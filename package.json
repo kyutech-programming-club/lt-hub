@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/kyutech-programming-club/LT-Hub/issues"
   },
-  "homepage": "https://github.com/kyutech-programming-club/LT-Hub#readme"
+  "homepage": "https://github.com/kyutech-programming-club/LT-Hub#readme",
+  "dependencies": {
+    "@vue/cli": "^4.3.1"
+  }
 }

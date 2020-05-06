@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <GithubAuth msg="Welcome to LT-Hub"/>
+    <github-auth msg="Welcome to LT-Hub"/>
   </div>
 </template>
 

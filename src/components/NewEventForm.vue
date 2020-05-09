@@ -27,6 +27,12 @@
         <v-text-field
           v-model="place"
           label="会場" />
+        <v-btn
+          color="blue"
+          :x-large="true"
+          @click="createEvent">
+          イベント作成
+        </v-btn>
       </v-card-text>
     </v-card>
   </div>

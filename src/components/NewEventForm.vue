@@ -32,6 +32,8 @@
   </div>
 </template>
 <script>
+import { db } from '@/firebase/firestore.js'
+
 export default {
   data: function() {
     return {
@@ -63,6 +65,27 @@ export default {
       console.log("place: "+this.place);
     },
   },
+  methods: {
+    createEvent: function() {
+      console.log("Creating event...");
+      db.collection('events')
+        .doc()
+        .set({
+          title: this.title,
+          description: this.description,
+          author: this.author,
+          startDate: this.startDate,
+          startTime: this.startTime,
+          place: this.place,
+        })
+        .then(() => {
+          console.log(`Event ${this.title} was created.`);
+        })
+        .catch(err => {
+          console.error(`Error occurd in createEvent: ${err}`);
+        });
+    }
+  }
 };
 </script>
 <style scoped>

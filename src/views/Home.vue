@@ -1,15 +1,14 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" src="./../assets/logo.png">
     <github-auth msg="Welcome to LT-Hub"/>
   </div>
 </template>
 
 <script>
-import GithubAuth from './components/GithubAuth.vue'
+import GithubAuth from './../components/GithubAuth.vue'
 
 export default {
-  name: 'App',
   components: {
     GithubAuth
   }

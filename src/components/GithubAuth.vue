@@ -44,10 +44,12 @@ export default {
       this.loggingIn = true;
       const provider = new firebase.auth.GithubAuthProvider();
       firebase.auth().signInWithPopup(provider)
+                     .finally(() => {
+                       this.loggingIn = false;
+                     });
     },
     doLogout() {
       console.log("doLogout");
-      this.loggingIn = false;
       firebase.auth().signOut()
     }
   }

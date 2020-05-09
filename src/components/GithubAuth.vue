@@ -10,7 +10,7 @@
     <div v-else key="logout">
       <v-btn class="ma-2"
              color="black"
-             :loading="loading"
+             :loading="loggingIn"
              @click="doLogin"
              dark>
         <v-icon dark left>mdi-github</v-icon>
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       user: {},
-      loading: false,
+      loggingIn: false,
     }
   },
   created() {
@@ -41,12 +41,13 @@ export default {
   methods: {
     doLogin() {
       console.log("doLogin");
-      this.loading = true;
+      this.loggingIn = true;
       const provider = new firebase.auth.GithubAuthProvider();
       firebase.auth().signInWithPopup(provider)
     },
     doLogout() {
       console.log("doLogout");
+      this.loggingIn = false;
       firebase.auth().signOut()
     }
   }

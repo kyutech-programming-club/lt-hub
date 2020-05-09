@@ -4,11 +4,19 @@
     <div v-if="user.uid" key="login">
       <img :src="user.photoURL"/><br>
       [{{ user.displayName }}]<br>
-      <button type="button" @click="doLogout">ログアウト</button>
+      <v-btn class="ma-2"
+             style="text-transform: none"
+             color="black"
+             @click="doLogout"
+             dark>
+        <v-icon dark left>mdi-logout</v-icon>
+        Logout
+      </v-btn>
     </div>
     <!-- 未ログイン時にはログインボタンを表示 -->
     <div v-else key="logout">
       <v-btn class="ma-2"
+             style="text-transform: none"
              color="black"
              :loading="loggingIn"
              @click="doLogin"

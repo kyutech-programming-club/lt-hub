@@ -8,7 +8,13 @@
     </div>
     <!-- 未ログイン時にはログインボタンを表示 -->
     <div v-else key="logout">
-      <button type="button" @click="doLogin">ログイン</button>
+      <v-btn class="ma-2"
+             color="black"
+             @click="doLogin"
+             dark>
+        <v-icon dark left>mdi-github</v-icon>
+        Sign in with GitHub
+      </v-btn>
     </div>
   </div>
 </template>

@@ -3,7 +3,15 @@
     <h1>This is Events page</h1>
     <v-expansion-panels>
       <v-expansion-panel>
-        <v-expansion-panel-header>Open</v-expansion-panel-header>
+        <v-expansion-panel-header>
+          <v-card-title>
+            <v-toolbar>
+              <v-toolbar-title class=mx-auto>
+                イベント新規作成
+              </v-toolbar-title>
+            </v-toolbar>
+          </v-card-title>
+        </v-expansion-panel-header>
         <v-expansion-panel-content>
           <new-event-form />
         </v-expansion-panel-content>

@@ -1,13 +1,6 @@
 <template>
   <div class="new-item-form">
     <v-card class="pa-4 ma-6">
-      <v-card-title>
-        <v-toolbar>
-          <v-toolbar-title class=mx-auto>
-            イベント新規作成
-          </v-toolbar-title>
-        </v-toolbar>
-      </v-card-title>
       <v-card-text>
         <v-text-field
           v-model="title"

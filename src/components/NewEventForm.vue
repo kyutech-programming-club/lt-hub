@@ -24,6 +24,12 @@
         <v-time-picker
           v-model="startTime"
           label="開始時刻"/>
+        <v-date-picker
+          v-model="endDate"
+          label="終了日"/>
+        <v-time-picker
+          v-model="endTime"
+          label="終了時刻"/>
         <v-text-field
           v-model="place"
           label="会場" />
@@ -48,6 +54,8 @@ export default {
       author: "",
       startDate: "",
       startTime: "",
+      endDate: "",
+      endTime: "",
       place: "",
     };
   },
@@ -67,6 +75,12 @@ export default {
     startTime: function() {
       console.log("startTime: "+this.startTime);
     },
+    endDate: function() {
+      console.log("endDate: "+this.endDate);
+    },
+    endTime: function() {
+      console.log("endTime: "+this.endTime);
+    },
     place: function() {
       console.log("place: "+this.place);
     },
@@ -82,6 +96,8 @@ export default {
           author: this.author,
           startDate: this.startDate,
           startTime: this.startTime,
+          endDate: this.endDate,
+          endTime: this.endTime,
           place: this.place,
         })
         .then(() => {

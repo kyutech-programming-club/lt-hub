@@ -5,8 +5,8 @@
       <v-expansion-panel>
         <v-expansion-panel-header>
           <v-card-title>
-            <v-toolbar>
-              <v-toolbar-title class=mx-auto>
+            <v-toolbar :flat="true">
+              <v-toolbar-title class="mx-autoi">
                 イベント新規作成
               </v-toolbar-title>
             </v-toolbar>

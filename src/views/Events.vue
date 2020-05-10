@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import NewEventForm from './../components/NewEventForm.vue'
+  import NewEventForm from '@/components/NewEventForm.vue'
 
   export default {
     components: {

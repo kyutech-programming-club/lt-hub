@@ -24,14 +24,28 @@
         <v-time-picker
           v-model="startTime"
           label="開始時刻"/>
+        <v-date-picker
+          v-model="endDate"
+          label="終了日"/>
+        <v-time-picker
+          v-model="endTime"
+          label="終了時刻"/>
         <v-text-field
           v-model="place"
           label="会場" />
+        <v-btn
+          color="blue"
+          :x-large="true"
+          @click="createEvent">
+          イベント作成
+        </v-btn>
       </v-card-text>
     </v-card>
   </div>
 </template>
 <script>
+import { db } from '@/firebase/firestore.js'
+
 export default {
   data: function() {
     return {
@@ -40,6 +54,8 @@ export default {
       author: "",
       startDate: "",
       startTime: "",
+      endDate: "",
+      endTime: "",
       place: "",
     };
   },
@@ -59,10 +75,39 @@ export default {
     startTime: function() {
       console.log("startTime: "+this.startTime);
     },
+    endDate: function() {
+      console.log("endDate: "+this.endDate);
+    },
+    endTime: function() {
+      console.log("endTime: "+this.endTime);
+    },
     place: function() {
       console.log("place: "+this.place);
     },
   },
+  methods: {
+    createEvent: function() {
+      console.log("Creating event...");
+      db.collection('events')
+        .doc()
+        .set({
+          title: this.title,
+          description: this.description,
+          author: this.author,
+          startDate: this.startDate,
+          startTime: this.startTime,
+          endDate: this.endDate,
+          endTime: this.endTime,
+          place: this.place,
+        })
+        .then(() => {
+          console.log(`Event ${this.title} was created.`);
+        })
+        .catch(err => {
+          console.error(`Error occurd in createEvent: ${err}`);
+        });
+    }
+  }
 };
 </script>
 <style scoped>

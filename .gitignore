@@ -24,4 +24,4 @@ yarn-error.log*
 /dist_electron
 
 # firebase-config
-/firebase_config.js
+/firebase.config.js

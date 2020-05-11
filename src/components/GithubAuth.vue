@@ -47,7 +47,6 @@ export default {
 
       if (user != null) {
           console.log("Login : " + user.displayName);
-          console.log("Login : " + user.uid);
           if (user.displayName != "") {
             this.$router.push({ name : "user", params: { uid: user.uid}})
           }

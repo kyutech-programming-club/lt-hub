@@ -40,17 +40,17 @@
                   photoURL: currentUser.photoURL
                 })
                 .then(() => {
-                  console.log(`Event ${currentUser.displayName} was created.`);
+                  console.log('Successfully created new user:', currentUser.displayName);
                   self.$router.go(self.$router.currentRoute)
                 })
                 .catch(err => {
-                  console.error(`Error occurd in createEvent: ${err}`);
+                  console.error('Error Creating new user: ', err);
                 });
             });
           }
         })
         .catch(err => {
-          console.error(`Error fetching user data: ${err}`);
+          console.error('Error fetching user data: ', err);
         });
     },
     methods: {

@@ -28,7 +28,7 @@
                   color="blue"
                   :x-large="true"
                   @click="update">
-                  更新
+                  Update
                 </v-btn>
               </v-card-text>
             </v-card>

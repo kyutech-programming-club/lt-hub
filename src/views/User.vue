@@ -88,6 +88,11 @@
     methods: {
       update: function() {
         console.log('update...');
+
+        if (!this.name) {
+          this.name = "ななっしー";
+        }
+
         db.collection('users')
           .doc(this.$route.params['uid'])
           .update({

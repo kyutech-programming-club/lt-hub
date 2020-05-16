@@ -59,7 +59,7 @@
       db.collection('users')
         .doc(this.$route.params['uid'])
         .get()
-        .then(function(dbUser) {
+        .then(dbUser => {
           if (dbUser.exists) {
             console.log('Successfully fetched user data');
             // console.log(JSON.stringify(dbUser.data()));
@@ -81,22 +81,18 @@
       })
     },
     watch: {
-      name: function() {
+      name() {
         console.log("name: "+this.name);
       }
     },
     methods: {
-      update: function() {
+      update() {
         console.log('update...');
-
-        if (!this.name) {
-          this.name = "ななっしー";
-        }
 
         db.collection('users')
           .doc(this.$route.params['uid'])
           .update({
-            name: this.name
+            name: this.name || "ななっしー"
           })
           .then(() => {
             console.log(`User ${this.name} was updated.`);

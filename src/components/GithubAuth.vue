@@ -45,7 +45,7 @@ export default {
   },
   created() {
     console.log('Start GithubAuth...');
-    let self = this
+    let self = this;
 
     firebase.auth().onAuthStateChanged(user => {
 
@@ -56,7 +56,7 @@ export default {
           db.collection('users')
             .doc(user.uid)
             .get()
-            .then(function(dbUser) {
+            .then(dbUser => {
               if (dbUser.exists) {
                 console.log('Successfully fetched user data');
                 // console.log(JSON.stringify(dbUser.data()));
@@ -67,7 +67,7 @@ export default {
                 db.collection('users')
                   .doc(user.uid)
                   .set({
-                    name: user.displayName ? user.displayName : 'ななっしー',
+                    name: user.displayName || 'ななっしー',
                     photoURL: user.photoURL
                   })
                   .then(() => {
@@ -76,12 +76,11 @@ export default {
                     db.collection('users')
                       .doc(user.uid)
                       .get()
-                      .then(function(dbUser) {
+                      .then(dbUser => {
                         console.log('Successfully fetched user data');
                         // console.log(JSON.stringify(dbUser.data()));
                         self.user = dbUser.data();
                       });
-
                   })
                   .catch(err => {
                     console.error('Error Creating new user: ', err);
@@ -92,7 +91,7 @@ export default {
               console.error('Error fetching user data: ', err);
             });
       } else {
-        self.user = {}
+        self.user = {};
       }
     })
   },

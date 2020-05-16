@@ -17,15 +17,40 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <div class="events-list">
+      <event-item
+        v-for="event in events"
+        :key="event.title"
+        :event="event" />
+    </div>
   </div>
 </template>
 
 <script>
   import NewEventForm from '@/components/NewEventForm.vue'
+  import EventItem from '@/components/EventItem.vue'
+  import { db } from '@/firebase/firestore.js'
 
   export default {
     components: {
       NewEventForm,
+      EventItem
+    },
+    data() {
+      return {
+        events: []
+      }
+    },
+    created() {
+      console.log('created...');
+      let self = this;
+      db.collection('events').get().then(function(events) {
+        events.forEach(function(event) {
+          console.log(event.data());
+          self.events.push(event.data());
+        });
+      });
     }
   };
 </script>

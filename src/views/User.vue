@@ -20,7 +20,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-card class="pa-4 ma-6">
-              <v-form v-model="isValid">
+              <v-form v-model="isValid" @submit.prevent>
                 <v-card-text>
                   <v-text-field
                     v-model="name"

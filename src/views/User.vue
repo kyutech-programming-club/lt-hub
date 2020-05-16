@@ -20,17 +20,20 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-card class="pa-4 ma-6">
-              <v-card-text>
-                <v-text-field
-                  v-model="name"
-                  label="Name" />
-                <v-btn
-                  color="blue"
-                  :x-large="true"
-                  @click="update">
-                  Update
-                </v-btn>
-              </v-card-text>
+              <v-form v-model="isValid">
+                <v-card-text>
+                  <v-text-field
+                    v-model="name"
+                    label="Name"
+                    :rules="[requiredNotEmpty]" />
+                  <v-btn
+                    color="blue"
+                    :x-large="true"
+                    @click="update">
+                    Update
+                  </v-btn>
+                </v-card-text>
+              </v-form>
             </v-card>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -50,7 +53,8 @@
       return {
         user: {},
         current: false,
-        name: ""
+        name: "",
+        isValid: false
       }
     },
     created() {
@@ -88,19 +92,28 @@
     methods: {
       update() {
         console.log('update...');
-
-        db.collection('users')
-          .doc(this.$route.params['uid'])
-          .update({
-            name: this.name || "ななっしー"
-          })
-          .then(() => {
-            console.log(`User ${this.name} was updated.`);
-            this.$router.go(this.$router.currentRoute);
-          })
-          .catch(err => {
-            console.error(`Error occurd in update: ${err}`);
-          });
+        if (this.isValid) {
+          db.collection('users')
+            .doc(this.$route.params['uid'])
+            .update({
+              name: this.name || "ななっしー"
+            })
+            .then(() => {
+              console.log(`User ${this.name} was updated.`);
+              this.$router.go(this.$router.currentRoute);
+            })
+            .catch(err => {
+              console.error(`Error occurd in update: ${err}`);
+            });
+        } else {
+          console.log("Error occurred on validation.");
+        }
+      },
+      requiredNotEmpty(value) {
+        const spaceRemoved = value.replace(/\s/g, '');
+        if (!spaceRemoved)
+          return "有効な表示名を入力してください．";
+        return true;
       }
     }
   }

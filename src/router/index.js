@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Events from '@/views/Events.vue'
+import User from '@/views/User.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
     name: 'Events',
     component: Events
   },
+  {
+      path: '/user/:uid/',
+      name: 'user',
+      component: User
+    }
 ]
 
 const router = new VueRouter({

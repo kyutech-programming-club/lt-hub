@@ -96,14 +96,14 @@
           db.collection('users')
             .doc(this.$route.params['uid'])
             .update({
-              name: this.name || "ななっしー"
+              name: this.name
             })
             .then(() => {
               console.log(`User ${this.name} was updated.`);
               this.$router.go(this.$router.currentRoute);
             })
             .catch(err => {
-              console.error(`Error occurd in update: ${err}`);
+              console.error(`Error occurred in update: ${err}`);
             });
         } else {
           console.log("Error occurred on validation.");
@@ -112,7 +112,7 @@
       requiredNotEmpty(value) {
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "有効な表示名を入力してください．";
+          return "Name is required.";
         return true;
       }
     }

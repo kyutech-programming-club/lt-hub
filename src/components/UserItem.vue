@@ -5,9 +5,9 @@
         <v-img
           height="200px"
           width="200px"
-          :src="user.photoURL"
+          :src="user.data.photoURL"
         />
-        <v-card-title>{{user.name}}</v-card-title>
+        <v-card-title>{{user.data.name}}</v-card-title>
       </v-container>
     </v-card>
   </div>
@@ -19,7 +19,7 @@
     methods: {
       goUserPage() {
         console.log("goUserPage");
-        this.$router.push({ name : "user", params: { uid: this.user.uid}});
+        this.$router.push({ name : "user", params: { uid: this.user.id}});
       }
     }
   }

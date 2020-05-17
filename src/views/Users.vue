@@ -4,7 +4,7 @@
     <div class="users-list">
       <user-item
         v-for="user in users"
-        :key="user.uid"
+        :key="user.id"
         :user="user" />
     </div>
   </div>
@@ -27,8 +27,12 @@
       let self = this;
       db.collection('users').get().then(function(users) {
         users.forEach(function(user) {
+          console.log(user.id);
           console.log(user.data());
-          self.users.push(user.data());
+          self.users.push({
+              id: user.id,
+              data: user.data()
+            });
         });
       });
     }

@@ -40,7 +40,7 @@
 import { db } from '@/firebase/firestore.js'
 
 export default {
-  data: function() {
+  data() {
     return {
       title: "",
       description: "",
@@ -53,33 +53,33 @@ export default {
     };
   },
   watch: {
-    title: function() {
+    title() {
       console.log("title: "+this.title);
     },
-    description: function() {
+    description() {
       console.log("description: "+this.description);
     },
-    author: function() {
+    author() {
       console.log("author: "+this.author)
     },
-    startDate: function() {
+    startDate() {
       console.log("startDate: "+this.startDate);
     },
-    startTime: function() {
+    startTime() {
       console.log("startTime: "+this.startTime);
     },
-    endDate: function() {
+    endDate() {
       console.log("endDate: "+this.endDate);
     },
-    endTime: function() {
+    endTime() {
       console.log("endTime: "+this.endTime);
     },
-    place: function() {
+    place() {
       console.log("place: "+this.place);
     },
   },
   methods: {
-    createEvent: function() {
+    createEvent() {
       console.log("Creating event...");
       db.collection('events')
         .doc()

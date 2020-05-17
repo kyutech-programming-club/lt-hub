@@ -67,6 +67,7 @@ export default {
                 db.collection('users')
                   .doc(user.uid)
                   .set({
+                    uid: user.uid,
                     name: user.displayName || 'ななっしー',
                     photoURL: user.photoURL
                   })

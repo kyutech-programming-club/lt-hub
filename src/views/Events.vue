@@ -21,8 +21,8 @@
     <div class="events-list">
       <event-item
         v-for="event in events"
-        :key="event.title"
-        :event="event" />
+        :key="event.id"
+        :event="event.data" />
     </div>
   </div>
 </template>
@@ -45,10 +45,18 @@
     created() {
       console.log('created...');
       let self = this;
-      db.collection('events').get().then(function(events) {
-        events.forEach(function(event) {
+      // orderBy('startTime')もしたいけどできない！！！！！！！！！！！
+      // 今のままだと、同日中の開催時間が無視されている。。。
+      db.collection('events').orderBy('startDate').get().then(events => {
+        events.forEach(event => {
+          console.log(event.id);
           console.log(event.data());
-          self.events.push(event.data());
+          self.events.push(
+            {
+              id: event.id,
+              data: event.data()
+            }
+          );
         });
       });
     }

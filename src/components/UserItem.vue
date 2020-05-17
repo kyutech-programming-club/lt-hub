@@ -15,7 +15,9 @@
 
 <script>
   export default {
-    props: ['user'],
+    props: {
+      user: Object
+    },
     methods: {
       goUserPage() {
         console.log("goUserPage");

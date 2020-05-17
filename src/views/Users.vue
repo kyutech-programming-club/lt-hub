@@ -25,8 +25,8 @@
     },
     created() {
       let self = this;
-      db.collection('users').get().then(function(users) {
-        users.forEach(function(user) {
+      db.collection('users').get().then(users => {
+        users.forEach(user => {
           console.log(user.id);
           console.log(user.data());
           self.users.push({

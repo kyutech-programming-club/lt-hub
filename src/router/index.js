@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Events from '@/views/Events.vue'
+import Event from '@/views/Event.vue'
 import Users from '@/views/Users.vue'
 import User from '@/views/User.vue'
 
@@ -19,15 +20,20 @@ const routes = [
     component: Events
   },
   {
+    path: '/event/:id/',
+    name: 'event',
+    component: Event
+  },
+  {
     path: '/users',
     name: 'Users',
     component: Users
   },
   {
-      path: '/user/:uid/',
-      name: 'user',
-      component: User
-    }
+    path: '/user/:uid/',
+    name: 'user',
+    component: User
+  }
 ]
 
 const router = new VueRouter({

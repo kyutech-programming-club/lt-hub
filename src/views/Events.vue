@@ -22,7 +22,7 @@
       <event-item
         v-for="event in events"
         :key="event.id"
-        :event="event.data" />
+        :event="event" />
     </div>
   </div>
 </template>

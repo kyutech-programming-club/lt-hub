@@ -95,6 +95,7 @@ export default {
         })
         .then(() => {
           console.log(`Event ${this.title} was created.`);
+          this.$router.go(this.$router.currentRoute);
         })
         .catch(err => {
           console.error(`Error occurd in createEvent: ${err}`);

@@ -8,9 +8,6 @@
         <v-text-field
           v-model="description"
           label="イベント概要" />
-        <v-text-field
-          v-model="author"
-          label="作成者" />
         <v-date-picker
           v-model="startDate"
           label="開始日"/>
@@ -37,72 +34,71 @@
   </div>
 </template>
 <script>
-import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
+  import { db } from '@/firebase/firestore.js'
 
-export default {
-  data() {
-    return {
-      title: "",
-      description: "",
-      author: "",
-      startDate: "",
-      startTime: "",
-      endDate: "",
-      endTime: "",
-      place: "",
-    };
-  },
-  watch: {
-    title() {
-      console.log("title: "+this.title);
+  export default {
+    data() {
+      return {
+        title: '',
+        description: '',
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: '',
+        place: '',
+      };
     },
-    description() {
-      console.log("description: "+this.description);
+    watch: {
+      title() {
+        console.log('title: '+this.title);
+      },
+      description() {
+        console.log('description: '+this.description);
+      },
+      startDate() {
+        console.log('startDate: '+this.startDate);
+      },
+      startTime() {
+        console.log('startTime: '+this.startTime);
+      },
+      endDate() {
+        console.log('endDate: '+this.endDate);
+      },
+      endTime() {
+        console.log('endTime: '+this.endTime);
+      },
+      place() {
+        console.log('place: '+this.place);
+      },
     },
-    author() {
-      console.log("author: "+this.author)
-    },
-    startDate() {
-      console.log("startDate: "+this.startDate);
-    },
-    startTime() {
-      console.log("startTime: "+this.startTime);
-    },
-    endDate() {
-      console.log("endDate: "+this.endDate);
-    },
-    endTime() {
-      console.log("endTime: "+this.endTime);
-    },
-    place() {
-      console.log("place: "+this.place);
-    },
-  },
-  methods: {
-    createEvent() {
-      console.log("Creating event...");
-      db.collection('events')
-        .doc()
-        .set({
-          title: this.title,
-          description: this.description,
-          author: this.author,
-          startDate: this.startDate,
-          startTime: this.startTime,
-          endDate: this.endDate,
-          endTime: this.endTime,
-          place: this.place,
-        })
-        .then(() => {
-          console.log(`Event ${this.title} was created.`);
-          this.$router.go(this.$router.currentRoute);
-        })
-        .catch(err => {
-          console.error(`Error occurd in createEvent: ${err}`);
+    methods: {
+      createEvent() {
+        console.log('Creating event...');
+        firebase.auth().onAuthStateChanged(user => {
+          db.collection('events')
+            .doc()
+            .set({
+              title: this.title,
+              description: this.description,
+              author: user.uid,
+              startDate: this.startDate,
+              startTime: this.startTime,
+              endDate: this.endDate,
+              endTime: this.endTime,
+              place: this.place,
+            })
+            .then(() => {
+              console.log(`Event ${this.title} was created.`);
+              this.$router.go(this.$router.currentRoute);
+            })
+            .catch(err => {
+              console.error(`Error occurd in createEvent: ${err}`);
+            });
         });
+      }
     }
-  }
-};
+  };
 </script>
 <style scoped>
 </style>

@@ -4,7 +4,6 @@
       <v-card-title>{{event.data.title}}</v-card-title>
       <v-card-text>
         期間：{{event.data.startDate}} {{event.data.startTime}} ~ {{event.data.endDate}} {{event.data.endTime}}<br>
-        責任者：{{event.data.author}}
       </v-card-text>
     </v-card>
   </div>

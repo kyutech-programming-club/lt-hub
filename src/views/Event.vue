@@ -12,18 +12,42 @@
         {{author.data.name}}
       </v-btn>
     </div>
+    <div v-if="current">
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  Edit
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <edit-event-form :event="event"/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </div>
   </div>
 </template>
 
 <script>
+  import firebase from 'firebase'
+  import EditEventForm from '@/components/EditEventForm.vue'
   import { db } from '@/firebase/firestore.js'
 
   export default {
     name: 'Event',
+    components: {
+      EditEventForm
+    },
     data() {
       return {
         event: {},
-        author: {}
+        author: {},
+        current: false
       }
     },
     created() {
@@ -55,6 +79,13 @@
               .catch(err => {
                 console.error('Error fetching author data: ', err);
               });
+
+
+            firebase.auth().onAuthStateChanged(user => {
+              if (user != null && user.uid == event.data().author) {
+                self.current = true;
+              }
+            });
 
           } else {
             console.error('Error fetching event data');

@@ -29,6 +29,9 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      <v-btn @click="deleteEvent">
+        Delete
+      </v-btn>
     </div>
   </div>
 </template>
@@ -100,7 +103,19 @@
       goUserPage() {
         console.log('goUserPage');
         this.$router.push({ name : 'user', params: { uid: this.author.id}});
-      }
+      },
+      deleteEvent() {
+        console.log('deleteEvent');
+        db.collection('events')
+          .doc(this.$route.params['id'])
+          .delete()
+          .then(() => {
+            this.$router.push({ name : 'Events'});
+          })
+          .catch(err => {
+            console.error('Error deleting event data: ', err);
+          });
+      },
     }
   }
 </script>

@@ -16,6 +16,7 @@
     "core-js": "^3.6.4",
     "firebase": "^7.14.2",
     "vue": "^2.6.11",
+    "vue-ctk-date-time-picker": "^2.4.0",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.11"
   },

@@ -45,9 +45,7 @@
     created() {
       console.log('created...');
       let self = this;
-      // orderBy('startTime')もしたいけどできない！！！！！！！！！！！
-      // 今のままだと、同日中の開催時間が無視されている。。。
-      db.collection('events').orderBy('startDate').get().then(events => {
+      db.collection('events').orderBy('start').get().then(events => {
         events.forEach(event => {
           console.log(event.id);
           console.log(event.data());

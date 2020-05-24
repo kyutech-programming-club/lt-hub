@@ -1,34 +1,37 @@
 <template>
   <div class="new-item-form">
     <v-card class="pa-4 ma-6">
-      <v-card-text>
-        <v-text-field
-          v-model="title"
-          label="イベント名" />
-        <v-text-field
-          v-model="description"
-          label="イベント概要" />
-        <vue-ctk-date-time-picker
-          id="start"
-          label="開始日時を選択"
-          :format="'YYYY-MM-DD HH:mm'"
-          v-model="start"/>
-        <vue-ctk-date-time-picker
-          id="end"
-          label="終了日時を選択"
-          :format="'YYYY-MM-DD HH:mm'"
-          :min-date="start"
-          v-model="end"/>
-        <v-text-field
-          v-model="place"
-          label="会場" />
-        <v-btn
-          color="blue"
-          :x-large="true"
-          @click="createEvent">
-          イベント作成
-        </v-btn>
-      </v-card-text>
+      <v-form v-model="isValid" @submit.prevent>
+        <v-card-text>
+          <v-text-field
+            v-model="title"
+            label="イベント名"
+            :rules="[requiredNotEmpty]" />
+          <v-text-field
+            v-model="description"
+            label="イベント概要" />
+          <vue-ctk-date-time-picker
+            id="start"
+            label="開始日時を選択"
+            :format="'YYYY-MM-DD HH:mm'"
+            v-model="start" />
+          <vue-ctk-date-time-picker
+            id="end"
+            label="終了日時を選択"
+            :format="'YYYY-MM-DD HH:mm'"
+            :min-date="start"
+            v-model="end" />
+          <v-text-field
+            v-model="place"
+            label="会場" />
+          <v-btn
+            color="blue"
+            :x-large="true"
+            @click="createEvent">
+            イベント作成
+          </v-btn>
+        </v-card-text>
+      </v-form>
     </v-card>
   </div>
 </template>
@@ -49,6 +52,7 @@
         start: '',
         end: '',
         place: '',
+        isValid: false
       };
     },
     watch: {
@@ -71,25 +75,36 @@
     methods: {
       createEvent() {
         console.log('Creating event...');
-        firebase.auth().onAuthStateChanged(user => {
-          db.collection('events')
-            .doc()
-            .set({
-              title: this.title,
-              description: this.description,
-              author: user.uid,
-              start: this.start,
-              end: this.end,
-              place: this.place,
-            })
-            .then(() => {
-              console.log(`Event ${this.title} was created.`);
-              this.$router.go(this.$router.currentRoute);
-            })
-            .catch(err => {
-              console.error(`Error occurd in createEvent: ${err}`);
-            });
-        });
+        if (this.isValid) {
+          firebase.auth().onAuthStateChanged(user => {
+            db.collection('events')
+              .doc()
+              .set({
+                title: this.title,
+                description: this.description,
+                author: user.uid,
+                start: this.start,
+                end: this.end,
+                place: this.place,
+              })
+              .then(() => {
+                console.log(`Event ${this.title} was created.`);
+                this.$router.go(this.$router.currentRoute);
+              })
+              .catch(err => {
+                console.error(`Error occurd in createEvent: ${err}`);
+              });
+          });
+        } else {
+          console.log("Error occurred on validation.");
+        }
+      },
+      requiredNotEmpty(value) {
+        //イベント名のみ入力必須項目
+        const spaceRemoved = value.replace(/\s/g, '');
+        if (!spaceRemoved)
+          return "Required.";
+        return true;
       }
     }
   };

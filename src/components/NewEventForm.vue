@@ -16,6 +16,7 @@
           label="開始時刻"/>
         <v-date-picker
           v-model="endDate"
+          :min=startDate
           label="終了日"/>
         <v-time-picker
           v-model="endTime"

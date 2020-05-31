@@ -1,7 +1,7 @@
 <template>
   <div class="edit-item-form">
     <v-card class="pa-4 ma-6">
-     <v-form v-model="isValid" @submit.prevent>
+      <v-form v-model="isValid" @submit.prevent>
         <v-card-text>
           <v-text-field
             v-model="title"
@@ -80,22 +80,26 @@
     methods: {
       updateEvent() {
         console.log('update event...');
-        db.collection('events')
-          .doc(this.event.id)
-          .update({
-            title: this.title,
-            description: this.description,
-            start: this.start,
-            end: this.end,
-            place: this.place,
-          })
-          .then(() => {
-            console.log(`Event ${this.title} was updated.`);
-            this.$router.go(this.$router.currentRoute);
-          })
-          .catch(err => {
-            console.error(`Error occurd in updateEvent: ${err}`);
-          });
+        if (this.isValid) {
+          db.collection('events')
+            .doc(this.event.id)
+            .update({
+              title: this.title,
+              description: this.description,
+              start: this.start,
+              end: this.end,
+              place: this.place,
+            })
+            .then(() => {
+              console.log(`Event ${this.title} was updated.`);
+              this.$router.go(this.$router.currentRoute);
+            })
+            .catch(err => {
+              console.error(`Error occurd in updateEvent: ${err}`);
+            });
+        } else {
+          console.log("Error occurred on validation.");
+        }
       },
       requiredNotEmpty(value) {
         //イベント名のみ入力必須項目

@@ -14,6 +14,7 @@
             id="start"
             label="開始日時を選択"
             :format="'YYYY-MM-DD HH:mm'"
+            :max-date="end"
             v-model="start" />
           <vue-ctk-date-time-picker
             id="end"

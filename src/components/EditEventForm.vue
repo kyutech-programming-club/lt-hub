@@ -90,11 +90,11 @@
             place: this.place,
           })
           .then(() => {
-          console.log(`Event ${this.title} was updated.`);
-          this.$router.go(this.$router.currentRoute);
+            console.log(`Event ${this.title} was updated.`);
+            this.$router.go(this.$router.currentRoute);
           })
           .catch(err => {
-          console.error(`Error occurd in updateEvent: ${err}`);
+            console.error(`Error occurd in updateEvent: ${err}`);
           });
       },
       requiredNotEmpty(value) {

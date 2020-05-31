@@ -110,7 +110,7 @@
           .doc(this.$route.params['id'])
           .delete()
           .then(() => {
-            this.$router.push({ name : 'Events'});
+            this.$router.push({ name : 'events'});
           })
           .catch(err => {
             console.error('Error deleting event data: ', err);

@@ -1,13 +1,17 @@
 <template>
   <div class="github-auth">
-    <h1>{{ msg }}</h1>
     <div v-if="user.name" key="login">
-      <img :src="user.photoURL"/><br>
-      <button @click="goMyPage">[{{ user.name }}](go to MyPage)</button><br>
+      <!-- <v-img :src="user.photoURL" /><br>
+      <button @click="goMyPage">[{{ user.name }}](go to MyPage)</button><br> -->
+
+      <v-avatar @click="goMyPage">
+        <img :src="user.photoURL" />
+      </v-avatar>
       <v-btn class="ma-2"
              style="text-transform: none"
-             color="black"
+             color="white"
              @click="doLogout"
+             outlined
              dark>
         <v-icon dark left>mdi-logout</v-icon>
         Logout
@@ -17,9 +21,10 @@
     <div v-else key="logout">
       <v-btn class="ma-2"
              style="text-transform: none"
-             color="black"
+             color="white"
              :loading="loggingIn"
              @click="doLogin"
+             outlined
              dark>
         <v-icon dark left>mdi-github</v-icon>
         Sign in with GitHub
@@ -34,9 +39,6 @@ import { db } from '@/firebase/firestore.js'
 
 export default {
   name: 'GithubAuth',
-  props: {
-    msg: String
-  },
   data() {
     return {
       user: {},
@@ -108,6 +110,7 @@ export default {
     doLogout() {
       console.log('doLogout');
       firebase.auth().signOut();
+      this.$router.push({ name : 'home' });
     },
     goMyPage() {
       console.log('goMyPage');

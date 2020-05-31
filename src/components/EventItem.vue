@@ -12,7 +12,9 @@
 <script>
   export default {
     props: {
-      event: Object
+      event: {
+        type: Object
+      }
     },
     methods: {
       goEventPage() {

@@ -16,7 +16,9 @@
 <script>
   export default {
     props: {
-      user: Object
+      user: {
+        type: Object
+      }
     },
     methods: {
       goUserPage() {

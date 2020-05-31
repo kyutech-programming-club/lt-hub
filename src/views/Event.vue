@@ -3,7 +3,7 @@
     <h1>Event Page</h1>
     <div v-if="event.id">
       <h2>{{ event.data.title }}</h2>
-      期間：{{event.data.startDate}} {{event.data.startTime}} ~ {{event.data.endDate}} {{event.data.endTime}}<br>
+      期間：{{event.data.start}} ~ {{event.data.end}}<br>
       場所：{{event.data.place}}<br>
     </div>
     <div v-if="author.id">

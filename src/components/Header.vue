@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-navigation-drawer v-model="drawer" absolute temporary>
     <v-list class="pt-1" dense>
       <v-divider></v-divider>
@@ -33,6 +34,7 @@
         </v-btn>
       </v-toolbar-items>
   </v-app-bar>
+</div>
 </template>
 
 <script>

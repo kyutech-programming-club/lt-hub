@@ -15,9 +15,9 @@
       </v-btn>
     </div>
     <div v-if="participated">
-      <v-chip>
-        参加済み
-      </v-chip>
+      <v-btn @click="cancelParticipate">
+        参加取り消し
+      </v-btn>
     </div>
     <div v-else>
       <v-btn @click="participate">
@@ -168,8 +168,28 @@
                     //配列フィールドに新しく要素を追加、存在しなければ配列フィールドを作成
                     participants : firebase.firestore.FieldValue.arrayUnion(userRef)
                   });
-          alert('Participated!');
           console.log('participants registered');
+          this.$router.go(this.$router.currentRoute);
+        } catch (err) {
+          console.log(err);
+        }
+      },
+      async cancelParticipate() {
+        try {
+          let userId;
+          await firebase.auth().onAuthStateChanged(user => {
+            console.log('userId: ' + user.uid);
+            userId =  user.uid;
+          });
+          let userRef = await db.collection('users').doc(userId); //ログインユーザーの参照オブジェクト
+          let self = this;
+          await db.collection('events')
+                  .doc(self.event.id)
+                  .update({
+                    participants : firebase.firestore.FieldValue.arrayRemove(userRef)
+                  });
+          alert('Cancel Participated!');
+          console.log('participants canceled');
           this.$router.go(this.$router.currentRoute);
         } catch (err) {
           console.log(err);

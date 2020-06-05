@@ -24,7 +24,7 @@
         参加
       </v-btn>
     </div>
-    <div v-if="!currentUserId">
+    <div v-if="!!currentUserId">
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>
@@ -45,7 +45,7 @@
         Delete
       </v-btn>
     </div>
-    <div class="users-list">
+    <div v-if="participants.length" class="users-list">
       参加者リスト
       <user-item
         v-for="user in participants"
@@ -140,8 +140,18 @@
         console.log('goUserPage');
         this.$router.push({ name : 'user', params: { uid: this.author.id}});
       },
-      deleteEvent() {
+      async deleteEvent() {
         console.log('deleteEvent');
+        let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
+
+        await this.participants.forEach( userRef => {
+          userRef.update({
+            joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+          }).then(() => {
+            console.log('deleted!')
+          })
+        })
+
         db.collection('events')
           .doc(this.$route.params['id'])
           .delete()
@@ -156,7 +166,7 @@
         try {
           let self = this;
           let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
-          let eventRef = await db.collection('events').doc(self.event.id); //ログインユーザーの参照オブジェクト
+          let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
           await userRef.update({
             joinEvents: firebase.firestore.FieldValue.arrayUnion(eventRef)
           });
@@ -176,10 +186,14 @@
         try {
           let self = this;
           let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
+          let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
+          await userRef.update({
+            joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+          });
           await db.collection('events')
                   .doc(self.event.id)
                   .update({
-                    participants : firebase.firestore.FieldValue.arrayRemove(userRef)
+                    participants: firebase.firestore.FieldValue.arrayRemove(userRef)
                   });
           alert('Cancel Participated!');
           console.log('participants canceled');

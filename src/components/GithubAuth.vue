@@ -70,7 +70,8 @@ export default {
                   .doc(user.uid)
                   .set({
                     name: user.displayName || 'ななっしー',
-                    photoURL: user.photoURL
+                    photoURL: user.photoURL,
+                    joinEvents: []
                   })
                   .then(() => {
                     console.log('Successfully created new user');

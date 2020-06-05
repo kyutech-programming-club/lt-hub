@@ -4,6 +4,12 @@
     <div v-if="user.name">
       <img :src="user.photoURL"/><br>
       [{{ user.name }}]<br>
+      <div v-if="joinEvents" class="events-list">
+        <event-item
+          v-for="event in joinEvents"
+          :key="event.id"
+          :event="event" />
+      </div>
     </div>
     <div v-if="current">
       <b>This is My Page</b>
@@ -46,14 +52,19 @@
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
+  import EventItem from '@/components/EventItem.vue'
 
   export default {
     name: 'User',
+    components: {
+      EventItem
+    },
     data() {
       return {
         user: {},
         current: false,
         name: "",
+        joinEvents: [],
         isValid: false
       }
     },
@@ -66,9 +77,19 @@
         .then(dbUser => {
           if (dbUser.exists) {
             console.log('Successfully fetched user data');
-            // console.log(dbUser.data());
+            console.log(dbUser.data());
             self.user = dbUser.data();
             self.name = dbUser.data().name;
+
+            if (dbUser.data().joinEvents.length) {
+              dbUser.data().joinEvents.forEach( async(eventRef) => {
+                let event = await eventRef.get();//参照型からデータの取得は非同期
+                self.joinEvents.push({
+                  id: event.id,
+                  data: event.data()
+                });
+              });
+            }
           } else {
             console.error('Error fetching user data');
             self.user = {};

@@ -24,7 +24,7 @@
         参加
       </v-btn>
     </div>
-    <div v-if="currentUserId">
+    <div v-if="!currentUserId">
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>

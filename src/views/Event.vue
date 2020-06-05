@@ -3,13 +3,15 @@
     <h1>Event Page</h1>
     <div v-if="event.id">
       <h2>{{ event.data.title }}</h2>
-      期間：{{event.data.start}} ~ {{event.data.end}}<br>
-      場所：{{event.data.place}}<br>
+      期間：{{ event.data.start }} ~ {{ event.data.end }}<br>
+      場所：{{ event.data.place }}<br>
+      作成日時：{{ event.data.createTime }}<br>
+      最終更新日時：{{ event.data.updateTime }}
     </div>
     <div v-if="author.id">
       責任者：
       <v-btn @click="goUserPage">
-        {{author.data.name}}
+        {{ author.data.name }}
       </v-btn>
     </div>
     <div v-if="participated">
@@ -46,7 +48,7 @@
     <div class="users-list">
       参加者リスト
       <user-item
-        v-for="user in users"
+        v-for="user in participants"
         :key="user.id"
         :user="user" />
     </div>
@@ -70,7 +72,7 @@
         event: {},
         author: {},
         current: false,
-        users: [],
+        participants: [],
         participated: false
       }
     },
@@ -89,10 +91,10 @@
               data: event.data()
             };
 
-            if (event.data().participant != null) {
-                event.data().participant.forEach( async(userRef) => {
+            if (event.data().participants.length) {
+                event.data().participants.forEach( async(userRef) => {
                     let user = await userRef.get();//参照型からデータの取得は非同期
-                    self.users.push({
+                    self.participants.push({
                         id: user.id,
                         data: user.data()
                     });
@@ -164,10 +166,10 @@
                   .doc(self.event.id)
                   .update({
                     //配列フィールドに新しく要素を追加、存在しなければ配列フィールドを作成
-                    participant : firebase.firestore.FieldValue.arrayUnion(userRef)
+                    participants : firebase.firestore.FieldValue.arrayUnion(userRef)
                   });
           alert('Participated!');
-          console.log('participant registered');
+          console.log('participants registered');
           this.$router.go(this.$router.currentRoute);
         } catch (err) {
           console.log(err);

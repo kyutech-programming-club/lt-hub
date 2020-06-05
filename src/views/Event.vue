@@ -128,9 +128,16 @@
             console.log('userId: ' + user.uid);
             userId =  user.uid;
           });
-          let userRef = await db.collection('users').doc(userId).get();
+          let userRef = await db.collection('users').doc(userId); //ログインユーザーの参照オブジェクト
+          let self = this;
+          await db.collection('events')
+                  .doc(self.event.id)
+                  .update({
+                    //配列フィールドに新しく要素を追加、存在しなければ配列フィールドを作成
+                    participant : firebase.firestore.FieldValue.arrayUnion(userRef)
+                  });
           alert('Participated!');
-          console.log(userRef.data().name + ' participated');
+          console.log('participant registered');
         } catch (err) {
           console.log(err);
         }

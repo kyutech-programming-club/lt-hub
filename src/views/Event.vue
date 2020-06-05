@@ -38,24 +38,34 @@
         Delete
       </v-btn>
     </div>
+    <div class="users-list">
+      参加者リスト
+      <user-item
+        v-for="user in users"
+        :key="user.id"
+        :user="user" />
+    </div>
   </div>
 </template>
 
 <script>
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
+  import UserItem from '@/components/UserItem.vue'
   import { db } from '@/firebase/firestore.js'
 
   export default {
     name: 'Event',
     components: {
-      EditEventForm
+      EditEventForm,
+      UserItem
     },
     data() {
       return {
         event: {},
         author: {},
-        current: false
+        current: false,
+        users: []
       }
     },
     created() {
@@ -71,6 +81,16 @@
             self.event = {
               id: event.id,
               data: event.data()
+            };
+
+            if (event.data().participant != null) {
+                event.data().participant.forEach( async(userRef) => {
+                    let user = await userRef.get();
+                    self.users.push({
+                        id: user.id,
+                        data: user.data()
+                    });
+                });
             }
 
             db.collection('users')

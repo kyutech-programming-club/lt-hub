@@ -12,7 +12,12 @@
         {{author.data.name}}
       </v-btn>
     </div>
-    <div>
+    <div v-if="participated">
+      <v-chip>
+        参加済み
+      </v-chip>
+    </div>
+    <div v-else>
       <v-btn @click="participate">
         参加
       </v-btn>
@@ -65,7 +70,8 @@
         event: {},
         author: {},
         current: false,
-        users: []
+        users: [],
+        participated: false
       }
     },
     created() {
@@ -85,10 +91,15 @@
 
             if (event.data().participant != null) {
                 event.data().participant.forEach( async(userRef) => {
-                    let user = await userRef.get();
+                    let user = await userRef.get();//参照型からデータの取得は非同期
                     self.users.push({
                         id: user.id,
                         data: user.data()
+                    });
+                    await firebase.auth().onAuthStateChanged(currentUser => {
+                        if (user.id == currentUser.uid) {
+                          self.participated = true;
+                        }
                     });
                 });
             }
@@ -107,7 +118,6 @@
               .catch(err => {
                 console.error('Error fetching author data: ', err);
               });
-
 
             firebase.auth().onAuthStateChanged(user => {
               if (user != null && user.uid == event.data().author) {
@@ -158,6 +168,7 @@
                   });
           alert('Participated!');
           console.log('participant registered');
+          this.$router.go(this.$router.currentRoute);
         } catch (err) {
           console.log(err);
         }

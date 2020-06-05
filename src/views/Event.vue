@@ -12,6 +12,11 @@
         {{author.data.name}}
       </v-btn>
     </div>
+    <div>
+      <v-btn @click="participate">
+        参加
+      </v-btn>
+    </div>
     <div v-if="current">
       <v-expansion-panels>
         <v-expansion-panel>
@@ -116,6 +121,10 @@
             console.error('Error deleting event data: ', err);
           });
       },
+      participate() {
+        alert("Participated!");
+        console.log('participate')
+      }
     }
   }
 </script>

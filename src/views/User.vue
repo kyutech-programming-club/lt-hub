@@ -66,7 +66,7 @@
         .then(dbUser => {
           if (dbUser.exists) {
             console.log('Successfully fetched user data');
-            // console.log(JSON.stringify(dbUser.data()));
+            // console.log(dbUser.data());
             self.user = dbUser.data();
             self.name = dbUser.data().name;
           } else {

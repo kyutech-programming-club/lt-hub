@@ -24,7 +24,7 @@
         参加
       </v-btn>
     </div>
-    <div v-if="current">
+    <div v-if="currentUserId">
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>
@@ -71,14 +71,20 @@
       return {
         event: {},
         author: {},
-        current: false,
+        currentUserId: '',
         participants: [],
-        participated: false
+        participated: false,
       }
     },
     created() {
       let self = this
       console.log('Event Page');
+      firebase.auth().onAuthStateChanged(user => {
+        if (user != null) {
+          self.currentUserId = user.uid;
+        }
+      });
+
       db.collection('events')
         .doc(this.$route.params['id'])
         .get()
@@ -91,50 +97,43 @@
               data: event.data()
             };
 
-            if (event.data().participants.length) {
-              event.data().participants.forEach( async(userRef) => {
-                let user = await userRef.get();//参照型からデータの取得は非同期
-                self.participants.push({
-                  id: user.id,
-                  data: user.data()
-                });
-                await firebase.auth().onAuthStateChanged(currentUser => {
-                  if (user.id == currentUser.uid) {
-                    self.participated = true;
-                  }
-                });
+          if (event.data().participants.length) {
+            event.data().participants.forEach( async(userRef) => {
+              let user = await userRef.get();//参照型からデータの取得は非同期
+              self.participants.push({
+                id: user.id,
+                data: user.data()
               });
-            }
-
-            db.collection('users')
-              .doc(event.data().author)
-              .get()
-              .then(author => {
-                if (author != null) {
-                  self.author = {
-                    id: author.id,
-                    data: author.data()
-                  }
-                }
-              })
-              .catch(err => {
-                console.error('Error fetching author data: ', err);
-              });
-
-            firebase.auth().onAuthStateChanged(user => {
-              if (user != null && user.uid == event.data().author) {
-                self.current = true;
+              if (user.id == self.currentUserId) {
+                self.participated = true;
               }
             });
-
-          } else {
-            console.error('Error fetching event data');
-            self.event = {};
           }
-        })
-        .catch(err => {
-          console.error('Error fetching event data: ', err);
-        });
+
+          db.collection('users')
+            .doc(event.data().author)
+            .get()
+            .then(author => {
+              if (author != null) {
+                self.author = {
+                  id: author.id,
+                  data: author.data()
+                }
+              }
+            })
+            .catch(err => {
+              console.error('Error fetching author data: ', err);
+            });
+
+        } else {
+          console.error('Error fetching event data');
+          self.event = {};
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching event data: ', err);
+      });
+      
     },
     methods: {
       goUserPage() {
@@ -155,18 +154,17 @@
       },
       async participate() {
         try {
-          let userId;
-          await firebase.auth().onAuthStateChanged(user => {
-            console.log('userId: ' + user.uid);
-            userId =  user.uid;
-          });
-          let userRef = await db.collection('users').doc(userId); //ログインユーザーの参照オブジェクト
           let self = this;
+          let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
+          let eventRef = await db.collection('events').doc(self.event.id); //ログインユーザーの参照オブジェクト
+          await userRef.update({
+            joinEvents: firebase.firestore.FieldValue.arrayUnion(eventRef)
+          });
           await db.collection('events')
                   .doc(self.event.id)
                   .update({
                     //配列フィールドに新しく要素を追加、存在しなければ配列フィールドを作成
-                    participants : firebase.firestore.FieldValue.arrayUnion(userRef)
+                    participants: firebase.firestore.FieldValue.arrayUnion(userRef)
                   });
           console.log('participants registered');
           this.$router.go(this.$router.currentRoute);
@@ -176,13 +174,8 @@
       },
       async cancelParticipate() {
         try {
-          let userId;
-          await firebase.auth().onAuthStateChanged(user => {
-            console.log('userId: ' + user.uid);
-            userId =  user.uid;
-          });
-          let userRef = await db.collection('users').doc(userId); //ログインユーザーの参照オブジェクト
           let self = this;
+          let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
           await db.collection('events')
                   .doc(self.event.id)
                   .update({

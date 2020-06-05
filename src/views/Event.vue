@@ -121,9 +121,19 @@
             console.error('Error deleting event data: ', err);
           });
       },
-      participate() {
-        alert("Participated!");
-        console.log('participate')
+      async participate() {
+        try {
+          let userId;
+          await firebase.auth().onAuthStateChanged(user => {
+            console.log('userId: ' + user.uid);
+            userId =  user.uid;
+          });
+          let userRef = await db.collection('users').doc(userId).get();
+          alert('Participated!');
+          console.log(userRef.data().name + ' participated');
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
   }

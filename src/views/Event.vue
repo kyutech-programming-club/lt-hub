@@ -92,18 +92,18 @@
             };
 
             if (event.data().participants.length) {
-                event.data().participants.forEach( async(userRef) => {
-                    let user = await userRef.get();//参照型からデータの取得は非同期
-                    self.participants.push({
-                        id: user.id,
-                        data: user.data()
-                    });
-                    await firebase.auth().onAuthStateChanged(currentUser => {
-                        if (user.id == currentUser.uid) {
-                          self.participated = true;
-                        }
-                    });
+              event.data().participants.forEach( async(userRef) => {
+                let user = await userRef.get();//参照型からデータの取得は非同期
+                self.participants.push({
+                  id: user.id,
+                  data: user.data()
                 });
+                await firebase.auth().onAuthStateChanged(currentUser => {
+                  if (user.id == currentUser.uid) {
+                    self.participated = true;
+                  }
+                });
+              });
             }
 
             db.collection('users')

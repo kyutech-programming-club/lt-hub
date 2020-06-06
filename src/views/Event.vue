@@ -95,7 +95,7 @@
             self.event = {
               id: event.id,
               data: event.data()
-            };
+            }
 
           if (event.data().participants.length) {
             event.data().participants.forEach( async(userRef) => {

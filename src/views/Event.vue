@@ -97,7 +97,7 @@
               id: event.id,
               data: event.data()
             }
-            if (event.data().author == self.currentUserId){
+            if (event.data().author == self.currentUserId) {
               self.isAuthor = true;
             }
           if (event.data().participants.length) {

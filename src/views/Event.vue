@@ -175,12 +175,9 @@
           await userRef.update({
             joinEvents: firebase.firestore.FieldValue.arrayUnion(eventRef)
           });
-          await db.collection('events')
-                  .doc(self.event.id)
-                  .update({
-                    //配列フィールドに新しく要素を追加、存在しなければ配列フィールドを作成
-                    participants: firebase.firestore.FieldValue.arrayUnion(userRef)
-                  });
+          await eventRef.update({
+            participants: firebase.firestore.FieldValue.arrayUnion(userRef)
+          });
           console.log('participants registered');
           this.$router.go(this.$router.currentRoute);
         } catch (err) {
@@ -197,11 +194,9 @@
             await userRef.update({
               joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
             });
-            await db.collection('events')
-                    .doc(self.event.id)
-                    .update({
-                      participants: firebase.firestore.FieldValue.arrayRemove(userRef)
-                    });
+            await eventRef.update({
+              participants: firebase.firestore.FieldValue.arrayRemove(userRef)
+            });
             alert('次はないですよ');
             console.log('participants canceled');
             this.$router.go(this.$router.currentRoute);

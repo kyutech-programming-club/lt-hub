@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+  import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
   import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
   import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
@@ -89,6 +90,7 @@
               start: this.start,
               end: this.end,
               place: this.place,
+              updateTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
               console.log(`Event ${this.title} was updated.`);

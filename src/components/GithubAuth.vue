@@ -71,7 +71,9 @@ export default {
                   .set({
                     name: user.displayName || 'ななっしー',
                     photoURL: user.photoURL,
-                    joinEvents: []
+                    joinEvents: [],
+                    createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
                     console.log('Successfully created new user');

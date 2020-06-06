@@ -142,15 +142,15 @@
       },
       async deleteEvent() {
         console.log('deleteEvent');
-        let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
+        let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
 
-        await this.participants.forEach( userRef => {
-          userRef.update({
-            joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-          }).then(() => {
-            console.log('deleted!')
-          })
-        })
+        await this.participants.forEach( user => {
+          db.collection('users')
+            .doc(user.id)
+            .update({
+              joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+            })
+        });
 
         db.collection('events')
           .doc(this.$route.params['id'])

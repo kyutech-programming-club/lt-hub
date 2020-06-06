@@ -18,6 +18,22 @@
       <v-btn @click="cancelParticipate">
         参加取り消し
       </v-btn>
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  トーク新規作成
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <new-talk-form />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </div>
     <div v-else>
       <v-btn @click="participate">
@@ -58,6 +74,7 @@
 <script>
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
+  import NewTalkForm from '@/components/NewTalkForm.vue'
   import UserItem from '@/components/UserItem.vue'
   import { db } from '@/firebase/firestore.js'
 
@@ -65,7 +82,8 @@
     name: 'Event',
     components: {
       EditEventForm,
-      UserItem
+      UserItem,
+      NewTalkForm,
     },
     data() {
       return {

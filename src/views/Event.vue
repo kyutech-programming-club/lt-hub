@@ -97,7 +97,7 @@
               id: event.id,
               data: event.data()
             }
-            if(event.data().author == self.currentUserId){
+            if (event.data().author == self.currentUserId){
               self.isAuthor = true;
             }
           if (event.data().participants.length) {
@@ -144,7 +144,7 @@
         this.$router.push({ name : 'user', params: { uid: this.author.id}});
       },
       async deleteEvent() {
-        var res = confirm("ほんとにイベントを取りやめますか？？？？？");
+        var res = confirm('ほんとにイベントを取りやめますか？？？？？');
         if (res) {
         console.log('deleteEvent');
         let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
@@ -188,7 +188,7 @@
         }
       },
       async cancelParticipate() {
-        var res = confirm("ほんとに取りやめますか？？？？？");
+        var res = confirm('ほんとに取りやめますか？？？？？');
         if (res) {
           try {
             let self = this;

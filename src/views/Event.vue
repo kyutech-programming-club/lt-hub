@@ -186,23 +186,26 @@
         }
       },
       async cancelParticipate() {
-        try {
-          let self = this;
-          let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
-          let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
-          await userRef.update({
-            joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-          });
-          await db.collection('events')
-                  .doc(self.event.id)
-                  .update({
-                    participants: firebase.firestore.FieldValue.arrayRemove(userRef)
-                  });
-          alert('Cancel Participated!');
-          console.log('participants canceled');
-          this.$router.go(this.$router.currentRoute);
-        } catch (err) {
-          console.log(err);
+        var res = confirm("ほんとに取りやめますか？？？？？");
+        if (res) {
+          try {
+            let self = this;
+            let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
+            let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
+            await userRef.update({
+              joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+            });
+            await db.collection('events')
+                    .doc(self.event.id)
+                    .update({
+                      participants: firebase.firestore.FieldValue.arrayRemove(userRef)
+                    });
+            alert('次はないですよ');
+            console.log('participants canceled');
+            this.$router.go(this.$router.currentRoute);
+          } catch (err) {
+            console.log(err);
+          }
         }
       },
       //日付から文字列に変換する関数

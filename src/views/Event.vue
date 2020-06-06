@@ -144,6 +144,8 @@
         this.$router.push({ name : 'user', params: { uid: this.author.id}});
       },
       async deleteEvent() {
+        var res = confirm("ほんとにイベントを取りやめますか？？？？？");
+        if (res) {
         console.log('deleteEvent');
         let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
 
@@ -154,7 +156,6 @@
               joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
             })
         });
-
         db.collection('events')
           .doc(this.$route.params['id'])
           .delete()
@@ -164,6 +165,7 @@
           .catch(err => {
             console.error('Error deleting event data: ', err);
           });
+        }
       },
       async participate() {
         try {

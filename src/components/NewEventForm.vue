@@ -88,8 +88,8 @@
                 end: this.end,
                 place: this.place,
                 participants: [],
-                createTime: firebase.firestore.FieldValue.serverTimestamp(),
-                updateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
               })
               .then(() => {
                 console.log(`Event ${this.title} was created.`);

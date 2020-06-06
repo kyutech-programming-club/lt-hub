@@ -5,8 +5,8 @@
       <h2>{{ event.data.title }}</h2>
       期間：{{ event.data.start }} ~ {{ event.data.end }}<br>
       場所：{{ event.data.place }}<br>
-      作成日時：{{ getStringFromDate(event.data.createTime.toDate()) }}<br>
-      最終更新日時：{{ getStringFromDate(event.data.updateTime.toDate()) }}
+      作成日時：{{ getStringFromDate(event.data.createdTime.toDate()) }}<br>
+      最終更新日時：{{ getStringFromDate(event.data.updatedTime.toDate()) }}
     </div>
     <div v-if="author.id">
       責任者：

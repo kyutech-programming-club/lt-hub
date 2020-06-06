@@ -90,7 +90,7 @@
               start: this.start,
               end: this.end,
               place: this.place,
-              updateTime: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
               console.log(`Event ${this.title} was updated.`);

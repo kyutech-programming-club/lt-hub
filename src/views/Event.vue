@@ -107,7 +107,7 @@
       }
     },
     created() {
-      let self = this
+      let self = this;
       console.log('Event Page');
       firebase.auth().onAuthStateChanged(user => {
         if (user != null) {

@@ -30,7 +30,8 @@
             </v-card-title>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <new-talk-form />
+            <new-talk-form
+            :eventId="event.id"/>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>

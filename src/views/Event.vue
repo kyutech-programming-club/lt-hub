@@ -62,6 +62,13 @@
         Delete
       </v-btn>
     </div>
+    <div class="talks-list">
+      <talk-item
+              v-for="talk in talks"
+              :key="talk.id"
+              :talk="talk"
+              :talkUser="talk.talkUser"/>
+    </div>
     <div v-if="participants.length" class="users-list">
       参加者リスト
       <user-item
@@ -77,6 +84,7 @@
   import EditEventForm from '@/components/EditEventForm.vue'
   import NewTalkForm from '@/components/NewTalkForm.vue'
   import UserItem from '@/components/UserItem.vue'
+  import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
 
   export default {
@@ -84,11 +92,13 @@
     components: {
       EditEventForm,
       UserItem,
+      TalkItem,
       NewTalkForm,
     },
     data() {
       return {
         event: {},
+        talks: [],
         author: {},
         currentUserId: '',
         participants: [],
@@ -104,12 +114,28 @@
           self.currentUserId = user.uid;
         }
       });
-
-      db.collection('events')
-        .doc(this.$route.params['id'])
+      let eventRef = db.collection('events').doc(this.$route.params['id']);
+      eventRef
         .get()
         .then(event => {
           if (event.exists) {
+            db.collection('talks').where('eventRef', '==', eventRef).get().then(talks => {
+              talks.forEach(async(talk) => {
+                // console.log(talk.id);
+                // console.log(talk.data());
+                let talkUser = await talk.data().userRef.get();
+                self.talks.push(
+                        {
+                          id: talk.id,
+                          data: talk.data(),
+                          talkUser: {
+                           id: talkUser.id,
+                           data: talkUser.data()
+                          }
+                        }
+                );
+              });
+            });
             console.log('Successfully fetched event data');
             // console.log(JSON.stringify(event.data()));
             self.event = {

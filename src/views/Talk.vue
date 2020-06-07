@@ -13,35 +13,12 @@
 </template>
 
 <script>
-  import { db } from '@/firebase/firestore.js'
-
   export default {
     name: 'Talk',
-    data() {
-      return {
-        talk: {}
-      }
-    },
-
-    created() {
-      let self = this;
-      console.log('Talk Page');
-      let talkRef = db.collection('talks').doc(this.$route.params['id']);
-      talkRef
-        .get()
-        .then(async(talk) => {
-          let talkUser = await talk.data().userRef.get();
-          if (talk.exists) {
-            self.talk = {
-              id: talk.id,
-              data: talk.data(),
-              talkUser: {
-                id: talkUser.id,
-                data: talkUser.data()
-              }
-            }
-          }
-        });
+    props: {
+      talk: {
+        type: Object
+      }, // 遷移元からのパラメータを取得
     },
     methods: {
       getStringFromDate(date) {

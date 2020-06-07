@@ -38,6 +38,7 @@ const routes = [
   {
     path: '/talks/:id',
     name: 'talk',
+    props: true, // paramsの値が遷移先のpropsとして使える
     component: Talk
   }
 ]

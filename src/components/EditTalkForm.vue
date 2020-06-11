@@ -31,7 +31,7 @@
 
   export default {
     props: {
-      event: {
+      talk: {
         type: Object
       }
     },

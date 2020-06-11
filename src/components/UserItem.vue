@@ -1,15 +1,11 @@
 <template>
-  <div class="user-item">
-    <v-card class="d-inline-block mx-auto" @click="goUserPage">
-      <v-container>
-        <v-img
-          height="200px"
-          width="200px"
-          :src="user.data.photoURL"
-        />
-        <v-card-title>{{user.data.name}}</v-card-title>
-      </v-container>
-    </v-card>
+  <div class="user-item mx-10" style="display: inline-block">
+    <v-avatar class="d-inline-block" size="128" @click="goUserPage">
+      <v-img
+        :src="user.data.photoURL"
+      />
+    </v-avatar>
+    <v-card-title>{{user.data.name}}</v-card-title>
   </div>
 </template>
 

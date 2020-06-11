@@ -18,6 +18,23 @@
       <v-btn @click="cancelParticipate">
         参加取り消し
       </v-btn>
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  トーク新規作成
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <new-talk-form
+              :eventId="event.id"/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </div>
     <div v-else>
       <v-btn @click="participate">
@@ -45,6 +62,13 @@
         Delete
       </v-btn>
     </div>
+    <div class="talks-list">
+      <talk-item
+        v-for="talk in talks"
+        :key="talk.id"
+        :talk="talk"
+        :talkUser="talk.talkUser"/>
+    </div>
     <div v-if="participants.length" class="users-list">
       参加者リスト
       <user-item
@@ -58,18 +82,23 @@
 <script>
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
+  import NewTalkForm from '@/components/NewTalkForm.vue'
   import UserItem from '@/components/UserItem.vue'
+  import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
 
   export default {
     name: 'Event',
     components: {
       EditEventForm,
-      UserItem
+      UserItem,
+      TalkItem,
+      NewTalkForm,
     },
     data() {
       return {
         event: {},
+        talks: [],
         author: {},
         currentUserId: '',
         participants: [],
@@ -78,19 +107,35 @@
       }
     },
     created() {
-      let self = this
+      let self = this;
       console.log('Event Page');
       firebase.auth().onAuthStateChanged(user => {
         if (user != null) {
           self.currentUserId = user.uid;
         }
       });
-
-      db.collection('events')
-        .doc(this.$route.params['id'])
+      let eventRef = db.collection('events').doc(this.$route.params['id']);
+      eventRef
         .get()
         .then(event => {
           if (event.exists) {
+            db.collection('talks').where('eventRef', '==', eventRef).get().then(talks => {
+              talks.forEach(async(talk) => {
+                // console.log(talk.id);
+                // console.log(talk.data());
+                let talkUser = await talk.data().userRef.get();
+                self.talks.push(
+                  {
+                    id: talk.id,
+                    data: talk.data(),
+                    talkUser: {
+                      id: talkUser.id,
+                      data: talkUser.data()
+                    }
+                  }
+                );
+              });
+            });
             console.log('Successfully fetched event data');
             // console.log(JSON.stringify(event.data()));
             self.event = {
@@ -100,42 +145,42 @@
             if (event.data().author == self.currentUserId) {
               self.isAuthor = true;
             }
-          if (event.data().participants.length) {
-            event.data().participants.forEach( async(userRef) => {
-              let user = await userRef.get();//参照型からデータの取得は非同期
-              self.participants.push({
-                id: user.id,
-                data: user.data()
-              });
-              if (user.id == self.currentUserId) {
-                self.participated = true;
-              }
-            });
-          }
-
-          db.collection('users')
-            .doc(event.data().author)
-            .get()
-            .then(author => {
-              if (author != null) {
-                self.author = {
-                  id: author.id,
-                  data: author.data()
+            if (event.data().participants.length) {
+              event.data().participants.forEach( async(userRef) => {
+                let user = await userRef.get();//参照型からデータの取得は非同期
+                self.participants.push({
+                  id: user.id,
+                  data: user.data()
+                });
+                if (user.id == self.currentUserId) {
+                  self.participated = true;
                 }
-              }
-            })
-            .catch(err => {
-              console.error('Error fetching author data: ', err);
-            });
+              });
+            }
 
-        } else {
-          console.error('Error fetching event data');
-          self.event = {};
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching event data: ', err);
-      });
+            db.collection('users')
+              .doc(event.data().author)
+              .get()
+              .then(author => {
+                if (author != null) {
+                  self.author = {
+                    id: author.id,
+                    data: author.data()
+                  }
+                }
+              })
+              .catch(err => {
+                console.error('Error fetching author data: ', err);
+              });
+
+          } else {
+            console.error('Error fetching event data');
+            self.event = {};
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching event data: ', err);
+        });
 
     },
     methods: {
@@ -146,25 +191,25 @@
       async deleteEvent() {
         var res = confirm('ほんとにイベントを取りやめますか？？？？？');
         if (res) {
-        console.log('deleteEvent');
-        let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
+          console.log('deleteEvent');
+          let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
 
-        await this.participants.forEach( user => {
-          db.collection('users')
-            .doc(user.id)
-            .update({
-              joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-            })
-        });
-        db.collection('events')
-          .doc(this.$route.params['id'])
-          .delete()
-          .then(() => {
-            this.$router.push({ name : 'events'});
-          })
-          .catch(err => {
-            console.error('Error deleting event data: ', err);
+          await this.participants.forEach( user => {
+            db.collection('users')
+              .doc(user.id)
+              .update({
+                joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+              })
           });
+          db.collection('events')
+            .doc(this.$route.params['id'])
+            .delete()
+            .then(() => {
+              this.$router.push({ name : 'events'});
+            })
+            .catch(err => {
+              console.error('Error deleting event data: ', err);
+            });
         }
       },
       async participate() {

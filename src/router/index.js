@@ -5,6 +5,7 @@ import Events from '@/views/Events.vue'
 import Event from '@/views/Event.vue'
 import Users from '@/views/Users.vue'
 import User from '@/views/User.vue'
+import Talk from '@/views/Talk.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,12 @@ const routes = [
     path: '/users/:uid/',
     name: 'user',
     component: User
+  },
+  {
+    path: '/talks/:id',
+    name: 'talk',
+    props: true, // paramsの値が遷移先のpropsとして使える
+    component: Talk
   }
 ]
 

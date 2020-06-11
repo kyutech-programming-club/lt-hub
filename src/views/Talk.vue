@@ -7,6 +7,10 @@
       最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
       動画URL: {{ talk.data.movieUrl }}<br>
       スライドURL: {{ talk.data.slideUrl }}<br>
+      参加イベント：
+      <v-btn @click="goEventPage">
+        {{ talkEvent.data.title }}
+      </v-btn><br>
       登壇者：{{ talk.talkUser.data.name }}<br>
     </div>
     <div v-if="isTalker">
@@ -52,6 +56,7 @@
       return {
         talk: Object,
         isTalker: false,
+        talkEvent: {}
       }
     },
     created() {
@@ -60,6 +65,7 @@
         console.log("in user auth");
         let talkerId = await self.getTalk(self);
         await self.checkTalker(talkerId, user.uid);
+        self.getEvent();
       });
 
     },
@@ -121,23 +127,34 @@
           this.isTalker = true;
         }
       },
+      async getEvent() {
+        console.log('goEvent')
+        let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
+        this.talkEvent = {
+          id: event.id,
+          data: event.data()
+        }
+      },
       async deleteTalk() {
         var res = confirm('ほんとに登壇を取りやめますか？？？？？');
         if (res) {
         console.log('deleteTalk');
-        
-        let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
 
+        let self = this;
         db.collection('talks')
           .doc(this.$route.params['id'])
           .delete()
           .then(() => {
-            this.$router.push({ name : 'event', params: {id: event.id}});
+            this.$router.push({ name : 'event', params: {id: self.talkEvent.id}});
           })
           .catch(err => {
             console.error('Error deleting event data: ', err);
           });
         }
+      },
+      goEventPage() {
+        console.log('goEventPage');
+        this.$router.push({ name : 'event', params: { id: this.talkEvent.id}});
       }
     }
   }

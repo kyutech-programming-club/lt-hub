@@ -34,24 +34,24 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
+  import { db } from '@/firebase/firestore.js'
 
-export default {
-  name: 'GithubAuth',
-  data() {
-    return {
-      user: {},
-      loggingIn: false,
-    }
-  },
-  created() {
-    console.log('Start GithubAuth...');
-    let self = this;
+  export default {
+    name: 'GithubAuth',
+    data() {
+      return {
+        user: {},
+        loggingIn: false,
+      }
+    },
+    created() {
+      console.log('Start GithubAuth...');
+      let self = this;
 
-    firebase.auth().onAuthStateChanged(user => {
+      firebase.auth().onAuthStateChanged(user => {
 
-      if (user != null) {
+        if (user != null) {
           console.log('Successfully Login');
           // console.log(JSON.stringify(user));
 
@@ -95,36 +95,36 @@ export default {
             .catch(err => {
               console.error('Error fetching user data: ', err);
             });
-      } else {
-        self.user = {};
-      }
-    })
-  },
-  methods: {
-    doLogin() {
-      console.log('doLogin');
-      this.loggingIn = true;
-      const provider = new firebase.auth.GithubAuthProvider();
-      firebase.auth().signInWithPopup(provider)
-                     .finally(() => {
-                       this.loggingIn = false;
-                     });
-    },
-    doLogout() {
-      console.log('doLogout');
-      firebase.auth().signOut();
-      this.$router.push({ name : 'home' });
-    },
-    goMyPage() {
-      console.log('goMyPage');
-      firebase.auth().onAuthStateChanged(user => {
-        if (user != null) {
-          this.$router.push({ name : "user", params: { uid: user.uid}});
+        } else {
+          self.user = {};
         }
-      });
+      })
+    },
+    methods: {
+      doLogin() {
+        console.log('doLogin');
+        this.loggingIn = true;
+        const provider = new firebase.auth.GithubAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+          .finally(() => {
+            this.loggingIn = false;
+          });
+      },
+      doLogout() {
+        console.log('doLogout');
+        firebase.auth().signOut();
+        this.$router.push({ name : 'home' });
+      },
+      goMyPage() {
+        console.log('goMyPage');
+        firebase.auth().onAuthStateChanged(user => {
+          if (user != null) {
+            this.$router.push({ name : "user", params: { uid: user.uid}});
+          }
+        });
+      }
     }
   }
-}
 </script>
 <style scoped>
 </style>

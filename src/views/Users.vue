@@ -30,9 +30,9 @@
           console.log(user.id);
           console.log(user.data());
           self.users.push({
-              id: user.id,
-              data: user.data()
-            });
+            id: user.id,
+            data: user.data()
+          });
         });
       });
     }

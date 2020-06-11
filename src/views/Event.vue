@@ -31,7 +31,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <new-talk-form
-            :eventId="event.id"/>
+              :eventId="event.id"/>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -64,10 +64,10 @@
     </div>
     <div class="talks-list">
       <talk-item
-              v-for="talk in talks"
-              :key="talk.id"
-              :talk="talk"
-              :talkUser="talk.talkUser"/>
+        v-for="talk in talks"
+        :key="talk.id"
+        :talk="talk"
+        :talkUser="talk.talkUser"/>
     </div>
     <div v-if="participants.length" class="users-list">
       参加者リスト
@@ -125,14 +125,14 @@
                 // console.log(talk.data());
                 let talkUser = await talk.data().userRef.get();
                 self.talks.push(
-                        {
-                          id: talk.id,
-                          data: talk.data(),
-                          talkUser: {
-                           id: talkUser.id,
-                           data: talkUser.data()
-                          }
-                        }
+                  {
+                    id: talk.id,
+                    data: talk.data(),
+                    talkUser: {
+                      id: talkUser.id,
+                      data: talkUser.data()
+                    }
+                  }
                 );
               });
             });
@@ -145,42 +145,42 @@
             if (event.data().author == self.currentUserId) {
               self.isAuthor = true;
             }
-          if (event.data().participants.length) {
-            event.data().participants.forEach( async(userRef) => {
-              let user = await userRef.get();//参照型からデータの取得は非同期
-              self.participants.push({
-                id: user.id,
-                data: user.data()
-              });
-              if (user.id == self.currentUserId) {
-                self.participated = true;
-              }
-            });
-          }
-
-          db.collection('users')
-            .doc(event.data().author)
-            .get()
-            .then(author => {
-              if (author != null) {
-                self.author = {
-                  id: author.id,
-                  data: author.data()
+            if (event.data().participants.length) {
+              event.data().participants.forEach( async(userRef) => {
+                let user = await userRef.get();//参照型からデータの取得は非同期
+                self.participants.push({
+                  id: user.id,
+                  data: user.data()
+                });
+                if (user.id == self.currentUserId) {
+                  self.participated = true;
                 }
-              }
-            })
-            .catch(err => {
-              console.error('Error fetching author data: ', err);
-            });
+              });
+            }
 
-        } else {
-          console.error('Error fetching event data');
-          self.event = {};
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching event data: ', err);
-      });
+            db.collection('users')
+              .doc(event.data().author)
+              .get()
+              .then(author => {
+                if (author != null) {
+                  self.author = {
+                    id: author.id,
+                    data: author.data()
+                  }
+                }
+              })
+              .catch(err => {
+                console.error('Error fetching author data: ', err);
+              });
+
+          } else {
+            console.error('Error fetching event data');
+            self.event = {};
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching event data: ', err);
+        });
 
     },
     methods: {
@@ -191,25 +191,25 @@
       async deleteEvent() {
         var res = confirm('ほんとにイベントを取りやめますか？？？？？');
         if (res) {
-        console.log('deleteEvent');
-        let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
+          console.log('deleteEvent');
+          let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
 
-        await this.participants.forEach( user => {
-          db.collection('users')
-            .doc(user.id)
-            .update({
-              joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-            })
-        });
-        db.collection('events')
-          .doc(this.$route.params['id'])
-          .delete()
-          .then(() => {
-            this.$router.push({ name : 'events'});
-          })
-          .catch(err => {
-            console.error('Error deleting event data: ', err);
+          await this.participants.forEach( user => {
+            db.collection('users')
+              .doc(user.id)
+              .update({
+                joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+              })
           });
+          db.collection('events')
+            .doc(this.$route.params['id'])
+            .delete()
+            .then(() => {
+              this.$router.push({ name : 'events'});
+            })
+            .catch(err => {
+              console.error('Error deleting event data: ', err);
+            });
         }
       },
       async participate() {

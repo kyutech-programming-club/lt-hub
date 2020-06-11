@@ -40,7 +40,7 @@
 <script>
   import EditTalkForm from '@/components/EditTalkForm.vue';
   import { db } from '@/firebase/firestore.js';
-  import firebase from "firebase";
+  import firebase from 'firebase';
 
   export default {
     name: 'Talk',
@@ -62,7 +62,7 @@
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-        console.log("in user auth");
+        console.log('in user auth');
         let talkerId = await self.getTalk(self);
         await self.checkTalker(talkerId, user.uid);
         self.getEvent();
@@ -98,7 +98,6 @@
       async getTalk(self) {
         if (self.talkData != null) {
           await self.$root.$set(this, 'talk', self.talkData);
-          console.log("IF");
           return self.talkData.talkUser.id
         } else {
           let talkData = {}
@@ -138,18 +137,18 @@
       async deleteTalk() {
         var res = confirm('ほんとに登壇を取りやめますか？？？？？');
         if (res) {
-        console.log('deleteTalk');
+          console.log('deleteTalk');
 
-        let self = this;
-        db.collection('talks')
-          .doc(this.$route.params['id'])
-          .delete()
-          .then(() => {
-            this.$router.push({ name : 'event', params: {id: self.talkEvent.id}});
-          })
-          .catch(err => {
-            console.error('Error deleting event data: ', err);
-          });
+          let self = this;
+          db.collection('talks')
+            .doc(this.$route.params['id'])
+            .delete()
+            .then(() => {
+              this.$router.push({ name : 'event', params: {id: self.talkEvent.id}});
+            })
+            .catch(err => {
+              console.error('Error deleting event data: ', err);
+            });
         }
       },
       goEventPage() {

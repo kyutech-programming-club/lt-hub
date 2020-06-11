@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-  import firebase from "firebase";
+  import firebase from 'firebase';
   import { db } from '@/firebase/firestore.js'
 
   export default {
@@ -62,26 +62,26 @@
             let userRef = await db.collection('users').doc(user.uid);
             let eventRef = await db.collection('events').doc(self.eventId);
             db.collection('talks')
-                    .doc()
-                    .set({
-                      userRef:userRef,
-                      eventRef:eventRef,
-                      title: this.title,
-                      slideUrl: this.slideUrl,
-                      movieUrl: this.movieUrl,
-                      createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-                      updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
-                    })
-                    .then(() => {
-                      console.log(`Event ${this.title} was created.`);
-                      this.$router.go(this.$router.currentRoute);
-                    })
-                    .catch(err => {
-                      console.error(`Error occurd in createEvent: ${err}`);
-                    });
+              .doc()
+              .set({
+                userRef:userRef,
+                eventRef:eventRef,
+                title: this.title,
+                slideUrl: this.slideUrl,
+                movieUrl: this.movieUrl,
+                createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
+              })
+              .then(() => {
+                console.log(`Event ${this.title} was created.`);
+                this.$router.go(this.$router.currentRoute);
+              })
+              .catch(err => {
+                console.error(`Error occurd in createEvent: ${err}`);
+              });
           });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
@@ -93,6 +93,6 @@
       }
     }
   };
-  </script>
-  <style scoped>
-  </style>
+</script>
+<style scoped>
+</style>

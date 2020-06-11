@@ -56,6 +56,7 @@
     },
     created() {
       console.log("I am edittalkform");
+      console.dir(this.talk);
     },
     methods: {
       updateTalk() {

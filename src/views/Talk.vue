@@ -9,7 +9,7 @@
       スライドURL: {{ talk.data.slideUrl }}<br>
       参加イベント：
       <v-btn @click="goEventPage">
-        {{ talkEvent.data.title }}
+        {{ talkEvent.title }}
       </v-btn><br>
       登壇者：{{ talk.talkUser.data.name }}<br>
     </div>
@@ -132,7 +132,7 @@
         let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
         this.talkEvent = {
           id: event.id,
-          data: event.data()
+          title: event.data().title
         }
       },
       async deleteTalk() {

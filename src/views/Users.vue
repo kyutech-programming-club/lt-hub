@@ -1,12 +1,14 @@
 <template>
   <div class="users">
     <h1>This is Users page</h1>
-    <div class="users-list">
-      <user-item
-        v-for="user in users"
-        :key="user.id"
-        :user="user" />
-    </div>
+    <v-row justify="center" align-content="center" class="pt-12">
+      <div class="users-list">
+        <user-item
+          v-for="user in users"
+          :key="user.id"
+          :user="user" />
+      </div>
+    </v-row>
   </div>
 </template>
 

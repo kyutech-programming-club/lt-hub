@@ -26,10 +26,9 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-      <!--      <v-btn @click="deleteTalk">-->
-      <!--        Delete-->
-      <!--      </v-btn>-->
-      <!--      ahiahi-->
+      <v-btn @click="deleteTalk">
+        Delete
+      </v-btn>
     </div>
   </div>
 </template>
@@ -115,17 +114,33 @@
           return talkData.talkUser.id
         }
       },
-      async checkTalker(talkerId, userId) {
+      checkTalker(talkerId, userId) {
         console.log(talkerId);
         console.log(userId);
         if (talkerId == userId) {
           this.isTalker = true;
         }
-        console.log("AUTH");
+      },
+      async deleteTalk() {
+        var res = confirm('ほんとに登壇を取りやめますか？？？？？');
+        if (res) {
+        console.log('deleteTalk');
+        
+        let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
+
+        db.collection('talks')
+          .doc(this.$route.params['id'])
+          .delete()
+          .then(() => {
+            this.$router.push({ name : 'event', params: {id: event.id}});
+          })
+          .catch(err => {
+            console.error('Error deleting event data: ', err);
+          });
+        }
       }
     }
-
-  };
+  }
 </script>
 
 <style scoped>

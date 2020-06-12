@@ -18,8 +18,8 @@
     },
     methods: {
       goUserPage() {
-        console.log("goUserPage");
-        this.$router.push({ name : "user", params: { uid: this.user.id}});
+        console.log('goUserPage');
+        this.$router.push({ name : 'user', params: { uid: this.user.id}});
       }
     }
   }

@@ -119,7 +119,7 @@
         console.log('goMyPage');
         firebase.auth().onAuthStateChanged(user => {
           if (user != null) {
-            this.$router.push({ name : "user", params: { uid: user.uid}});
+            this.$router.push({ name : 'user', params: { uid: user.uid}});
           }
         });
       }

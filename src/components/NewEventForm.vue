@@ -100,14 +100,14 @@
               });
           });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Required.";
+          return 'Required.';
         return true;
       }
     }

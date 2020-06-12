@@ -65,7 +65,7 @@
       return {
         user: {},
         current: false,
-        name: "",
+        name: '',
         joinEvents: [],
         isValid: false
       }
@@ -109,7 +109,7 @@
     },
     watch: {
       name() {
-        console.log("name: "+this.name);
+        console.log('name: '+this.name);
       }
     },
     methods: {
@@ -130,13 +130,13 @@
               console.error(`Error occurred in update: ${err}`);
             });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Name is required.";
+          return 'Name is required.';
         return true;
       },
       //日付から文字列に変換する関数

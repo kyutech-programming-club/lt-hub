@@ -13,6 +13,27 @@
         {{ author.data.name }}
       </v-btn>
     </div>
+    <div v-if="isAuthor">
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  Edit
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <edit-event-form :event="event"/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
+        Delete
+      </v-btn>
+    </div>
     <div v-if="participated">
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
         参加取り消し
@@ -43,27 +64,7 @@
         参加
       </v-btn>
     </div>
-    <div v-if="isAuthor">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <edit-event-form :event="event"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
-        Delete
-      </v-btn>
-    </div>
+    
     <div class="talks-list">
       <talk-item
         v-for="talk in talks"
@@ -72,7 +73,7 @@
         :talkUser="talk.talkUser"/>
     </div>
     <div v-if="participants.length" class="users-list">
-      参加者リスト
+      参加者リスト<br>
       <user-item
         v-for="user in participants"
         :key="user.id"
@@ -244,6 +245,17 @@
             await eventRef.update({
               participants: firebase.firestore.FieldValue.arrayRemove(userRef)
             });
+            let talkRefs = await db.collection('talks').where('eventRef', '==', eventRef).where('userRef', '==', userRef);
+            await talkRefs
+                    .get()
+                    .then(talks => {
+                      talks.forEach(talk => {
+                        talk.ref.delete().then(() => {
+                          console.log('delete!');
+                        });
+                      });
+                    });
+
             alert('次はないですよ');
             this.$router.go(this.$router.currentRoute);
           } catch (err) {

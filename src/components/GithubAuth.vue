@@ -99,7 +99,7 @@
       },
       doLogout() {
         firebase.auth().signOut();
-        this.$router.push({ name : 'home' });
+        this.$router.go(this.$router.currentRoute);
       },
       goMyPage() {
         firebase.auth().onAuthStateChanged(user => {

@@ -69,7 +69,7 @@
         :talkUser="talk.talkUser"/>
     </div>
     <div v-if="participants.length" class="users-list">
-      参加者リスト
+      参加者リスト<br>
       <user-item
         v-for="user in participants"
         :key="user.id"

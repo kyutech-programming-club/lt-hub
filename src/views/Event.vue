@@ -241,6 +241,17 @@
             await eventRef.update({
               participants: firebase.firestore.FieldValue.arrayRemove(userRef)
             });
+            let talkRefs = await db.collection('talks').where('eventRef', '==', eventRef).where('userRef', '==', userRef);
+            await talkRefs
+                    .get()
+                    .then(talks => {
+                      talks.forEach(talk => {
+                        talk.ref.delete().then(() => {
+                          console.log('delete!');
+                        });
+                      });
+                    });
+
             alert('次はないですよ');
             this.$router.go(this.$router.currentRoute);
           } catch (err) {

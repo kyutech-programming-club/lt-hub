@@ -1,8 +1,7 @@
 <template>
   <div class="event">
-    <h1>Event Page</h1>
     <div v-if="event.id">
-      <h2>{{ event.data.title }}</h2>
+      <h1>{{ event.data.title }}</h1>
       期間：{{ event.data.start }} ~ {{ event.data.end }}<br>
       場所：{{ event.data.place }}<br>
       作成日時：{{ getStringFromDate(event.data.createdTime.toDate()) }}<br>

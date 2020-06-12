@@ -1,6 +1,6 @@
 <template>
   <div class="events">
-    <h1>This is Events page</h1>
+    <h1>Events</h1>
     <v-expansion-panels v-if="isLogin">
       <v-expansion-panel>
         <v-expansion-panel-header>

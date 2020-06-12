@@ -1,19 +1,18 @@
 <template>
   <div class="talk">
-    <h1>Talk Page</h1>
-    <div v-if="talk.id">
-      <h2>{{ talk.data.title }}</h2>
-      作成日時：{{ getStringFromDate(talk.data.createdTime.toDate()) }}<br>
-      最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
-      動画URL: {{ talk.data.movieUrl }}<br>
-      スライドURL: {{ talk.data.slideUrl }}<br>
-      登壇者：{{ talk.talkUser.data.name }}<br>
-    </div>
     <div v-if="talkEvent">
       参加イベント：
       <v-btn @click="goEventPage">
         {{ talkEvent.title }}
       </v-btn><br>
+    </div>
+    <div v-if="talk.id">
+      <h1>{{ talk.data.title }}</h1>
+      作成日時：{{ getStringFromDate(talk.data.createdTime.toDate()) }}<br>
+      最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
+      動画URL: {{ talk.data.movieUrl }}<br>
+      スライドURL: {{ talk.data.slideUrl }}<br>
+      登壇者：{{ talk.talkUser.data.name }}<br>
     </div>
 
     <div v-if="isTalker">

@@ -1,9 +1,8 @@
 <template>
   <div class="user">
-    <h1>User Page</h1>
     <div v-if="user.name">
+      <h1>{{ user.name }}</h1>
       <img :src="user.photoURL"/><br>
-      [{{ user.name }}]<br>
       作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
       最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
       <div v-if="joinEvents" class="events-list">

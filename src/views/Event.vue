@@ -1,8 +1,7 @@
 <template>
   <div class="event">
-    <h1>Event Page</h1>
     <div v-if="event.id">
-      <h2>{{ event.data.title }}</h2>
+      <h1>{{ event.data.title }}</h1>
       期間：{{ event.data.start }} ~ {{ event.data.end }}<br>
       場所：{{ event.data.place }}<br>
       作成日時：{{ getStringFromDate(event.data.createdTime.toDate()) }}<br>
@@ -14,8 +13,29 @@
         {{ author.data.name }}
       </v-btn>
     </div>
+    <div v-if="isAuthor">
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  Edit
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <edit-event-form :event="event"/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
+        Delete
+      </v-btn>
+    </div>
     <div v-if="participated">
-      <v-btn @click="cancelParticipate">
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
         参加取り消し
       </v-btn>
       <v-expansion-panels>
@@ -36,32 +56,15 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <div v-else>
-      <v-btn @click="participate">
+    <div v-else-if="currentUserId">
+      <v-btn
+        class="white--text font-weight-bold"
+        color="#009eff"
+        @click="participate">
         参加
       </v-btn>
     </div>
-    <div v-if="isAuthor">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <edit-event-form :event="event"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-btn @click="deleteEvent">
-        Delete
-      </v-btn>
-    </div>
+    
     <div class="talks-list">
       <talk-item
         v-for="talk in talks"
@@ -70,7 +73,7 @@
         :talkUser="talk.talkUser"/>
     </div>
     <div v-if="participants.length" class="users-list">
-      参加者リスト
+      参加者リスト<br>
       <user-item
         v-for="user in participants"
         :key="user.id"
@@ -242,8 +245,18 @@
             await eventRef.update({
               participants: firebase.firestore.FieldValue.arrayRemove(userRef)
             });
+            let talkRefs = await db.collection('talks').where('eventRef', '==', eventRef).where('userRef', '==', userRef);
+            await talkRefs
+                    .get()
+                    .then(talks => {
+                      talks.forEach(talk => {
+                        talk.ref.delete().then(() => {
+                          console.log('delete!');
+                        });
+                      });
+                    });
+
             alert('次はないですよ');
-            console.log('participants canceled');
             this.$router.go(this.$router.currentRoute);
           } catch (err) {
             console.log(err);

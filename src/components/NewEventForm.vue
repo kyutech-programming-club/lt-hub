@@ -26,7 +26,8 @@
             v-model="place"
             label="会場" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="createEvent">
             イベント作成
@@ -75,7 +76,6 @@
     },
     methods: {
       createEvent() {
-        console.log('Creating event...');
         if (this.isValid) {
           firebase.auth().onAuthStateChanged(user => {
             db.collection('events')
@@ -100,14 +100,14 @@
               });
           });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Required.";
+          return 'Required.';
         return true;
       }
     }

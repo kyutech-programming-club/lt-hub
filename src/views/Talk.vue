@@ -1,18 +1,20 @@
 <template>
   <div class="talk">
-    <h1>Talk Page</h1>
+    <div v-if="talkEvent">
+      参加イベント：
+      <v-btn color="#CBFFD3" @click="goEventPage">
+        {{ talkEvent.title }}
+      </v-btn><br>
+    </div>
     <div v-if="talk.id">
-      <h2>{{ talk.data.title }}</h2>
+      <h1>{{ talk.data.title }}</h1>
       作成日時：{{ getStringFromDate(talk.data.createdTime.toDate()) }}<br>
       最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
       動画URL: {{ talk.data.movieUrl }}<br>
       スライドURL: {{ talk.data.slideUrl }}<br>
-      参加イベント：
-      <v-btn @click="goEventPage">
-        {{ talkEvent.title }}
-      </v-btn><br>
       登壇者：{{ talk.talkUser.data.name }}<br>
     </div>
+
     <div v-if="isTalker">
       <v-expansion-panels>
         <v-expansion-panel>
@@ -30,7 +32,7 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-btn @click="deleteTalk">
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
         Delete
       </v-btn>
     </div>
@@ -62,10 +64,10 @@
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-        console.log('in user auth');
-        let talkerId = await self.getTalk(self);
-        await self.checkTalker(talkerId, user.uid);
-        self.getEvent();
+          let talkerId = await self.getTalk(self);
+          if (user) {
+            await self.checkTalker(talkerId, user.uid);
+          }
       });
 
     },
@@ -98,6 +100,7 @@
       async getTalk(self) {
         if (self.talkData != null) {
           await self.$root.$set(this, 'talk', self.talkData);
+          self.getEvent();
           return self.talkData.talkUser.id
         } else {
           let talkData = {}
@@ -116,18 +119,16 @@
                 self.$root.$set(self, 'talk', talkData);
               });
             });
+          self.getEvent();
           return talkData.talkUser.id
         }
       },
       checkTalker(talkerId, userId) {
-        console.log(talkerId);
-        console.log(userId);
         if (talkerId == userId) {
           this.isTalker = true;
         }
       },
       async getEvent() {
-        console.log('goEvent')
         let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
         this.talkEvent = {
           id: event.id,
@@ -137,8 +138,6 @@
       async deleteTalk() {
         var res = confirm('ほんとに登壇を取りやめますか？？？？？');
         if (res) {
-          console.log('deleteTalk');
-
           let self = this;
           db.collection('talks')
             .doc(this.$route.params['id'])

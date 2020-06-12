@@ -14,7 +14,8 @@
             v-model="movieUrl"
             label="動画URL" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="createTalk">
             トーク作成
@@ -55,7 +56,6 @@
     },
     methods: {
       createTalk() {
-        console.log('Creating event...');
         if (this.isValid) {
           let self = this;
           firebase.auth().onAuthStateChanged(async(user) => {
@@ -88,7 +88,7 @@
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Required.";
+          return 'Required.';
         return true;
       }
     }

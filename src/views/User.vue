@@ -1,9 +1,8 @@
 <template>
   <div class="user">
-    <h1>User Page</h1>
     <div v-if="user.name">
+      <h1>{{ user.name }}</h1>
       <img :src="user.photoURL"/><br>
-      [{{ user.name }}]<br>
       作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
       最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
       <div v-if="joinEvents" class="events-list">
@@ -14,7 +13,6 @@
       </div>
     </div>
     <div v-if="current">
-      <b>This is My Page</b>
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>
@@ -65,7 +63,7 @@
       return {
         user: {},
         current: false,
-        name: "",
+        name: '',
         joinEvents: [],
         isValid: false
       }
@@ -109,12 +107,11 @@
     },
     watch: {
       name() {
-        console.log("name: "+this.name);
+        console.log('name: '+this.name);
       }
     },
     methods: {
       update() {
-        console.log('update...');
         if (this.isValid) {
           db.collection('users')
             .doc(this.$route.params['uid'])
@@ -130,13 +127,13 @@
               console.error(`Error occurred in update: ${err}`);
             });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Name is required.";
+          return 'Name is required.';
         return true;
       },
       //日付から文字列に変換する関数

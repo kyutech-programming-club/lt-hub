@@ -1,6 +1,6 @@
 <template>
   <div class="event-item">
-    <v-card class="pa-4 ma-6"  @click="goEventPage">
+    <v-card class="pa-4 ma-6" color="#CBFFD3" @click="goEventPage">
       <v-card-title>{{event.data.title}}</v-card-title>
       <v-card-text>
         期間：{{event.data.start}} ~ {{event.data.end}}<br>
@@ -18,7 +18,6 @@
     },
     methods: {
       goEventPage() {
-        console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.event.id}});
       }
     }

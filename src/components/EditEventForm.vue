@@ -26,7 +26,8 @@
             v-model="place"
             label="会場" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="updateEvent">
             Update
@@ -80,7 +81,6 @@
     },
     methods: {
       updateEvent() {
-        console.log('update event...');
         if (this.isValid) {
           db.collection('events')
             .doc(this.event.id)
@@ -100,14 +100,14 @@
               console.error(`Error occurd in updateEvent: ${err}`);
             });
         } else {
-          console.log("Error occurred on validation.");
+          console.log('Error occurred on validation.');
         }
       },
       requiredNotEmpty(value) {
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved)
-          return "Required.";
+          return 'Required.';
         return true;
       }
     }

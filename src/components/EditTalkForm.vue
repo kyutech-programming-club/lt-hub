@@ -14,7 +14,8 @@
             v-model="movieUrl"
             label="動画URL" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="updateTalk">
             Update
@@ -55,12 +56,10 @@
       }
     },
     created() {
-      console.log('I am edittalkform');
       console.dir(this.talk);
     },
     methods: {
       updateTalk() {
-        console.log('update talk...');
         if (this.isValid) {
           db.collection('talks')
             .doc(this.talk.id)

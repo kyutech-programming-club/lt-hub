@@ -46,26 +46,18 @@
       }
     },
     created() {
-      console.log('Start GithubAuth...');
       let self = this;
 
       firebase.auth().onAuthStateChanged(user => {
 
         if (user != null) {
-          console.log('Successfully Login');
-          // console.log(JSON.stringify(user));
-
           db.collection('users')
             .doc(user.uid)
             .get()
             .then(dbUser => {
               if (dbUser.exists) {
-                console.log('Successfully fetched user data');
-                // console.log(JSON.stringify(dbUser.data()));
                 self.user = dbUser.data();
               } else {
-                console.log('Creating user data...');
-
                 db.collection('users')
                   .doc(user.uid)
                   .set({
@@ -76,14 +68,10 @@
                     updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
-                    console.log('Successfully created new user');
-                    // console.log(JSON.stringify(user));
                     db.collection('users')
                       .doc(user.uid)
                       .get()
                       .then(dbUser => {
-                        console.log('Successfully fetched user data');
-                        // console.log(JSON.stringify(dbUser.data()));
                         self.user = dbUser.data();
                       });
                   })
@@ -102,7 +90,6 @@
     },
     methods: {
       doLogin() {
-        console.log('doLogin');
         this.loggingIn = true;
         const provider = new firebase.auth.GithubAuthProvider();
         firebase.auth().signInWithPopup(provider)
@@ -111,15 +98,13 @@
           });
       },
       doLogout() {
-        console.log('doLogout');
         firebase.auth().signOut();
-        this.$router.push({ name : 'home' });
+        this.$router.go(this.$router.currentRoute);
       },
       goMyPage() {
-        console.log('goMyPage');
         firebase.auth().onAuthStateChanged(user => {
           if (user != null) {
-            this.$router.push({ name : "user", params: { uid: user.uid}});
+            this.$router.push({ name : 'user', params: { uid: user.uid}});
           }
         });
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="users">
-    <h1>This is Users page</h1>
+    <h1>Users</h1>
     <v-row justify="center" align-content="center" class="pt-12">
       <div class="users-list">
         <user-item
@@ -29,8 +29,6 @@
       let self = this;
       db.collection('users').get().then(users => {
         users.forEach(user => {
-          console.log(user.id);
-          console.log(user.data());
           self.users.push({
             id: user.id,
             data: user.data()

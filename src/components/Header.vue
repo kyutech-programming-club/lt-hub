@@ -48,9 +48,9 @@
       return {
         drawer: null,
         items: [
-          { title: "Home", icon: "mdi-home", to: "/" },
-          { title: "Events", icon: "mdi-presentation", to: "/events" },
-          { title: "Users", icon: "mdi-account-group", to: "/users" }
+          { title: 'Home', icon: 'mdi-home', to: '/' },
+          { title: 'Events', icon: 'mdi-presentation', to: '/events' },
+          { title: 'Users', icon: 'mdi-account-group', to: '/users' }
         ]
       };
     }

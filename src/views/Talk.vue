@@ -7,12 +7,15 @@
       最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
       動画URL: {{ talk.data.movieUrl }}<br>
       スライドURL: {{ talk.data.slideUrl }}<br>
+      登壇者：{{ talk.talkUser.data.name }}<br>
+    </div>
+    <div v-if="talkEvent">
       参加イベント：
       <v-btn @click="goEventPage">
         {{ talkEvent.title }}
       </v-btn><br>
-      登壇者：{{ talk.talkUser.data.name }}<br>
     </div>
+
     <div v-if="isTalker">
       <v-expansion-panels>
         <v-expansion-panel>
@@ -65,7 +68,6 @@
         console.log('in user auth');
         let talkerId = await self.getTalk(self);
         await self.checkTalker(talkerId, user.uid);
-        self.getEvent();
       });
 
     },
@@ -98,6 +100,7 @@
       async getTalk(self) {
         if (self.talkData != null) {
           await self.$root.$set(this, 'talk', self.talkData);
+          self.getEvent();
           return self.talkData.talkUser.id
         } else {
           let talkData = {}
@@ -116,6 +119,7 @@
                 self.$root.$set(self, 'talk', talkData);
               });
             });
+          self.getEvent();
           return talkData.talkUser.id
         }
       },

@@ -1,7 +1,7 @@
 <template>
   <div class="events">
     <h1>This is Events page</h1>
-    <v-expansion-panels>
+    <v-expansion-panels v-if="isLogin">
       <v-expansion-panel>
         <v-expansion-panel-header>
           <v-card-title>
@@ -31,6 +31,7 @@
   import NewEventForm from '@/components/NewEventForm.vue'
   import EventItem from '@/components/EventItem.vue'
   import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
 
   export default {
     components: {
@@ -39,7 +40,8 @@
     },
     data() {
       return {
-        events: []
+        events: [],
+        isLogin: false
       }
     },
     created() {
@@ -56,6 +58,11 @@
             }
           );
         });
+      });
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          this.isLogin = true;
+        }
       });
     }
   };

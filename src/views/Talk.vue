@@ -2,7 +2,7 @@
   <div class="talk">
     <div v-if="talkEvent">
       参加イベント：
-      <v-btn color="red" @click="goEventPage">
+      <v-btn color="#CBFFD3" @click="goEventPage">
         {{ talkEvent.title }}
       </v-btn><br>
     </div>
@@ -32,7 +32,7 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-btn @click="deleteTalk">
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
         Delete
       </v-btn>
     </div>

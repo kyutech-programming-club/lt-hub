@@ -14,7 +14,8 @@
             v-model="movieUrl"
             label="動画URL" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="createTalk">
             トーク作成

@@ -13,7 +13,6 @@
       </div>
     </div>
     <div v-if="current">
-      <b>This is My Page</b>
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>

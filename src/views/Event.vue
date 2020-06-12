@@ -36,7 +36,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <div v-else>
+    <div v-else-if="currentUserId.lenth">
       <v-btn @click="participate">
         参加
       </v-btn>

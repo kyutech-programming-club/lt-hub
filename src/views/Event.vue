@@ -13,6 +13,27 @@
         {{ author.data.name }}
       </v-btn>
     </div>
+    <div v-if="isAuthor">
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <v-card-title>
+              <v-toolbar :flat="true">
+                <v-toolbar-title class="mx-autoi">
+                  Edit
+                </v-toolbar-title>
+              </v-toolbar>
+            </v-card-title>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <edit-event-form :event="event"/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <v-btn @click="deleteEvent">
+        Delete
+      </v-btn>
+    </div>
     <div v-if="participated">
       <v-btn @click="cancelParticipate">
         参加取り消し
@@ -40,27 +61,7 @@
         参加
       </v-btn>
     </div>
-    <div v-if="isAuthor">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <edit-event-form :event="event"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-btn @click="deleteEvent">
-        Delete
-      </v-btn>
-    </div>
+    
     <div class="talks-list">
       <talk-item
         v-for="talk in talks"

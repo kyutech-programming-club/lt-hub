@@ -30,12 +30,12 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-btn @click="deleteEvent">
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
         Delete
       </v-btn>
     </div>
     <div v-if="participated">
-      <v-btn @click="cancelParticipate">
+      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
         参加取り消し
       </v-btn>
       <v-expansion-panels>
@@ -57,7 +57,10 @@
       </v-expansion-panels>
     </div>
     <div v-else-if="currentUserId">
-      <v-btn @click="participate">
+      <v-btn
+        class="white--text font-weight-bold"
+        color="#009eff"
+        @click="participate">
         参加
       </v-btn>
     </div>

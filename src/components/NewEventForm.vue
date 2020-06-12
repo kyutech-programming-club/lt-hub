@@ -26,7 +26,8 @@
             v-model="place"
             label="会場" />
           <v-btn
-            color="blue"
+            class="white--text font-weight-bold"
+            color="#009eff"
             :x-large="true"
             @click="createEvent">
             イベント作成

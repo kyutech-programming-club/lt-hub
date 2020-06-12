@@ -2,7 +2,7 @@
   <div class="talk">
     <div v-if="talkEvent">
       参加イベント：
-      <v-btn @click="goEventPage">
+      <v-btn color="red" @click="goEventPage">
         {{ talkEvent.title }}
       </v-btn><br>
     </div>

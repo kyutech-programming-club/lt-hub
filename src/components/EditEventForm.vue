@@ -80,7 +80,6 @@
     },
     methods: {
       updateEvent() {
-        console.log('update event...');
         if (this.isValid) {
           db.collection('events')
             .doc(this.event.id)

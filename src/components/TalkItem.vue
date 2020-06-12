@@ -18,7 +18,6 @@
     },
     methods: {
       goTalkPage() {
-        console.log('goTalkPage');
         this.$router.push({ name : 'talk', params: { id: this.talk.id, talkData: this.talk }});
       }
     }

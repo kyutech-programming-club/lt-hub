@@ -55,7 +55,6 @@
     },
     methods: {
       createTalk() {
-        console.log('Creating event...');
         if (this.isValid) {
           let self = this;
           firebase.auth().onAuthStateChanged(async(user) => {

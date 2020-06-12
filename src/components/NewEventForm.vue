@@ -75,7 +75,6 @@
     },
     methods: {
       createEvent() {
-        console.log('Creating event...');
         if (this.isValid) {
           firebase.auth().onAuthStateChanged(user => {
             db.collection('events')

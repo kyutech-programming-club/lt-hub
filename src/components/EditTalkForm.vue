@@ -55,12 +55,10 @@
       }
     },
     created() {
-      console.log('I am edittalkform');
       console.dir(this.talk);
     },
     methods: {
       updateTalk() {
-        console.log('update talk...');
         if (this.isValid) {
           db.collection('talks')
             .doc(this.talk.id)

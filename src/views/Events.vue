@@ -49,8 +49,6 @@
       let self = this;
       db.collection('events').orderBy('start').get().then(events => {
         events.forEach(event => {
-          console.log(event.id);
-          console.log(event.data());
           self.events.push(
             {
               id: event.id,

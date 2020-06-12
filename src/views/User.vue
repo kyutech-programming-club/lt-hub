@@ -114,7 +114,6 @@
     },
     methods: {
       update() {
-        console.log('update...');
         if (this.isValid) {
           db.collection('users')
             .doc(this.$route.params['uid'])

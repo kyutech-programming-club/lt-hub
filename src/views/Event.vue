@@ -243,7 +243,6 @@
               participants: firebase.firestore.FieldValue.arrayRemove(userRef)
             });
             alert('次はないですよ');
-            console.log('participants canceled');
             this.$router.go(this.$router.currentRoute);
           } catch (err) {
             console.log(err);

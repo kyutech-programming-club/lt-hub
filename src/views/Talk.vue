@@ -65,7 +65,6 @@
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-        console.log('in user auth');
         let talkerId = await self.getTalk(self);
         await self.checkTalker(talkerId, user.uid);
       });
@@ -124,14 +123,11 @@
         }
       },
       checkTalker(talkerId, userId) {
-        console.log(talkerId);
-        console.log(userId);
         if (talkerId == userId) {
           this.isTalker = true;
         }
       },
       async getEvent() {
-        console.log('goEvent')
         let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
         this.talkEvent = {
           id: event.id,
@@ -141,8 +137,6 @@
       async deleteTalk() {
         var res = confirm('ほんとに登壇を取りやめますか？？？？？');
         if (res) {
-          console.log('deleteTalk');
-
           let self = this;
           db.collection('talks')
             .doc(this.$route.params['id'])

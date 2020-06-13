@@ -15,15 +15,18 @@
             </v-avatar>
 
             <v-list-item-content>
-              <v-list-item-subtitle class="text--primary subheading">{{comment.content}}</v-list-item-subtitle>
+              <v-list-title>{{comment.content}}</v-list-title>
               <v-list-item-subtitle>
                 {{comment.createdAt.toDate().toLocaleString()}}
-                <v-icon color="red" @click="deleteComment(comment.id)" small>delete</v-icon>
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
             </v-list-item-action>
+              <v-icon v-if="currentUserId == comment.userRef.id" color="red" @click="deleteComment(comment.id)">
+                mdi-delete
+              </v-icon>
           </v-list-item>
+
           <v-divider :key="comment.id"></v-divider>
         </template>
       </v-list>
@@ -33,6 +36,8 @@
 
 <script>
   import { db } from '@/firebase/firestore.js';
+  import firebase from 'firebase';
+
   export default {
     name: "ChatBoard",
     props: {
@@ -42,8 +47,17 @@
     },
     data: () => ({
       comments: [],
-      scrollInvoked: 0
+      scrollInvoked: 0,
+      currentUserId: ''
     }),
+    created() {
+      let self = this;
+      firebase.auth().onAuthStateChanged(user => {
+        if (user != null) {
+          self.currentUserId = user.uid;
+        }
+      });
+    },
     firestore() {
       return {
         // firestoreのcommentsコレクションを参照

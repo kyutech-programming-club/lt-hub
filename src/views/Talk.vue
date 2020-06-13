@@ -36,11 +36,17 @@
         Delete
       </v-btn>
     </div>
+
+    <ChatBoard/>
+    <ChatForm/>
+
   </div>
 </template>
 
 <script>
   import EditTalkForm from '@/components/EditTalkForm.vue';
+  import ChatBoard from '@/components/ChatBoard'
+  import ChatForm from '@/components/Form'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
 
@@ -48,6 +54,8 @@
     name: 'Talk',
     components: {
       EditTalkForm,
+      ChatBoard,
+      ChatForm
     },
     props: {
       talkData: {
@@ -64,10 +72,10 @@
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-          let talkerId = await self.getTalk(self);
-          if (user) {
-            await self.checkTalker(talkerId, user.uid);
-          }
+        let talkerId = await self.getTalk(self);
+        if (user) {
+          await self.checkTalker(talkerId, user.uid);
+        }
       });
 
     },

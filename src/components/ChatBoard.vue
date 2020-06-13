@@ -5,11 +5,10 @@
       <template v-for="(comment, index) in comments">
         <v-list-item
           :key="index"
-          avatar
         >
-          <v-list-item-avatar>
+          <v-avatar @click="goUserPage(comment.userRef)">
             <img :src="comment.userRef.photoURL">
-          </v-list-item-avatar>
+          </v-avatar>
 
           <v-list-item-content>
             <v-list-item-subtitle class="text--primary subheading">{{comment.content}}</v-list-item-subtitle>
@@ -52,6 +51,9 @@
         }
         db.collection('talks').doc(this.talkId).collection('comments').doc(id).delete()
       },
+      goUserPage(userRef) {
+        this.$router.push({ name : 'user', params: { uid: userRef.id}});
+      }
     },
   }
 </script>

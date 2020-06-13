@@ -4,18 +4,26 @@
       <v-container>
         <h2>コメント追加</h2>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-          <v-text-field
-            v-model="inputComment"
-            :rules="commentRules"
-            label="コメント"
-            required
-          ></v-text-field>
-          <v-btn
-            :disabled="!valid"
-            @click="addComment"
-          >
-            投稿する
-          </v-btn>
+          <v-row no-gutters>
+            <v-col
+              :cols="11">
+              <v-text-field
+                v-model="inputComment"
+                :rules="commentRules"
+                label="コメント"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col
+              :cols="1">
+              <v-btn
+                :disabled="!valid"
+                @click="addComment"
+              >
+                <v-icon>mdi-send</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-form>
       </v-container>
     </v-card>

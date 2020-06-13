@@ -36,10 +36,11 @@
         Delete
       </v-btn>
     </div>
-
-    <ChatBoard/>
-    <ChatForm/>
-
+    
+    <div v-if="talk.id">
+      <ChatBoard :talkId="talk.id"/>
+      <ChatForm :talkId="talk.id"/>
+    </div>
   </div>
 </template>
 

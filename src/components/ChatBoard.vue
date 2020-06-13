@@ -31,13 +31,21 @@
   import { db } from '@/firebase/firestore.js';
   export default {
     name: "ChatBoard",
+    props: {
+      talkId: {
+        type: String
+      }
+    },
     data: () => ({
       comments: [],
     }),
+    created() {
+      console.log("AAA : " + this.talkId);
+    },
     firestore() {
       return {
         // firestoreのcommentsコレクションを参照
-        comments: db.collection('comments').orderBy('createdAt')
+        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdAt')
 
       }
     },
@@ -46,7 +54,7 @@
         if (!confirm('コメントを削除してよろしいですか？')) {
           return
         }
-        db.collection('comments').doc(id).delete()
+        db.collection('talks').doc(this.talkId).collection('comments').doc(id).delete()
       },
     },
   }

@@ -42,6 +42,11 @@
 
   export default {
     name: 'CreateForm',
+    props: {
+      talkId: {
+        type: String
+      }
+    },
     data: () => ({
       // form入力データ
       inputComment: "",
@@ -58,7 +63,7 @@
       addComment() {
         const now = new Date()
         // コメントをFirestoreへ登録
-        db.collection('comments').add({
+        db.collection('talks').doc(this.talkId).collection('comments').add({
           content: this.inputComment,
           avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
           createdAt: now

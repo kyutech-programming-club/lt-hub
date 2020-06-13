@@ -17,7 +17,7 @@
             {{comment.userRef.name}}
 
             <v-list-item-content>
-              <v-list-title>{{comment.content}}</v-list-title>
+              <v-list-item-title>{{comment.content}}</v-list-item-title>
               <v-list-item-subtitle>
                 {{comment.createdAt.toDate().toLocaleString()}}
               </v-list-item-subtitle>

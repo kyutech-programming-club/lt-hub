@@ -75,7 +75,7 @@
       },
     },
     methods: {
-      createEvent() {
+      async createEvent() {
         if (this.isValid) {
           firebase.auth().onAuthStateChanged(user => {
             db.collection('events')
@@ -83,7 +83,7 @@
               .set({
                 title: this.title,
                 description: this.description,
-                author: user.uid,
+                author: db.collection('users').doc(user.uid),
                 start: this.start,
                 end: this.end,
                 place: this.place,
@@ -93,7 +93,7 @@
               })
               .then(() => {
                 console.log(`Event ${this.title} was created.`);
-                this.$router.go(this.$router.currentRoute);
+                //this.$router.go(this.$router.currentRoute);
               })
               .catch(err => {
                 console.error(`Error occurd in createEvent: ${err}`);
@@ -109,7 +109,7 @@
         if (!spaceRemoved)
           return 'Required.';
         return true;
-      }
+      },
     }
   };
 </script>

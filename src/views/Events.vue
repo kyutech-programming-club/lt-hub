@@ -45,23 +45,16 @@
       }
     },
     created() {
-      console.log('created...');
-      let self = this;
-      db.collection('events').orderBy('start').get().then(events => {
-        events.forEach(event => {
-          self.events.push(
-            {
-              id: event.id,
-              data: event.data()
-            }
-          );
-        });
-      });
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           this.isLogin = true;
         }
       });
+    },
+    firestore () {
+      return {
+        events: db.collection('events').orderBy('createdTime', 'desc')
+      }
     }
   };
 </script>

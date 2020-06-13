@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-card>
+    <v-card
+    color="blue-grey lighten-5"
+    :hover="true"
+    >
       <v-container>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
           <v-row no-gutters>

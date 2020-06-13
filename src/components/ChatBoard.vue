@@ -39,7 +39,7 @@
   import firebase from 'firebase';
 
   export default {
-    name: "ChatBoard",
+    name: 'ChatBoard',
     props: {
       talkId: {
         type: String

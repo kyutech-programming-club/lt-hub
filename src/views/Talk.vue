@@ -48,8 +48,8 @@
 
 <script>
   import EditTalkForm from '@/components/EditTalkForm.vue';
-  import ChatBoard from '@/components/ChatBoard'
-  import ChatForm from '@/components/Form'
+  import ChatBoard from '@/components/ChatBoard.vue'
+  import ChatForm from '@/components/Form.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
 

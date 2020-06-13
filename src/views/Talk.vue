@@ -38,8 +38,10 @@
     </div>
     
     <div v-if="talk.id">
+      <div v-if="currentUserId">
+        <ChatForm :talkId="talk.id" :userId="currentUserId"/>
+      </div>
       <ChatBoard :talkId="talk.id"/>
-      <ChatForm :talkId="talk.id"/>
     </div>
   </div>
 </template>
@@ -66,6 +68,7 @@
     data() {
       return {
         talk: Object,
+        currentUserId: '',
         isTalker: false,
         talkEvent: {}
       }
@@ -75,6 +78,7 @@
       firebase.auth().onAuthStateChanged(async(user) => {
         let talkerId = await self.getTalk(self);
         if (user) {
+          self.currentUserId = user.uid;
           await self.checkTalker(talkerId, user.uid);
         }
       });

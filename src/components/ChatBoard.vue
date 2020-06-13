@@ -8,7 +8,7 @@
           avatar
         >
           <v-list-item-avatar>
-            <img :src="comment.avatar">
+            <img :src="comment.userRef.photoURL">
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -39,14 +39,10 @@
     data: () => ({
       comments: [],
     }),
-    created() {
-      console.log("AAA : " + this.talkId);
-    },
     firestore() {
       return {
         // firestoreのcommentsコレクションを参照
-        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdAt')
-
+        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdAt', 'desc')
       }
     },
     methods: {

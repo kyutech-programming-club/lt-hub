@@ -45,6 +45,9 @@
     props: {
       talkId: {
         type: String
+      },
+      userId: {
+        type: String
       }
     },
     data: () => ({
@@ -60,12 +63,13 @@
     }),
     methods: {
       // コメント追加
-      addComment() {
+      async addComment() {
+        let userRef = await db.collection('users').doc(this.userId);
         const now = new Date()
         // コメントをFirestoreへ登録
         db.collection('talks').doc(this.talkId).collection('comments').add({
           content: this.inputComment,
-          avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
+          userRef: userRef,
           createdAt: now
         })
         // ダイアログを閉じる

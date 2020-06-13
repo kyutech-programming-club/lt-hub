@@ -26,8 +26,7 @@
              @click="doLogin"
              outlined
              dark>
-        <v-icon dark left>mdi-github</v-icon>
-        Sign in with GitHub
+        <v-img src="@/assets/google-logo.png" left/>
       </v-btn>
     </div>
   </div>
@@ -91,7 +90,8 @@
     methods: {
       doLogin() {
         this.loggingIn = true;
-        const provider = new firebase.auth.GithubAuthProvider();
+        // const provider = new firebase.auth.GithubAuthProvider();
+        const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
           .finally(() => {
             this.loggingIn = false;

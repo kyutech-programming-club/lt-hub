@@ -9,7 +9,7 @@
         <event-item
           v-for="event in joinEvents"
           :key="event.id"
-          :event="event" />
+          :event="event.data" />
       </div>
     </div>
     <div v-if="current">

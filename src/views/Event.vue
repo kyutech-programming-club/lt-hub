@@ -12,29 +12,30 @@
         責任者：
         <user-item-small
           :user = "event.author" />
+        <div v-if="event.author.id==currentUserId">
+          <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header>
+                <v-card-title>
+                  <v-toolbar :flat="true">
+                    <v-toolbar-title class="mx-autoi">
+                      Edit
+                    </v-toolbar-title>
+                  </v-toolbar>
+                </v-card-title>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <edit-event-form :event="event"/>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
+            Delete
+          </v-btn>
+        </div>
       </div>
     </div>
-    <!--    <div v-if="isAuthor">-->
-    <!--      <v-expansion-panels>-->
-    <!--        <v-expansion-panel>-->
-    <!--          <v-expansion-panel-header>-->
-    <!--            <v-card-title>-->
-    <!--              <v-toolbar :flat="true">-->
-    <!--                <v-toolbar-title class="mx-autoi">-->
-    <!--                  Edit-->
-    <!--                </v-toolbar-title>-->
-    <!--              </v-toolbar>-->
-    <!--            </v-card-title>-->
-    <!--          </v-expansion-panel-header>-->
-    <!--          <v-expansion-panel-content>-->
-    <!--            <edit-event-form :event="event"/>-->
-    <!--          </v-expansion-panel-content>-->
-    <!--        </v-expansion-panel>-->
-    <!--      </v-expansion-panels>-->
-    <!--      <v-btn class="white&#45;&#45;text font-weight-bold" color="#ff4b4b" @click="deleteEvent">-->
-    <!--        Delete-->
-    <!--      </v-btn>-->
-    <!--    </div>-->
+
     <!--    <div v-if="participated">-->
     <!--      <v-btn class="white&#45;&#45;text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">-->
     <!--        参加取り消し-->
@@ -84,8 +85,8 @@
 </template>
 
 <script>
-  // import firebase from 'firebase'
-  // import EditEventForm from '@/components/EditEventForm.vue'
+  import firebase from 'firebase'
+  import EditEventForm from '@/components/EditEventForm.vue'
   // import NewTalkForm from '@/components/NewTalkForm.vue'
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
@@ -94,7 +95,7 @@
   export default {
     name: 'Event',
     components: {
-      // EditEventForm,
+      EditEventForm,
       UserItemSmall,
       TalkItem,
       // NewTalkForm,
@@ -112,13 +113,13 @@
     },
     created() {
       // console.dir(this.event);
-      // let self = this;
+      let self = this;
       // console.log('Event Page');
-      // firebase.auth().onAuthStateChanged(user => {
-      //   if (user != null) {
-      //     self.currentUserId = user.uid;
-      //   }
-      // });
+      firebase.auth().onAuthStateChanged(user => {
+        if (user != null) {
+          self.currentUserId = user.uid;
+        }
+      });
       // let eventRef = db.collection('events').doc(this.$route.params['id']);
       // eventRef
       //   .get()
@@ -193,7 +194,7 @@
         event: db.collection('events').doc(this.$route.params['id']),
         talks: db.collection('talks')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id']))
-          // .orderBy('createdTime', 'desc')
+
       }
     },
     methods: {
@@ -201,30 +202,30 @@
       //     console.log('goUserPage');
       //     this.$router.push({ name : 'user', params: { uid: this.author.id}});
       //   },
-      //   async deleteEvent() {
-      //     var res = confirm('ほんとにイベントを取りやめますか？？？？？');
-      //     if (res) {
-      //       console.log('deleteEvent');
-      //       let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
-      //
-      //       await this.participants.forEach( user => {
-      //         db.collection('users')
-      //           .doc(user.id)
-      //           .update({
-      //             joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-      //           })
-      //       });
-      //       db.collection('events')
-      //         .doc(this.$route.params['id'])
-      //         .delete()
-      //         .then(() => {
-      //           this.$router.push({ name : 'events'});
-      //         })
-      //         .catch(err => {
-      //           console.error('Error deleting event data: ', err);
-      //         });
-      //     }
-      //   },
+      async deleteEvent() {
+        var res = confirm('ほんとにイベントを取りやめますか？？？？？');
+        if (res) {
+          console.log('deleteEvent');
+          let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
+
+          await this.participants.forEach( user => {
+            db.collection('users')
+              .doc(user.id)
+              .update({
+                joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+              })
+          });
+          db.collection('events')
+            .doc(this.$route.params['id'])
+            .delete()
+            .then(() => {
+              this.$router.push({ name : 'events'});
+            })
+            .catch(err => {
+              console.error('Error deleting event data: ', err);
+            });
+        }
+      },
       //   async participate() {
       //     try {
       //       let self = this;

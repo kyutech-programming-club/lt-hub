@@ -8,6 +8,7 @@
             <v-col
               :cols="11">
               <v-text-field
+                @keydown.enter="addComment"
                 v-model="inputComment"
                 :rules="commentRules"
                 label="コメント"
@@ -16,12 +17,12 @@
             </v-col>
             <v-col
               :cols="1">
-              <v-btn
+              <v-icon
+                class="mt-5"
+                color="blue"
                 :disabled="!valid"
                 @click="addComment"
-              >
-                <v-icon>mdi-send</v-icon>
-              </v-btn>
+              >mdi-send</v-icon>
             </v-col>
           </v-row>
         </v-form>

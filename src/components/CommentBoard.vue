@@ -41,7 +41,7 @@
   import firebase from 'firebase';
 
   export default {
-    name: 'ChatBoard',
+    name: 'CommentBoard',
     props: {
       talkId: {
         type: String

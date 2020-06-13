@@ -9,9 +9,8 @@
     </div>
     <div v-if="author.id">
       責任者：
-      <v-btn @click="goUserPage">
-        {{ author.data.name }}
-      </v-btn>
+      <user-item-small
+      :user = "author" />
     </div>
     <div v-if="isAuthor">
       <v-expansion-panels>
@@ -74,7 +73,7 @@
     </div>
     <div v-if="participants.length" class="users-list">
       参加者リスト<br>
-      <user-item
+      <user-item-small
         v-for="user in participants"
         :key="user.id"
         :user="user" />
@@ -86,7 +85,7 @@
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
   import NewTalkForm from '@/components/NewTalkForm.vue'
-  import UserItem from '@/components/UserItem.vue'
+  import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
 
@@ -94,7 +93,7 @@
     name: 'Event',
     components: {
       EditEventForm,
-      UserItem,
+      UserItemSmall,
       TalkItem,
       NewTalkForm,
     },

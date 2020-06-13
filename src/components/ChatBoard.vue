@@ -10,9 +10,11 @@
           <v-list-item
             :key="index"
           >
-            <v-avatar @click="goUserPage(comment.userRef)">
+            <v-list-item-avatar @click="goUserPage(comment.userRef)">
               <img :src="comment.userRef.photoURL">
-            </v-avatar>
+            </v-list-item-avatar>
+
+            {{comment.userRef.name}}
 
             <v-list-item-content>
               <v-list-title>{{comment.content}}</v-list-title>

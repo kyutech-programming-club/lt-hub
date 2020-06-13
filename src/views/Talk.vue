@@ -12,7 +12,9 @@
       最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
       動画URL: {{ talk.data.movieUrl }}<br>
       スライドURL: {{ talk.data.slideUrl }}<br>
-      登壇者：{{ talk.talkUser.data.name }}<br>
+      登壇者：
+      <user-item-small
+      :user = "talk.talkUser" />
     </div>
 
     <div v-if="isTalker">
@@ -52,10 +54,12 @@
   import ChatForm from '@/components/Form.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
+  import UserItemSmall from "../components/UserItemSmall";
 
   export default {
     name: 'Talk',
     components: {
+      UserItemSmall,
       EditTalkForm,
       ChatBoard,
       ChatForm

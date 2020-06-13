@@ -1,11 +1,11 @@
 <template>
   <div class="talk-item">
     <v-card class="pa-4 ma-6" color="#C2EEFF" @click="goTalkPage" >
-      <v-card-title>{{talk.data.title}}</v-card-title>
-      <v-card-text>
+      <v-card-title>{{talk.title}}</v-card-title>
+      <v-card-text v-if="talk.userRef.id">
         登壇者：
         <user-item-small
-        :user = "talk.talkUser" />
+        :user = "talk.userRef" />
       </v-card-text>
     </v-card>
   </div>

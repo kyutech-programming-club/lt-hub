@@ -18,7 +18,7 @@
     },
     methods: {
       goEventPage() {
-        this.$router.push({ name : 'event', params: { id: this.event.id}});
+        this.$router.push({ name : 'event', params: { id: this.event.id, event: this.event}});
       }
     }
   }

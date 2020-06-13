@@ -1,8 +1,6 @@
 <template>
   <div class="github-auth">
     <div v-if="user.name" key="login">
-      <!-- <v-img :src="user.photoURL" /><br>
-      <button @click="goMyPage">[{{ user.name }}](go to MyPage)</button><br> -->
 
       <v-avatar @click="goMyPage">
         <img :src="user.photoURL" />

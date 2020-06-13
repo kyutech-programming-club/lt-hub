@@ -13,22 +13,7 @@
         <user-item-small
           :user = "event.author" />
         <div v-if="event.author.id==currentUserId">
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                <v-card-title>
-                  <v-toolbar :flat="true">
-                    <v-toolbar-title class="mx-autoi">
-                      Edit
-                    </v-toolbar-title>
-                  </v-toolbar>
-                </v-card-title>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <edit-event-form :event="event"/>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          <edit-event-form :event="event"/>
           <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
             Delete
           </v-btn>

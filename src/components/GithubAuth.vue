@@ -1,109 +1,53 @@
 <template>
   <div class="github-auth">
-    <div v-if="user.name" key="login">
-
-      <v-avatar @click="goMyPage">
-        <img :src="user.photoURL" />
-      </v-avatar>
-      <v-btn class="ma-2"
-             style="text-transform: none"
-             color="white"
-             @click="doLogout"
-             outlined
-             dark>
-        <v-icon dark left>mdi-logout</v-icon>
-        Logout
-      </v-btn>
+    <div v-if="user.uid">
+      <v-btn @click="logout">LOGOUT</v-btn>
     </div>
-    <!-- 未ログイン時にはログインボタンを表示 -->
-    <div v-else key="logout">
-      <v-btn class="ma-2"
-             style="text-transform: none"
-             color="white"
-             :loading="loggingIn"
-             @click="doLogin"
-             outlined
-             dark>
-        <v-icon dark left>mdi-github</v-icon>
-        Sign in with GitHub
-      </v-btn>
+    <div v-else>
+      <div id="firebaseui-auth-container"></div>
     </div>
   </div>
 </template>
 
 <script>
   import firebase from 'firebase'
-  import { db } from '@/firebase/firestore.js'
+  import firebaseui from 'firebaseui-ja'
+  import 'firebaseui/dist/firebaseui.css'
 
   export default {
-    name: 'GithubAuth',
     data() {
       return {
-        user: {},
-        loggingIn: false,
+        user: {}
       }
     },
-    created() {
-      let self = this;
-
+    created(){
       firebase.auth().onAuthStateChanged(user => {
-
-        if (user != null) {
-          db.collection('users')
-            .doc(user.uid)
-            .get()
-            .then(dbUser => {
-              if (dbUser.exists) {
-                self.user = dbUser.data();
-              } else {
-                db.collection('users')
-                  .doc(user.uid)
-                  .set({
-                    name: user.displayName || 'ななっしー',
-                    photoURL: user.photoURL,
-                    joinEvents: [],
-                    createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
-                  })
-                  .then(() => {
-                    db.collection('users')
-                      .doc(user.uid)
-                      .get()
-                      .then(dbUser => {
-                        self.user = dbUser.data();
-                      });
-                  })
-                  .catch(err => {
-                    console.error('Error Creating new user: ', err);
-                  });
-              }
-            })
-            .catch(err => {
-              console.error('Error fetching user data: ', err);
-            });
-        } else {
-          self.user = {};
+        if (user) {
+          this.user = user
         }
-      })
+      });
+    },
+    mounted() {
+      var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start('#firebaseui-auth-container',{
+        // callbacks: {
+        //   signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        //     console.log(authResult);
+        //     console.log(redirectUrl);
+        //     return false;
+        //   }
+        // },
+        
+        signInOptions: [
+          firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        ]
+      });
     },
     methods: {
-      doLogin() {
-        this.loggingIn = true;
-        const provider = new firebase.auth.GithubAuthProvider();
-        firebase.auth().signInWithPopup(provider)
-          .finally(() => {
-            this.loggingIn = false;
-          });
-      },
-      doLogout() {
-        firebase.auth().signOut();
-        this.$router.go(this.$router.currentRoute);
-      },
-      goMyPage() {
-        firebase.auth().onAuthStateChanged(user => {
-          if (user != null) {
-            this.$router.push({ name : 'user', params: { uid: user.uid}});
-          }
+      logout() {
+        firebase.auth().signOut().then(() => {
+          console.log("Sign out.");
+          this.$router.go(this.$router.currentRoute);
         });
       }
     }

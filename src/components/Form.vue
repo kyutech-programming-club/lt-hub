@@ -2,7 +2,6 @@
   <div>
     <v-card>
       <v-container>
-        <h2>コメント追加</h2>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
           <v-row no-gutters>
             <v-col

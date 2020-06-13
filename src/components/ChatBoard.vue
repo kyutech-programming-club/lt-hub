@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Chat Board !!</h1>
     <v-card
       v-scroll.self="onScroll"
       class="overflow-y-auto"

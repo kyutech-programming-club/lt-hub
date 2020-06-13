@@ -36,11 +36,20 @@
         Delete
       </v-btn>
     </div>
+    
+    <div v-if="talk.id">
+      <div v-if="currentUserId">
+        <ChatForm :talkId="talk.id" :userId="currentUserId"/>
+      </div>
+      <ChatBoard :talkId="talk.id"/>
+    </div>
   </div>
 </template>
 
 <script>
   import EditTalkForm from '@/components/EditTalkForm.vue';
+  import ChatBoard from '@/components/ChatBoard.vue'
+  import ChatForm from '@/components/Form.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
 
@@ -48,6 +57,8 @@
     name: 'Talk',
     components: {
       EditTalkForm,
+      ChatBoard,
+      ChatForm
     },
     props: {
       talkData: {
@@ -57,6 +68,7 @@
     data() {
       return {
         talk: Object,
+        currentUserId: '',
         isTalker: false,
         talkEvent: {}
       }
@@ -64,10 +76,11 @@
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-          let talkerId = await self.getTalk(self);
-          if (user) {
-            await self.checkTalker(talkerId, user.uid);
-          }
+        let talkerId = await self.getTalk(self);
+        if (user) {
+          self.currentUserId = user.uid;
+          await self.checkTalker(talkerId, user.uid);
+        }
       });
 
     },

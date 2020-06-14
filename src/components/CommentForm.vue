@@ -1,18 +1,18 @@
 <template>
   <div>
     <v-card
-    color="blue-grey lighten-5"
-    :hover="true"
+      color="blue-grey lighten-5"
+      :hover="true"
     >
       <v-container>
-        <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
+        <v-form ref="form" v-model="isValid" lazy-validation @submit.prevent>
           <v-row no-gutters>
             <v-col
               :cols="11">
               <v-text-field
                 @keydown.enter="addComment"
                 v-model="inputComment"
-                :rules="commentRules"
+                :rules="[requiredNotEmpty]"
                 label="コメント"
                 required
               ></v-text-field>
@@ -22,7 +22,7 @@
               <v-icon
                 class="mt-5"
                 color="blue"
-                :disabled="!valid"
+                :disabled="!isValid"
                 @click="addComment"
               >mdi-send</v-icon>
             </v-col>
@@ -52,24 +52,37 @@
       // form入力データ
       inputComment: "",
       // バリデーション
-      valid: true,
-      commentRules: [
-        v => !!v || 'コメントは必須項目です',
-      ],
+      isValid: false,
       // Formダイアログの表示可否
       displayForm: false,
     }),
     methods: {
       // コメント追加
       async addComment() {
-        let userRef = await db.collection('users').doc(this.userId);
-        // コメントをFirestoreへ登録
-        db.collection('talks').doc(this.talkId).collection('comments').add({
-          content: this.inputComment,
-          userRef: userRef,
-          createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-        this.clear();
+        if (this.isValid) {
+          let userRef = await db.collection('users').doc(this.userId);
+          // コメントをFirestoreへ登録
+          db.collection('talks').doc(this.talkId).collection('comments').add({
+            content: this.inputComment,
+            userRef: userRef,
+            createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+          })
+          this.clear();
+        }
+      },
+      requiredNotEmpty(value) {
+        if (value == null) {
+          this.isValid = false;
+          return 'Required.';
+        }
+        //イベント名のみ入力必須項目
+        const spaceRemoved = value.replace(/\s/g, '');
+        if (!spaceRemoved) {
+          this.isValid = false;
+          return 'Required.';
+        }
+        this.isValid = true;
+        return true;
       },
       // Formの初期化
       clear() {

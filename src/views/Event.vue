@@ -59,13 +59,13 @@
         :talk="talk"
         :talkUser="talk.talkUser"/>
     </div>
-    <!--    <div v-if="participants.length" class="users-list">-->
-    <!--      参加者リスト<br>-->
-    <!--      <user-item-small-->
-    <!--        v-for="user in participants"-->
-    <!--        :key="user.id"-->
-    <!--        :user="user" />-->
-    <!--    </div>-->
+    <div v-if="participants" class="users-list">
+      参加者リスト<br>
+      <participate-item
+        v-for="user in participants"
+        :key="user.id"
+        :user="user" />
+    </div>
   </div>
 </template>
 
@@ -73,6 +73,7 @@
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
   // import NewTalkForm from '@/components/NewTalkForm.vue'
+  import ParticipateItem from '@/components/ParticipateItem.vue'
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
@@ -80,6 +81,7 @@
   export default {
     name: 'Event',
     components: {
+      ParticipateItem,
       EditEventForm,
       UserItemSmall,
       TalkItem,

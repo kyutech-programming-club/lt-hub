@@ -21,7 +21,7 @@ const routes = [
     component: Events
   },
   {
-    path: '/events/:id/',
+    path: '/events/:id',
     name: 'event',
     component: Event
   },
@@ -31,14 +31,13 @@ const routes = [
     component: Users
   },
   {
-    path: '/users/:uid/',
+    path: '/users/:uid',
     name: 'user',
     component: User
   },
   {
     path: '/talks/:id',
     name: 'talk',
-    props: true, // paramsの値が遷移先のpropsとして使える
     component: Talk
   }
 ]

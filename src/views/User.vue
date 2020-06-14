@@ -65,6 +65,14 @@
       name() {
         console.log('name: '+this.name);
       },
+      $route (to) {
+        db.collection('users')
+          .doc(to.params.uid)
+          .get()
+          .then(user => {
+            this.user = user.data()
+          })
+      }
     },
     firestore() {
       return {
@@ -126,7 +134,7 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
-      }
+      },
     }
   }
 </script>

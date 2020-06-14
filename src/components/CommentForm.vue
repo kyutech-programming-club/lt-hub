@@ -35,6 +35,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase'
   import {db} from '@/firebase/firestore.js';
 
   export default {
@@ -62,12 +63,11 @@
       // コメント追加
       async addComment() {
         let userRef = await db.collection('users').doc(this.userId);
-        const now = new Date()
         // コメントをFirestoreへ登録
         db.collection('talks').doc(this.talkId).collection('comments').add({
           content: this.inputComment,
           userRef: userRef,
-          createdAt: now
+          createdTime: firebase.firestore.FieldValue.serverTimestamp(),
         })
         this.clear();
       },

@@ -3,10 +3,12 @@
     <h1>Events</h1>
     <new-event-form v-if="isLogin"/>
     <div class="events-list">
-      <event-item
-        v-for="event in events"
-        :key="event.id"
-        :event="event" />
+      <div v-if="events.length">
+        <event-item
+          v-for="event in events"
+          :key="event.id"
+          :event="event" />
+      </div>
     </div>
   </div>
 </template>
@@ -37,7 +39,7 @@
     },
     firestore () {
       return {
-        events: db.collection('events').orderBy('createdTime', 'desc')
+        events: db.collection('events').orderBy('start')
       }
     }
   };

@@ -174,13 +174,16 @@
         modal1: false,
         modal2: false,
         modal3: false,
-        startTime: null,
-        endTime: null,
+        startTime: '',
+        endTime: '',
         startDate: '',
         endDate: '',
         minTime: '',
         maxTime: '',
       };
+    },
+    created() {
+      this.startDate = this.getStringFromDate(new Date());
     },
     watch: {
       title() {
@@ -220,6 +223,14 @@
       startDate() {
         console.log('startDate: '+this.startDate);
         this.endDate = this.startDate;
+        if (this.startTime == '') {
+          this.startTime = '19:00'
+          this.endTime = '21:00'
+        }
+        if (this.startDate == '') {
+          this.startTime = ''
+          this.endTime = ''
+        }
         if (this.endTime < this.startTime) {
           this.endTime = '';
           this.minTime = this.startTime
@@ -238,7 +249,6 @@
                 start: firebase.firestore.Timestamp.fromDate(new Date(this.startDate.split('-').join('/') + ' ' + this.startTime)),
                 end: firebase.firestore.Timestamp.fromDate(new Date(this.endDate.split('-').join('/') + ' ' + this.endTime)),
                 place: this.place,
-                participants: [],
                 createdTime: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
               })
@@ -253,7 +263,6 @@
           });
         } else {
           console.log('Error occurred on validation.');
-          this.clear();
         }
       },
       requiredNotEmpty(value) {
@@ -275,10 +284,10 @@
         this.$refs.title.reset()
         this.title = '';
         this.description = '';
-        this.startDate = '';
-        this.endDate = '';
-        this.startTime = '';
-        this.endTime = '';
+        this.startDate = this.getStringFromDate(new Date());
+        this.endDate = this.getStringFromDate(new Date());
+        this.startTime = '19:00';
+        this.endTime = '21:00';
         this.place =  '';
         this.isValid =  false;
       },
@@ -295,6 +304,23 @@
         this.clear();
         this.dialog= false;
       },
+      //日付から文字列に変換する関数
+      getStringFromDate(date) {
+        var year_str = date.getFullYear();
+        //月だけ+1すること
+        var month_str = 1 + date.getMonth();
+        var day_str = date.getDate();
+
+        month_str = ('0' + month_str).slice(-2);
+        day_str = ('0' + day_str).slice(-2);
+
+        var format_str = 'YYYY/MM/DD';
+        format_str = format_str.replace(/YYYY/g, year_str);
+        format_str = format_str.replace(/MM/g, month_str);
+        format_str = format_str.replace(/DD/g, day_str);
+
+        return format_str;
+      }
     }
   };
 </script>

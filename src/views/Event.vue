@@ -4,7 +4,7 @@
       <div>
         <h1>{{ event.title }}</h1>
         <div v-if="event.start">
-          期間：{{ getStringFromDate(this.event.start.toDate()) }} ~ {{ getStringFromDate(this.event.end.toDate()) }}<br>
+          期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
         場所：{{ event.place }}<br>
         作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>

@@ -4,7 +4,7 @@
       <v-card class="pa-4 ma-6" color="#CBFFD3" @click="goEventPage">
         <v-card-title>{{event.title}}</v-card-title>
         <div v-if="event.start">
-          期間：{{ getStringFromDate(this.event.start.toDate()) }} ~ {{ getStringFromDate(this.event.end.toDate()) }}<br>
+          期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
       </v-card>
     </div>

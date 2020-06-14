@@ -1,11 +1,11 @@
 <template>
-  <div class="edit-item-form">
+  <div class="new-item-form">
     <v-icon
       id="activator"
       @click:on="openDialog"
       color="blue"
       large>
-      mdi-calendar-edit
+      mdi-plus-box-multiple
     </v-icon>
     <v-dialog
       v-model="dialog"
@@ -13,7 +13,7 @@
       fullscreen>
       <v-card>
         <v-card-title>
-          <span class="headline">イベント編集</span>
+          <span class="headline">新規イベント作成</span>
           <v-spacer></v-spacer>
           <v-card-actions>
             <v-icon color="red" @click="hideDialog" large>mdi-close-circle</v-icon>
@@ -22,24 +22,115 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md6>
-                <vue-ctk-date-time-picker
-                  id="start"
-                  label="開始日時を選択"
-                  :format="'YYYY-MM-DD HH:mm'"
-                  :max-date="end"
-                  v-model="start" />
-              </v-flex>
-              <v-flex xs12 sm6 md6>
-                <vue-ctk-date-time-picker
-                  id="end"
-                  label="終了日時を選択"
-                  :format="'YYYY-MM-DD HH:mm'"
-                  :min-date="start"
-                  v-model="end" />
-              </v-flex>
+
+              <v-dialog
+                ref="dialog1"
+                v-model="modal"
+                :return-value.sync="startDate"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="startDate"
+                    label="開始日"
+                    prepend-icon="mdi-event"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="startDate" :max="endDate">
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dialog1.save(startDate)">OK</v-btn>
+                </v-date-picker>
+              </v-dialog>
+
+              <v-dialog
+                ref="dialog2"
+                v-model="modal1"
+                :return-value.sync="startTime"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="startTime"
+                    label="開始時間"
+                    prepend-icon="mdi-clock-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                  v-if="modal1"
+                  v-model="startTime"
+                  full-width
+                  :max="maxTime"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dialog2.save(startTime)">OK</v-btn>
+                </v-time-picker>
+              </v-dialog>
+
+              <v-dialog
+                ref="dialog3"
+                v-model="modal3"
+                :return-value.sync="endDate"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="endDate"
+                    label="終了日"
+                    prepend-icon="mdi-event"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="endDate" :min="startDate" >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dialog3.save(endDate)">OK</v-btn>
+                </v-date-picker>
+              </v-dialog>
+
+              <v-dialog
+                ref="dialog4"
+                v-model="modal2"
+                :return-value.sync="endTime"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="endTime"
+                    label="終了時間"
+                    prepend-icon="mdi-clock-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                  v-if="modal2"
+                  v-model="endTime"
+                  full-width
+                  :min="minTime"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dialog4.save(endTime)">OK</v-btn>
+                </v-time-picker>
+              </v-dialog>
               <v-flex xs12>
                 <v-text-field
+                  ref="title"
                   v-model="title"
                   label="イベント名"
                   :rules="[requiredNotEmpty]"/>
@@ -70,8 +161,6 @@
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
-  import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
-  import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 
   export default {
     props: {
@@ -79,19 +168,35 @@
         type: Object
       }
     },
-    components: {
-      VueCtkDateTimePicker
-    },
     data() {
       return {
         title: this.event.title,
         description: this.event.description,
-        start: this.event.start,
-        end: this.event.end,
         place: this.event.place,
         isValid: false,
-        dialog: false
+        dialog: false,
+        modal: false,
+        modal1: false,
+        modal2: false,
+        modal3: false,
+        startTime: null,
+        endTime: null,
+        startDate: '',
+        endDate: '',
+        minTime: '',
+        maxTime: '',
       };
+    },
+    created() {
+      if (this.event.start) {
+        let start = this.getStringFromDate(this.event.start.toDate());
+        console.log('start: '+start);
+        let end = this.getStringFromDate(this.event.end.toDate());
+        this.startDate = start.substr( 0, 10 ).split('/').join('-');
+        this.endDate = end.substr( 0, 10 ).split('/').join('-');
+        this.startTime = start.substr( 11, 16 );
+        this.endTime = end.substr( 11, 16 );
+      }
     },
     watch: {
       title() {
@@ -100,42 +205,65 @@
       description() {
         console.log('description: '+this.description);
       },
-      start() {
-        console.log('start: '+this.start);
-      },
-      end() {
-        console.log('end: '+this.end);
-      },
       place() {
         console.log('place: '+this.place);
       },
+      modal1() {
+        console.log('modal1: '+this.modal1);
+      },
+      modal2() {
+        console.log('modal2: '+this.modal2);
+      },
+      startTime() {
+        console.log('startTime: '+this.startTime);
+        if (this.startDate == this.endDate) {
+          this.minTime = this.startTime;
+        }
+      },
+      endTime() {
+        console.log('endTime: '+this.endTime);
+        if (this.startDate == this.endDate) {
+          this.maxTime = this.endTime;
+        }
+      },
+      endDate() {
+        console.log('endDate: '+this.endDate);
+        if (this.endDate != this.startDate) {
+          this.maxTime = '';
+          this.minTime = '';
+        }
+      },
+      startDate() {
+        console.log('startDate: '+this.startDate);
+        this.endDate = this.startDate;
+        if (this.endTime < this.startTime) {
+          this.endTime = '';
+          this.minTime = this.startTime
+        }
+      },
     },
     methods: {
-      async updateEvent() {
+      updateEvent() {
         if (this.isValid) {
-          // this.event.ref()
           db.collection('events')
-            .doc(this.$route.params['id'])
+            .doc(this.event.id)
             .update({
               title: this.title,
               description: this.description,
-              start: this.start,
-              end: this.end,
+              start: firebase.firestore.Timestamp.fromDate(new Date(this.startDate.split('-').join('/') + ' ' + this.startTime)),
+              end: firebase.firestore.Timestamp.fromDate(new Date(this.endDate.split('-').join('/') + ' ' + this.endTime)),
               place: this.place,
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
               console.log(`Event ${this.title} was updated.`);
-              this.hideDialog();
-              //this.$router.go(this.$router.currentRoute);
+              this.$router.go(this.$router.currentRoute);
             })
             .catch(err => {
-              console.error(`Error occurd in createEvent: ${err}`);
+              console.error(`Error occurd in updateEvent: ${err}`);
             });
-
         } else {
           console.log('Error occurred on validation.');
-          this.clear();
         }
       },
       requiredNotEmpty(value) {
@@ -152,28 +280,40 @@
         this.isValid = true;
         return true;
       },
-      // Formの初期化
-      clear() {
-        this.title = this.event.title;
-        this.description = this.event.description;
-        this.start = this.event.start;
-        this.end =  this.event.end;
-        this.place =  this.event.place;
-        this.isValid =  false;
-      },
       // Formダイアログの表示
       openDialog() {
         this.dialog = true
       },
-      //
       // Formダイアログの非表示
       hideDialog() {
-        // if (!this.isValid) {
-        //   this.clear();
-        // }
-        this.clear();
         this.dialog= false;
       },
+      //日付から文字列に変換する関数
+      getStringFromDate(date) {
+        var year_str = date.getFullYear();
+        //月だけ+1すること
+        var month_str = 1 + date.getMonth();
+        var day_str = date.getDate();
+        var hour_str = date.getHours();
+        var minute_str = date.getMinutes();
+        var second_str = date.getSeconds();
+
+        month_str = ('0' + month_str).slice(-2);
+        day_str = ('0' + day_str).slice(-2);
+        hour_str = ('0' + hour_str).slice(-2);
+        minute_str = ('0' + minute_str).slice(-2);
+        second_str = ('0' + second_str).slice(-2);
+
+        var format_str = 'YYYY/MM/DD hh:mm:ss';
+        format_str = format_str.replace(/YYYY/g, year_str);
+        format_str = format_str.replace(/MM/g, month_str);
+        format_str = format_str.replace(/DD/g, day_str);
+        format_str = format_str.replace(/hh/g, hour_str);
+        format_str = format_str.replace(/mm/g, minute_str);
+        format_str = format_str.replace(/ss/g, second_str);
+
+        return format_str;
+      }
     }
   };
 </script>

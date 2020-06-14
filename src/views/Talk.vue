@@ -16,6 +16,12 @@
         登壇者：
         <user-item-small
           :user = "talk.userRef" />
+        <div v-if="talk.userRef.id == currentUserId">
+<!--          <edit-talk-form :talk="talk"/>-->
+          <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
+            Delete
+          </v-btn>
+        </div>
       </div>
     </div>
 
@@ -41,21 +47,21 @@
     <!--      </v-btn>-->
     <!--    </div>-->
 
-    <!--    <div v-if="talk.id">-->
-    <!--      <div v-if="currentUserId">-->
-    <!--        <CommentForm :talkId="talk.id" :userId="currentUserId"/>-->
-    <!--      </div>-->
-    <!--      <CommentBoard :talkId="talk.id"/>-->
-    <!--    </div>-->
+    <div v-if="talk.id">
+      <div v-if="currentUserId">
+        <CommentForm :talkId="talk.id" :userId="currentUserId"/>
+      </div>
+      <CommentBoard :talkId="talk.id"/>
+    </div>
   </div>
 </template>
 
 <script>
   // import EditTalkForm from '@/components/EditTalkForm.vue';
-  // import CommentBoard from '@/components/CommentBoard.vue'
-  // import CommentForm from '@/components/CommentForm.vue'
+  import CommentBoard from '@/components/CommentBoard.vue'
+  import CommentForm from '@/components/CommentForm.vue'
   import { db } from '@/firebase/firestore.js';
-  // import firebase from 'firebase';
+  import firebase from 'firebase';
   import UserItemSmall from "../components/UserItemSmall";
 
   export default {
@@ -63,27 +69,24 @@
     components: {
       UserItemSmall,
       // EditTalkForm,
-      // CommentBoard,
-      // CommentForm
+      CommentBoard,
+      CommentForm
     },
     data() {
       return {
         talk: [],
-        // currentUserId: '',
+        currentUserId: '',
         // isTalker: false,
         // talkEvent: {}
       }
     },
     created() {
-      // let self = this;
-      // firebase.auth().onAuthStateChanged(async(user) => {
-      //   let talkerId = await self.getTalk(self);
-      //   if (user) {
-      //     self.currentUserId = user.uid;
-      //     await self.checkTalker(talkerId, user.uid);
-      //   }
-      // });
-
+      let self = this;
+      firebase.auth().onAuthStateChanged(async(user) => {
+        if (user != null) {
+          this.$root.$set(self, 'currentUserId', user.uid);
+        }
+      });
     },
     firestore(){
       return {
@@ -154,21 +157,21 @@
       //     title: event.data().title
       //   }
       // },
-      // async deleteTalk() {
-      //   var res = confirm('ほんとに登壇を取りやめますか？？？？？');
-      //   if (res) {
-      //     let self = this;
-      //     db.collection('talks')
-      //       .doc(this.$route.params['id'])
-      //       .delete()
-      //       .then(() => {
-      //         this.$router.push({ name : 'event', params: {id: self.talkEvent.id}});
-      //       })
-      //       .catch(err => {
-      //         console.error('Error deleting event data: ', err);
-      //       });
-      //   }
-      // },
+      async deleteTalk() {
+        var res = confirm('ほんとに登壇を取りやめますか？？？？？');
+        if (res) {
+          let self = this;
+          db.collection('talks')
+            .doc(this.$route.params['id'])
+            .delete()
+            .then(() => {
+              this.$router.push({ name : 'event', params: {id: self.talk.eventRef.id}});
+            })
+            .catch(err => {
+              console.error('Error deleting event data: ', err);
+            });
+        }
+      },
       goEventPage() {
         console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});

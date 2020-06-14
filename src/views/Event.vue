@@ -46,8 +46,7 @@
       <talk-item
         v-for="talk in talks"
         :key="talk.id"
-        :talk="talk"
-        :talkUser="talk.talkUser"/>
+        :talk="talk"/>
     </div>
     <div v-if="participants" class="users-list">
       参加者リスト<br>

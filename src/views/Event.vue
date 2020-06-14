@@ -20,9 +20,7 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form :event="event"/>
-          <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
-            Delete
-          </v-btn>
+          <v-icon color="red" @click="deleteEvent" large>mdi-delete</v-icon>
         </div>
       </div>
     </div>
@@ -31,8 +29,8 @@
         参加取り消し
       </v-btn>
       <new-talk-form
-      :eventId="event.id"
-      :userId="currentUserId"/>
+        :eventId="event.id"
+        :userId="currentUserId"/>
     </div>
     <div v-else-if="currentUserId">
       <v-btn
@@ -126,16 +124,7 @@
         if (res) {
           console.log('deleteEvent');
           let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
-
-          await this.participants.forEach(user => {
-            db.collection('users')
-              .doc(user.id)
-              .update({
-                joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-              })
-          });
-          db.collection('events')
-            .doc(this.$route.params['id'])
+          eventRef
             .delete()
             .then(() => {
               this.$router.push({name: 'events'});

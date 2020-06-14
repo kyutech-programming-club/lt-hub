@@ -22,9 +22,7 @@
           :user = "talk.userRef" />
         <div v-if="talk.userRef.id == currentUserId">
           <edit-talk-form :talk="talk"/>
-          <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
-            Delete
-          </v-btn>
+          <v-icon color="red" @click="deleteTalk" large>mdi-delete</v-icon>
         </div>
       </div>
     </div>

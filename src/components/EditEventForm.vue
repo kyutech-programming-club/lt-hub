@@ -5,7 +5,7 @@
       @click:on="openDialog"
       color="blue"
       large>
-      mdi-plus-box-multiple
+      mdi-pencil
     </v-icon>
     <v-dialog
       v-model="dialog"
@@ -13,7 +13,7 @@
       fullscreen>
       <v-card>
         <v-card-title>
-          <span class="headline">新規イベント作成</span>
+          <span class="headline">イベント編集</span>
           <v-spacer></v-spacer>
           <v-card-actions>
             <v-icon color="red" @click="hideDialog" large>mdi-close-circle</v-icon>

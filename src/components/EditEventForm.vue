@@ -257,7 +257,7 @@
             })
             .then(() => {
               console.log(`Event ${this.title} was updated.`);
-              this.$router.go(this.$router.currentRoute);
+              this.hideDialog();
             })
             .catch(err => {
               console.error(`Error occurd in updateEvent: ${err}`);

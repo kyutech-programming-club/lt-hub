@@ -7,8 +7,12 @@
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
         場所：{{ event.place }}<br>
-        作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
-        最終更新日時：{{ getStringFromDate(event.updatedTime.toDate()) }}
+        <div v-if="event.createdTime">
+          作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
+        </div>
+        <div v-if="event.updatedTime">
+          最終更新日時：{{ getStringFromDate(event.updatedTime.toDate()) }}
+        </div>
       </div>
       <div v-if="event.author.id">
         責任者：

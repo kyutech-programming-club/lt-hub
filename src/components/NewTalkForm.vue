@@ -104,7 +104,6 @@
             });
         } else {
           console.log('Error occurred on validation.');
-          this.clear();
         }
       },
       requiredNotEmpty(value) {

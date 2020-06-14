@@ -99,7 +99,6 @@
             });
         } else {
           console.log('Error occurred on validation.');
-          this.clear();
         }
       },
       requiredNotEmpty(value) {
@@ -118,10 +117,9 @@
       },
       // Formの初期化
       clear() {
-        this.$refs.title.reset()
-        this.title = '';
-        this.movieUrl = '';
-        this.slideUrl = '';
+        this.title = this.talk.title;
+        this.movieUrl = this.talk.movieUrl;
+        this.slideUrl = this.talk.slideUrl;
         this.isValid =  false;
       },
       // Formダイアログの表示

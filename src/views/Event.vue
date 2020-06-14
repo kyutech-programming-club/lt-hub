@@ -24,6 +24,9 @@
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
         参加取り消し
       </v-btn>
+      <new-talk-form
+      :eventId="event.id"
+      :userId="currentUserId"/>
     </div>
     <div v-else-if="currentUserId">
       <v-btn
@@ -53,7 +56,7 @@
 <script>
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
-  // import NewTalkForm from '@/components/NewTalkForm.vue'
+  import NewTalkForm from '@/components/NewTalkForm.vue'
   import ParticipateItem from '@/components/ParticipateItem.vue'
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
@@ -66,7 +69,7 @@
       EditEventForm,
       UserItemSmall,
       TalkItem,
-      // NewTalkForm,
+      NewTalkForm,
     },
     data() {
       return {

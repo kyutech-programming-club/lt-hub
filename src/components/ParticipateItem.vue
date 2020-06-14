@@ -22,7 +22,7 @@
     },
     methods: {
       goUserPage() {
-        this.$router.push({ name : 'user', params: { uid: this.user.id}});
+        this.$router.push({ name : 'user', params: { uid: this.user.userRef.id}});
       }
     }
   }

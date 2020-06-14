@@ -8,8 +8,12 @@
     </div>
     <div v-if="talk.id">
       <h1>{{ talk.title }}</h1>
+      <div v-if="talk.createdTime">
       作成日時：{{ getStringFromDate(talk.createdTime.toDate()) }}<br>
+      </div>
+      <div v-if="talk.updatedTime">
       最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
+      </div>
       動画URL: {{ talk.movieUrl }}<br>
       スライドURL: {{ talk.slideUrl }}<br>
       <div v-if="talk.userRef.id">
@@ -17,35 +21,13 @@
         <user-item-small
           :user = "talk.userRef" />
         <div v-if="talk.userRef.id == currentUserId">
-<!--          <edit-talk-form :talk="talk"/>-->
+          <edit-talk-form :talk="talk"/>
           <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
             Delete
           </v-btn>
         </div>
       </div>
     </div>
-
-    <!--    <div v-if="isTalker">-->
-    <!--      <v-expansion-panels>-->
-    <!--        <v-expansion-panel>-->
-    <!--          <v-expansion-panel-header>-->
-    <!--            <v-card-title>-->
-    <!--              <v-toolbar :flat="true">-->
-    <!--                <v-toolbar-title class="mx-autoi">-->
-    <!--                  Edit-->
-    <!--                </v-toolbar-title>-->
-    <!--              </v-toolbar>-->
-    <!--            </v-card-title>-->
-    <!--          </v-expansion-panel-header>-->
-    <!--          <v-expansion-panel-content>-->
-    <!--            <edit-talk-form :talk="talk"/>-->
-    <!--          </v-expansion-panel-content>-->
-    <!--        </v-expansion-panel>-->
-    <!--      </v-expansion-panels>-->
-    <!--      <v-btn class="white&#45;&#45;text font-weight-bold" color="#ff4b4b" @click="deleteTalk">-->
-    <!--        Delete-->
-    <!--      </v-btn>-->
-    <!--    </div>-->
 
     <div v-if="talk.id">
       <div v-if="currentUserId">
@@ -57,7 +39,7 @@
 </template>
 
 <script>
-  // import EditTalkForm from '@/components/EditTalkForm.vue';
+  import EditTalkForm from '@/components/EditTalkForm.vue';
   import CommentBoard from '@/components/CommentBoard.vue'
   import CommentForm from '@/components/CommentForm.vue'
   import { db } from '@/firebase/firestore.js';
@@ -68,7 +50,7 @@
     name: 'Talk',
     components: {
       UserItemSmall,
-      // EditTalkForm,
+      EditTalkForm,
       CommentBoard,
       CommentForm
     },

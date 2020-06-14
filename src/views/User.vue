@@ -5,7 +5,9 @@
       <edit-user-form
         v-if="currentUserId == this.$route.params['uid']"
         :user="user"/>
-      <img :src="user.photoURL"/><br>
+      <v-avatar size="128">
+        <img :src="user.photoURL"/><br>
+      </v-avatar>
       <div v-if="user.createdTime">
         作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
       </div>

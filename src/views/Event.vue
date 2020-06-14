@@ -171,6 +171,15 @@
                 participant.ref.delete();
               })
             });
+          db.collection('talks')
+            .where('userRef', '==', currentUserRef)
+            .where('eventRef', '==', currentEventRef)
+            .get()
+            .then(talks => {
+              talks.forEach(talk =>{
+                talk.ref.delete();
+              })
+            });
         }
         alert('次はないですよ');
       },

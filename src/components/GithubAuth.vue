@@ -63,7 +63,6 @@
                   .set({
                     name: user.displayName || 'ななっしー',
                     photoURL: user.photoURL,
-                    joinEvents: [],
                     createdTime: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
                   })

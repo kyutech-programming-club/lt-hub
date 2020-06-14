@@ -2,10 +2,10 @@
   <div class="user-item mx-10" style="display: inline-block">
     <v-avatar class="d-inline-block" size="128" @click="goUserPage">
       <v-img
-        :src="user.data.photoURL"
+        :src="user.photoURL"
       />
     </v-avatar>
-    <v-card-title>{{user.data.name}}</v-card-title>
+    <v-card-title>{{user.name}}</v-card-title>
   </div>
 </template>
 

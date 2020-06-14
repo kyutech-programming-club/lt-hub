@@ -5,11 +5,17 @@
       <img :src="user.photoURL"/><br>
       作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
       最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
-      <div v-if="joinEvents" class="events-list">
-        <event-item
-          v-for="event in joinEvents"
+      <div v-if="userEvents" class="events-list">
+        <user-event-item
+          v-for="event in userEvents"
           :key="event.id"
-          :event="event.data" />
+          :event="event" />
+      </div>
+      <div v-if="userTalks" class="talks-list">
+        <talk-item
+          v-for="talk in userTalks"
+          :key="talk.id"
+          :talk="talk" />
       </div>
     </div>
     <div v-if="current">
@@ -52,19 +58,22 @@
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
-  import EventItem from '@/components/EventItem.vue'
+  import UserEventItem from '@/components/UserEventItem.vue'
+  import TalkItem from '@/components/TalkItem.vue'
 
   export default {
     name: 'User',
     components: {
-      EventItem
+      UserEventItem,
+      TalkItem
     },
     data() {
       return {
-        user: {},
+        user: [],
         current: false,
         name: '',
-        joinEvents: [],
+        userEvents: [],
+        userTalks: [],
         isValid: false
       }
     },
@@ -108,6 +117,15 @@
     watch: {
       name() {
         console.log('name: '+this.name);
+      },
+    },
+    firestore() {
+      return {
+        user: db.collection('users').doc(this.$route.params['uid']),
+        userEvents: db.collection('participants')
+          .where('userRef', '==', db.collection('users').doc(this.$route.params['uid'])),
+        userTalks: db.collection('talks')
+          .where('userRef', '==', db.collection('users').doc(this.$route.params['uid']))
       }
     },
     methods: {

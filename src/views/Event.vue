@@ -3,7 +3,9 @@
     <div v-if="event.id">
       <div>
         <h1>{{ event.title }}</h1>
-        期間：{{ event.start }} ~ {{ event.end }}<br>
+        <div v-if="event.start">
+          期間：{{ getStringFromDate(this.event.start.toDate()) }} ~ {{ getStringFromDate(this.event.end.toDate()) }}<br>
+        </div>
         場所：{{ event.place }}<br>
         作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
         最終更新日時：{{ getStringFromDate(event.updatedTime.toDate()) }}
@@ -274,7 +276,7 @@
         minute_str = ('0' + minute_str).slice(-2);
         second_str = ('0' + second_str).slice(-2);
 
-        var format_str = 'YYYY-MM-DD hh:mm:ss';
+        var format_str = 'YYYY/MM/DD hh:mm:ss';
         format_str = format_str.replace(/YYYY/g, year_str);
         format_str = format_str.replace(/MM/g, month_str);
         format_str = format_str.replace(/DD/g, day_str);

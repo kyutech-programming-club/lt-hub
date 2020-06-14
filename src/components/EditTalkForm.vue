@@ -1,77 +1,98 @@
 <template>
-  <div class="edit-item-form">
-    <v-card class="pa-4 ma-6">
-      <v-form v-model="isValid" @submit.prevent>
+  <div class="new-talk-form">
+    <v-icon
+      id="talk-activator"
+      @click:on="openDialog"
+      color="blue"
+      large>
+      mdi-tooltip-edit
+    </v-icon>
+    <v-dialog
+      v-model="dialog"
+      activator="#talk-activator">
+      <v-card>
+        <v-card-title>
+          <span class="headline">トーク編集</span>
+          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-icon color="red" @click="hideDialog" large>mdi-close-circle</v-icon>
+          </v-card-actions>
+        </v-card-title>
         <v-card-text>
-          <v-text-field
-            v-model="title"
-            label="タイトル"
-            :rules="[requiredNotEmpty]" />
-          <v-text-field
-            v-model="slideUrl"
-            label="スライドURL" />
-          <v-text-field
-            v-model="movieUrl"
-            label="動画URL" />
-          <v-btn
-            class="white--text font-weight-bold"
-            color="#009eff"
-            :x-large="true"
-            @click="updateTalk">
-            Update
-          </v-btn>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field
+                  ref="title"
+                  v-model="title"
+                  label="タイトル"
+                  :rules="[requiredNotEmpty]" />
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="movieUrl"
+                  label="動画URL" />
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="slideUrl"
+                  label="スライドURL" />
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-card-text>
-      </v-form>
-    </v-card>
+        <v-card-actions>
+          <v-spacer>
+            <v-btn color="blue darken-1" @click="updateTalk">トーク更新</v-btn>
+          </v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
-
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
 
   export default {
     props: {
-      talk: {
-        type: Object
-      }
+      talk: Object
     },
     data() {
       return {
-        title: this.talk.data.title,
-        slideUrl: this.talk.data.slideUrl,
-        movieUrl: this.talk.data.movieUrl,
-        isValid: false
+        title: this.talk.title,
+        slideUrl: this.talk.slideUrl,
+        movieUrl: this.talk.movieUrl,
+        isValid: false,
+        dialog: false
       };
     },
     watch: {
       title() {
-        console.log('title: ' + this.title);
+        console.log('title: '+this.title);
       },
       slideUrl() {
-        console.log('title: ' + this.slideUrl);
+        console.log('slideUrl: '+this.slideUrl);
       },
       movieUrl() {
-        console.log('title: ' + this.movieUrl);
-      }
-    },
-    created() {
-      console.dir(this.talk);
+        console.log('movieUrl: '+this.movieUrl);
+      },
     },
     methods: {
-      updateTalk() {
+      async updateTalk() {
         if (this.isValid) {
           db.collection('talks')
             .doc(this.talk.id)
             .update({
               title: this.title,
-              slideUrl: this.talk.data.slideUrl,
-              movieUrl: this.talk.data.movieUrl,
+              slideUrl: this.slideUrl,
+              movieUrl: this.movieUrl,
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
-              console.log(`Talk ${this.title} was updated.`);
-              this.$router.go(this.$router.currentRoute);
+              console.log(`Talk ${this.title} was updateed.`);
+              this.hideDialog();
+              //this.$router.go(this.$router.currentRoute);
             })
             .catch(err => {
               console.error(`Error occurd in updateTalk: ${err}`);
@@ -81,14 +102,37 @@
         }
       },
       requiredNotEmpty(value) {
+        if (value == null) {
+          this.isValid = false;
+          return 'Required.';
+        }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
-        if (!spaceRemoved)
+        if (!spaceRemoved) {
+          this.isValid = false;
           return 'Required.';
+        }
+        this.isValid = true;
         return true;
-      }
+      },
+      // Formの初期化
+      clear() {
+        this.title = this.talk.title;
+        this.movieUrl = this.talk.movieUrl;
+        this.slideUrl = this.talk.slideUrl;
+        this.isValid =  false;
+      },
+      // Formダイアログの表示
+      openDialog() {
+        this.dialog = true
+      },
+      // Formダイアログの非表示
+      hideDialog() {
+        this.clear();
+        this.dialog= false;
+      },
     }
-  }
+  };
 </script>
 <style scoped>
 </style>

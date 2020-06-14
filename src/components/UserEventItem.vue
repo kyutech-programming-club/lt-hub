@@ -1,10 +1,10 @@
 <template>
   <div class="event-item">
-    <div v-if="event.id">
+    <div v-if="event.eventRef">
       <v-card class="pa-4 ma-6" color="#CBFFD3" @click="goEventPage">
-        <v-card-title>{{event.title}}</v-card-title>
-        <div v-if="event.start">
-          期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
+        <v-card-title>{{event.eventRef.title}}</v-card-title>
+        <div v-if="event.eventRef.start">
+          期間：{{ getStringFromDate(this.event.eventRef.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.eventRef.end.toDate()).substr(0,16) }}<br>
         </div>
       </v-card>
     </div>
@@ -20,7 +20,7 @@
     },
     methods: {
       goEventPage() {
-        this.$router.push({ name : 'event', params: { id: this.event.id, event: this.event}});
+        this.$router.push({ name : 'event', params: { id: this.event.eventRef.id, event: this.event.eventRef}});
       },
       //日付から文字列に変換する関数
       getStringFromDate(date) {

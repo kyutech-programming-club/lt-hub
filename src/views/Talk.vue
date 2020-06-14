@@ -1,75 +1,77 @@
 <template>
   <div class="talk">
-    <div v-if="talkEvent">
+    <div v-if="talk.id">
       参加イベント：
       <v-btn color="#CBFFD3" @click="goEventPage">
-        {{ talkEvent.title }}
+        {{ talk.eventRef.title }}
       </v-btn><br>
     </div>
     <div v-if="talk.id">
-      <h1>{{ talk.data.title }}</h1>
-      作成日時：{{ getStringFromDate(talk.data.createdTime.toDate()) }}<br>
-      最終更新日時：{{ getStringFromDate(talk.data.updatedTime.toDate()) }}<br>
-      動画URL: {{ talk.data.movieUrl }}<br>
-      スライドURL: {{ talk.data.slideUrl }}<br>
-      登壇者：{{ talk.talkUser.data.name }}<br>
+      <h1>{{ talk.title }}</h1>
+      <div v-if="talk.createdTime">
+      作成日時：{{ getStringFromDate(talk.createdTime.toDate()) }}<br>
+      </div>
+      <div v-if="talk.updatedTime">
+      最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
+      </div>
+      動画URL: {{ talk.movieUrl }}<br>
+      スライドURL: {{ talk.slideUrl }}<br>
+      <div v-if="talk.userRef.id">
+        登壇者：
+        <user-item-small
+          :user = "talk.userRef" />
+        <div v-if="talk.userRef.id == currentUserId">
+          <edit-talk-form :talk="talk"/>
+          <v-icon color="red" @click="deleteTalk" large>mdi-delete</v-icon>
+        </div>
+      </div>
     </div>
 
-    <div v-if="isTalker">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <edit-talk-form :talk="talk"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteTalk">
-        Delete
-      </v-btn>
+    <div v-if="talk.id">
+      <div v-if="currentUserId">
+        <CommentForm :talkId="talk.id" :userId="currentUserId"/>
+      </div>
+      <CommentBoard :talkId="talk.id"/>
     </div>
   </div>
 </template>
 
 <script>
   import EditTalkForm from '@/components/EditTalkForm.vue';
+  import CommentBoard from '@/components/CommentBoard.vue'
+  import CommentForm from '@/components/CommentForm.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
+  import UserItemSmall from "../components/UserItemSmall";
 
   export default {
     name: 'Talk',
     components: {
+      UserItemSmall,
       EditTalkForm,
-    },
-    props: {
-      talkData: {
-        type: Object
-      }, // 遷移元からのパラメータを取得
+      CommentBoard,
+      CommentForm
     },
     data() {
       return {
-        talk: Object,
-        isTalker: false,
-        talkEvent: {}
+        talk: [],
+        currentUserId: '',
+        // isTalker: false,
+        // talkEvent: {}
       }
     },
     created() {
       let self = this;
       firebase.auth().onAuthStateChanged(async(user) => {
-          let talkerId = await self.getTalk(self);
-          if (user) {
-            await self.checkTalker(talkerId, user.uid);
-          }
+        if (user != null) {
+          this.$root.$set(self, 'currentUserId', user.uid);
+        }
       });
-
+    },
+    firestore(){
+      return {
+        talk: db.collection('talks').doc(this.$route.params['id'])
+      }
     },
     methods: {
       getStringFromDate(date) {
@@ -97,62 +99,27 @@
 
         return format_str;
       },
-      async getTalk(self) {
-        if (self.talkData != null) {
-          await self.$root.$set(this, 'talk', self.talkData);
-          self.getEvent();
-          return self.talkData.talkUser.id
-        } else {
-          let talkData = {}
-          await db.collection('talks').doc(this.$route.params['id']).get()
-            .then(async (talk) => {
-              await talk.data().userRef.get().then(talkUser => {
-                talkData =
-                  {
-                    id: talk.id,
-                    data: talk.data(),
-                    talkUser: {
-                      id: talkUser.id,
-                      data: talkUser.data()
-                    }
-                  };
-                self.$root.$set(self, 'talk', talkData);
-              });
-            });
-          self.getEvent();
-          return talkData.talkUser.id
-        }
-      },
-      checkTalker(talkerId, userId) {
-        if (talkerId == userId) {
-          this.isTalker = true;
-        }
-      },
-      async getEvent() {
-        let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
-        this.talkEvent = {
-          id: event.id,
-          title: event.data().title
-        }
-      },
       async deleteTalk() {
-        var res = confirm('ほんとに登壇を取りやめますか？？？？？');
+        var res = confirm('やめちゃうの…？');
         if (res) {
           let self = this;
           db.collection('talks')
             .doc(this.$route.params['id'])
             .delete()
             .then(() => {
-              this.$router.push({ name : 'event', params: {id: self.talkEvent.id}});
+              this.$router.push({ name : 'event', params: {id: self.talk.eventRef.id}});
             })
             .catch(err => {
-              console.error('Error deleting event data: ', err);
+              console.error('Error deleting talk data: ', err);
             });
+          alert('ぱおん')
+        } else {
+          alert('焦った〜！');
         }
       },
       goEventPage() {
         console.log('goEventPage');
-        this.$router.push({ name : 'event', params: { id: this.talkEvent.id}});
+        this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});
       }
     }
   }

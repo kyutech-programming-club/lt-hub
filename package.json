@@ -14,10 +14,11 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.4",
-    "firebase": "^7.14.2",
+    "firebase": "^7.15.1",
     "vue": "^2.6.11",
     "vue-ctk-date-time-picker": "^2.4.0",
     "vue-router": "^3.1.6",
+    "vuefire": "^2.2.0-alpha.0",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {

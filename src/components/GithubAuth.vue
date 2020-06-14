@@ -1,11 +1,9 @@
 <template>
   <div class="github-auth">
-    <div v-if="user.name" key="login">
-      <!-- <v-img :src="user.photoURL" /><br>
-      <button @click="goMyPage">[{{ user.name }}](go to MyPage)</button><br> -->
+    <div v-if="user.id" key="login">
 
-      <v-avatar @click="goMyPage">
-        <img :src="user.photoURL" />
+      <v-avatar @click="goMyPage(user.id)">
+        <img :src="user.data.photoURL" />
       </v-avatar>
       <v-btn class="ma-2"
              style="text-transform: none"
@@ -26,8 +24,7 @@
              @click="doLogin"
              outlined
              dark>
-        <v-icon dark left>mdi-github</v-icon>
-        Sign in with GitHub
+        <v-img src="@/assets/google-logo.png" left/>
       </v-btn>
     </div>
   </div>
@@ -56,14 +53,16 @@
             .get()
             .then(dbUser => {
               if (dbUser.exists) {
-                self.user = dbUser.data();
+                self.user = {
+                  id: dbUser.id,
+                  data: dbUser.data()
+                }
               } else {
                 db.collection('users')
                   .doc(user.uid)
                   .set({
                     name: user.displayName || 'ななっしー',
                     photoURL: user.photoURL,
-                    joinEvents: [],
                     createdTime: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
                   })
@@ -72,7 +71,10 @@
                       .doc(user.uid)
                       .get()
                       .then(dbUser => {
-                        self.user = dbUser.data();
+                        self.user = {
+                          id: dbUser.id,
+                          data: dbUser.data()
+                        }
                       });
                   })
                   .catch(err => {
@@ -91,7 +93,8 @@
     methods: {
       doLogin() {
         this.loggingIn = true;
-        const provider = new firebase.auth.GithubAuthProvider();
+        // const provider = new firebase.auth.GithubAuthProvider();
+        const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
           .finally(() => {
             this.loggingIn = false;
@@ -101,13 +104,9 @@
         firebase.auth().signOut();
         this.$router.go(this.$router.currentRoute);
       },
-      goMyPage() {
-        firebase.auth().onAuthStateChanged(user => {
-          if (user != null) {
-            this.$router.push({ name : 'user', params: { uid: user.uid}});
-          }
-        });
-      }
+      goMyPage(id) {
+        this.$router.push({ name : 'user', params: { uid: id}}).catch(() => {});
+      },
     }
   }
 </script>

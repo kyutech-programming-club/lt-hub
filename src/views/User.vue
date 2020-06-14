@@ -2,9 +2,17 @@
   <div class="user">
     <div v-if="user.name">
       <h1>{{ user.name }}</h1>
+      <edit-user-form
+        v-if="currentUserId == this.$route.params['uid']"
+        :user="user"/>
       <img :src="user.photoURL"/><br>
-      作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
-      最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
+      <div v-if="user.createdTime">
+        作成日時：{{ getStringFromDate(user.createdTime.toDate()) }}<br>
+      </div>
+      <div v-if="user.updatedTime">
+        最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
+      </div>
+
       <div v-if="userEvents" class="events-list">
         <user-event-item
           v-for="event in userEvents"
@@ -18,40 +26,6 @@
           :talk="talk" />
       </div>
     </div>
-    <div v-if="current">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-card class="pa-4 ma-6">
-              <v-form v-model="isValid" @submit.prevent>
-                <v-card-text>
-                  <v-text-field
-                    v-model="name"
-                    label="Name"
-                    :rules="[requiredNotEmpty]" />
-                  <v-btn
-                    color="blue"
-                    :x-large="true"
-                    @click="update">
-                    Update
-                  </v-btn>
-                </v-card-text>
-              </v-form>
-            </v-card>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
-
   </div>
 </template>
 
@@ -60,17 +34,19 @@
   import { db } from '@/firebase/firestore.js'
   import UserEventItem from '@/components/UserEventItem.vue'
   import TalkItem from '@/components/TalkItem.vue'
+  import EditUserForm from '@/components/EditUserForm';
 
   export default {
     name: 'User',
     components: {
       UserEventItem,
-      TalkItem
+      TalkItem,
+      EditUserForm
     },
     data() {
       return {
         user: [],
-        current: false,
+        currentUserId: '',
         name: '',
         userEvents: [],
         userTalks: [],
@@ -78,41 +54,12 @@
       }
     },
     created() {
-      let self = this
-      console.log('User Page');
-      db.collection('users')
-        .doc(this.$route.params['uid'])
-        .get()
-        .then(dbUser => {
-          if (dbUser.exists) {
-            console.log('Successfully fetched user data');
-            // console.log(dbUser.data());
-            self.user = dbUser.data();
-            self.name = dbUser.data().name;
-
-            if (dbUser.data().joinEvents.length) {
-              dbUser.data().joinEvents.forEach( async(eventRef) => {
-                let event = await eventRef.get();//参照型からデータの取得は非同期
-                self.joinEvents.push({
-                  id: event.id,
-                  data: event.data()
-                });
-              });
-            }
-          } else {
-            console.error('Error fetching user data');
-            self.user = {};
-          }
-        })
-        .catch(err => {
-          console.error('Error fetching user data: ', err);
-        });
-
-      firebase.auth().onAuthStateChanged(user => {
-        if (user != null && user.uid == this.$route.params['uid']) {
-          self.current = true;
+      let self = this;
+      firebase.auth().onAuthStateChanged(async(user) => {
+        if (user != null) {
+          this.$root.$set(self, 'currentUserId', user.uid);
         }
-      })
+      });
     },
     watch: {
       name() {

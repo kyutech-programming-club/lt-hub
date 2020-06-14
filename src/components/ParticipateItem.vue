@@ -1,11 +1,15 @@
 <template>
   <div class="user-item mx-10" style="display: inline-block">
-    <v-avatar class="d-inline-block" size="128" @click="goUserPage">
-      <v-img
-        :src="user.photoURL"
-      />
-    </v-avatar>
-    <v-card-title>{{user.name}}</v-card-title>
+    <v-list>
+      <v-list-item @click="goUserPage">
+        <v-list-item-avatar class="d-inline-block" size="50">
+          <v-img
+            :src="user.userRef.photoURL"
+          />
+        </v-list-item-avatar>
+        <v-list-item-content>{{user.userRef.name}}</v-list-item-content>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 

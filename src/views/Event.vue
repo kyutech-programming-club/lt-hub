@@ -1,59 +1,36 @@
 <template>
   <div class="event">
     <div v-if="event.id">
-      <h1>{{ event.data.title }}</h1>
-      期間：{{ event.data.start }} ~ {{ event.data.end }}<br>
-      場所：{{ event.data.place }}<br>
-      作成日時：{{ getStringFromDate(event.data.createdTime.toDate()) }}<br>
-      最終更新日時：{{ getStringFromDate(event.data.updatedTime.toDate()) }}
+      <div>
+        <h1>{{ event.title }}</h1>
+        <div v-if="event.start">
+          期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
+        </div>
+        場所：{{ event.place }}<br>
+        <div v-if="event.createdTime">
+          作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
+        </div>
+        <div v-if="event.updatedTime">
+          最終更新日時：{{ getStringFromDate(event.updatedTime.toDate()) }}
+        </div>
+      </div>
+      <div v-if="event.author.id">
+        責任者：
+        <user-item-small
+          :user = "event.author" />
+        <div v-if="event.author.id == currentUserId">
+          <edit-event-form :event="event"/>
+          <v-icon color="red" @click="deleteEvent" large>mdi-delete</v-icon>
+        </div>
+      </div>
     </div>
-    <div v-if="author.id">
-      責任者：
-      <user-item-small
-      :user = "author" />
-    </div>
-    <div v-if="isAuthor">
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  Edit
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <edit-event-form :event="event"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="deleteEvent">
-        Delete
-      </v-btn>
-    </div>
-    <div v-if="participated">
+    <div  v-if="isParticipated">
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
         参加取り消し
       </v-btn>
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <v-card-title>
-              <v-toolbar :flat="true">
-                <v-toolbar-title class="mx-autoi">
-                  トーク新規作成
-                </v-toolbar-title>
-              </v-toolbar>
-            </v-card-title>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <new-talk-form
-              :eventId="event.id"/>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <new-talk-form
+        :eventId="event.id"
+        :userId="currentUserId"/>
     </div>
     <div v-else-if="currentUserId">
       <v-btn
@@ -63,17 +40,15 @@
         参加
       </v-btn>
     </div>
-    
     <div class="talks-list">
       <talk-item
         v-for="talk in talks"
         :key="talk.id"
-        :talk="talk"
-        :talkUser="talk.talkUser"/>
+        :talk="talk"/>
     </div>
-    <div v-if="participants.length" class="users-list">
+    <div v-if="participants" class="users-list">
       参加者リスト<br>
-      <user-item-small
+      <participate-item
         v-for="user in participants"
         :key="user.id"
         :user="user" />
@@ -85,6 +60,7 @@
   import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
   import NewTalkForm from '@/components/NewTalkForm.vue'
+  import ParticipateItem from '@/components/ParticipateItem.vue'
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
@@ -92,6 +68,7 @@
   export default {
     name: 'Event',
     components: {
+      ParticipateItem,
       EditEventForm,
       UserItemSmall,
       TalkItem,
@@ -99,115 +76,74 @@
     },
     data() {
       return {
-        event: {},
+        event: [],
         talks: [],
+        participants: [],
+        isParticipated: false,
         author: {},
         currentUserId: '',
-        participants: [],
         participated: false,
         isAuthor: false,
       }
     },
     created() {
+      console.log("created");
       let self = this;
-      console.log('Event Page');
-      firebase.auth().onAuthStateChanged(user => {
+      firebase.auth().onAuthStateChanged(async(user) => {
         if (user != null) {
-          self.currentUserId = user.uid;
+          this.$root.$set(self, 'currentUserId', user.uid);
         }
       });
-      let eventRef = db.collection('events').doc(this.$route.params['id']);
-      eventRef
-        .get()
-        .then(event => {
-          if (event.exists) {
-            db.collection('talks').where('eventRef', '==', eventRef).get().then(talks => {
-              talks.forEach(async(talk) => {
-                // console.log(talk.id);
-                // console.log(talk.data());
-                let talkUser = await talk.data().userRef.get();
-                self.talks.push(
-                  {
-                    id: talk.id,
-                    data: talk.data(),
-                    talkUser: {
-                      id: talkUser.id,
-                      data: talkUser.data()
-                    }
-                  }
-                );
-              });
-            });
-            console.log('Successfully fetched event data');
-            // console.log(JSON.stringify(event.data()));
-            self.event = {
-              id: event.id,
-              data: event.data()
-            }
-            if (event.data().author == self.currentUserId) {
-              self.isAuthor = true;
-            }
-            if (event.data().participants.length) {
-              event.data().participants.forEach( async(userRef) => {
-                let user = await userRef.get();//参照型からデータの取得は非同期
-                self.participants.push({
-                  id: user.id,
-                  data: user.data()
-                });
-                if (user.id == self.currentUserId) {
-                  self.participated = true;
-                }
-              });
-            }
-
-            db.collection('users')
-              .doc(event.data().author)
-              .get()
-              .then(author => {
-                if (author != null) {
-                  self.author = {
-                    id: author.id,
-                    data: author.data()
-                  }
-                }
-              })
-              .catch(err => {
-                console.error('Error fetching author data: ', err);
-              });
-
-          } else {
-            console.error('Error fetching event data');
-            self.event = {};
-          }
-        })
-        .catch(err => {
-          console.error('Error fetching event data: ', err);
-        });
-
+    },
+    watch: {
+      async event() {
+        let currentUserRef = await db.collection('users').doc(this.currentUserId)
+        let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
+        let participantRef = await db.collection('participants')
+          .where('userRef', '==', currentUserRef)
+          .where('eventRef', '==', currentEventRef)
+          .get();
+        if (!participantRef.empty) {
+          this.isParticipated = true;
+        }
+      }
+    },
+    firestore(){
+      console.log("firestore")
+      return {
+        event: db.collection('events').doc(this.$route.params['id']),
+        talks: db.collection('talks')
+          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
+        participants: db.collection('participants')
+          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
+      }
     },
     methods: {
-      goUserPage() {
-        console.log('goUserPage');
-        this.$router.push({ name : 'user', params: { uid: this.author.id}});
-      },
       async deleteEvent() {
         var res = confirm('ほんとにイベントを取りやめますか？？？？？');
         if (res) {
           console.log('deleteEvent');
           let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
-
-          await this.participants.forEach( user => {
-            db.collection('users')
-              .doc(user.id)
-              .update({
-                joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
-              })
+          db.collection('participants').where('eventRef', '==', eventRef)
+          .get()
+          .then(participants =>{
+            participants.forEach(participant => {
+              participant.ref.delete();
+            })
           });
-          db.collection('events')
-            .doc(this.$route.params['id'])
+
+          db.collection('talks').where('eventRef', '==', eventRef)
+            .get()
+            .then(talks =>{
+              talks.forEach(talk => {
+                talk.ref.delete();
+              })
+            });
+
+          eventRef
             .delete()
             .then(() => {
-              this.$router.push({ name : 'events'});
+              this.$router.push({name: 'events'});
             })
             .catch(err => {
               console.error('Error deleting event data: ', err);
@@ -215,51 +151,42 @@
         }
       },
       async participate() {
-        try {
-          let self = this;
-          let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
-          let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
-          await userRef.update({
-            joinEvents: firebase.firestore.FieldValue.arrayUnion(eventRef)
-          });
-          await eventRef.update({
-            participants: firebase.firestore.FieldValue.arrayUnion(userRef)
-          });
-          console.log('participants registered');
-          this.$router.go(this.$router.currentRoute);
-        } catch (err) {
-          console.log(err);
-        }
+        let self = this;
+        let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
+        let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
+        db.collection('participants').add({
+          userRef: userRef,
+          eventRef: eventRef
+        });
+        this.isParticipated = true;
       },
       async cancelParticipate() {
-        var res = confirm('ほんとに取りやめますか？？？？？');
+        var res = confirm('参加を取り消しますか？');
         if (res) {
-          try {
-            let self = this;
-            let userRef = await db.collection('users').doc(self.currentUserId); //ログインユーザーの参照オブジェクト
-            let eventRef = await db.collection('events').doc(self.event.id); //参加イベントの参照オブジェクト
-            await userRef.update({
-              joinEvents: firebase.firestore.FieldValue.arrayRemove(eventRef)
+          this.isParticipated = false;
+          let currentUserRef = await db.collection('users').doc(this.currentUserId)
+          let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
+          db.collection('participants')
+            .where('userRef', '==', currentUserRef)
+            .where('eventRef', '==', currentEventRef)
+            .get()
+            .then(participants => {
+              participants.forEach(participant =>{
+                participant.ref.delete();
+              })
             });
-            await eventRef.update({
-              participants: firebase.firestore.FieldValue.arrayRemove(userRef)
+          db.collection('talks')
+            .where('userRef', '==', currentUserRef)
+            .where('eventRef', '==', currentEventRef)
+            .get()
+            .then(talks => {
+              talks.forEach(talk =>{
+                talk.ref.delete();
+              })
             });
-            let talkRefs = await db.collection('talks').where('eventRef', '==', eventRef).where('userRef', '==', userRef);
-            await talkRefs
-                    .get()
-                    .then(talks => {
-                      talks.forEach(talk => {
-                        talk.ref.delete().then(() => {
-                          console.log('delete!');
-                        });
-                      });
-                    });
-
-            alert('次はないですよ');
-            this.$router.go(this.$router.currentRoute);
-          } catch (err) {
-            console.log(err);
-          }
+          alert('ぴえん');
+        } else {
+          alert('命拾いしましたね');
         }
       },
       //日付から文字列に変換する関数
@@ -278,7 +205,7 @@
         minute_str = ('0' + minute_str).slice(-2);
         second_str = ('0' + second_str).slice(-2);
 
-        var format_str = 'YYYY-MM-DD hh:mm:ss';
+        var format_str = 'YYYY/MM/DD hh:mm:ss';
         format_str = format_str.replace(/YYYY/g, year_str);
         format_str = format_str.replace(/MM/g, month_str);
         format_str = format_str.replace(/DD/g, day_str);

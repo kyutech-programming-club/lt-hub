@@ -1,28 +1,14 @@
 <template>
   <div class="events">
     <h1>Events</h1>
-    <v-expansion-panels v-if="isLogin">
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <v-card-title>
-            <v-toolbar :flat="true">
-              <v-toolbar-title class="mx-autoi">
-                イベント新規作成
-              </v-toolbar-title>
-            </v-toolbar>
-          </v-card-title>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <new-event-form />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-
+    <new-event-form v-if="isLogin"/>
     <div class="events-list">
-      <event-item
-        v-for="event in events"
-        :key="event.id"
-        :event="event" />
+      <div v-if="events.length">
+        <event-item
+          v-for="event in events"
+          :key="event.id"
+          :event="event" />
+      </div>
     </div>
   </div>
 </template>
@@ -45,23 +31,16 @@
       }
     },
     created() {
-      console.log('created...');
-      let self = this;
-      db.collection('events').orderBy('start').get().then(events => {
-        events.forEach(event => {
-          self.events.push(
-            {
-              id: event.id,
-              data: event.data()
-            }
-          );
-        });
-      });
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           this.isLogin = true;
         }
       });
+    },
+    firestore () {
+      return {
+        events: db.collection('events').orderBy('start')
+      }
     }
   };
 </script>

@@ -1,18 +1,18 @@
 <template>
-  <div class="new-talk-form">
+  <div class="edit-user-form">
     <v-icon
-      id="talk-activator"
+      id="user-activator"
       @click:on="openDialog"
       color="blue"
       large>
-      mdi-tooltip-plus
+      mdi-account-edit
     </v-icon>
     <v-dialog
       v-model="dialog"
-      activator="#talk-activator">
+      activator="#user-activator">
       <v-card>
         <v-card-title>
-          <span class="headline">新規トーク作成</span>
+          <span class="headline">ユーザー編集</span>
           <v-spacer></v-spacer>
           <v-card-actions>
             <v-icon color="red" @click="hideDialog" large>mdi-close-circle</v-icon>
@@ -23,84 +23,54 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
-                  ref="title"
-                  v-model="title"
-                  label="タイトル"
+                  ref="name"
+                  v-model="name"
+                  label="名前"
                   :rules="[requiredNotEmpty]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="movieUrl"
-                  label="動画URL" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="slideUrl"
-                  label="スライドURL" />
               </v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="createTalk">トーク作成</v-btn>
+            <v-btn color="blue darken-1" @click="updateUser">ユーザー更新</v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
+
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
 
   export default {
     props: {
-      eventId: String,
-      userId: String,
+      user: Object
     },
     data() {
       return {
-        title: '',
-        slideUrl: '',
-        movieUrl: '',
+        name: this.user.name,
         isValid: false,
         dialog: false
       };
     },
-    watch: {
-      title() {
-        console.log('title: '+this.title);
-      },
-      slideUrl() {
-        console.log('slideUrl: '+this.slideUrl);
-      },
-      movieUrl() {
-        console.log('movieUrl: '+this.movieUrl);
-      },
-    },
     methods: {
-      async createTalk() {
+      async updateUser() {
         if (this.isValid) {
-          let eventRef = await db.collection('events').doc(this.eventId)
-          let userRef = await db.collection('users').doc(this.userId)
-          db.collection('talks')
-            .add({
-              eventRef: eventRef,
-              userRef: userRef,
-              title: this.title,
-              slideUrl: this.slideUrl,
-              movieUrl: this.movieUrl,
-              createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+          db.collection('users')
+            .doc(this.user.id)
+            .update({
+              name: this.name,
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
-              console.log(`Talk ${this.title} was created.`);
+              console.log(`User ${this.name} was updateed.`);
               this.hideDialog();
-              //this.$router.go(this.$router.currentRoute);
             })
             .catch(err => {
-              console.error(`Error occurd in createTalk: ${err}`);
+              console.error(`Error occurd in updateUser: ${err}`);
             });
         } else {
           console.log('Error occurred on validation.');
@@ -123,10 +93,7 @@
       },
       // Formの初期化
       clear() {
-        this.$refs.title.reset()
-        this.title = '';
-        this.movieUrl = '';
-        this.slideUrl = '';
+        this.name = this.user.name;
         this.isValid =  false;
       },
       // Formダイアログの表示

@@ -2,7 +2,7 @@
   <div class="users">
     <h1>Users</h1>
     <v-row justify="center" align-content="center" class="pt-12">
-      <div class="users-list">
+      <div class="users-list" v-if="users">
         <user-item
           v-for="user in users"
           :key="user.id"
@@ -25,16 +25,10 @@
         users: []
       }
     },
-    created() {
-      let self = this;
-      db.collection('users').get().then(users => {
-        users.forEach(user => {
-          self.users.push({
-            id: user.id,
-            data: user.data()
-          });
-        });
-      });
+    firestore() {
+      return {
+        users: db.collection('users')
+      }
     }
   };
 </script>

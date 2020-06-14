@@ -4,10 +4,10 @@
       <v-list-item @click="goUserPage">
         <v-list-item-avatar class="d-inline-block" size="50">
           <v-img
-            :src="user.data.photoURL"
+            :src="user.photoURL"
           />
         </v-list-item-avatar>
-        <v-list-item-content>{{user.data.name}}</v-list-item-content>
+        <v-list-item-content>{{user.name}}</v-list-item-content>
       </v-list-item>
     </v-list>
   </div>

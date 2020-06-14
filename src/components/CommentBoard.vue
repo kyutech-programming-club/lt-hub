@@ -24,9 +24,9 @@
             </v-list-item-content>
             <v-list-item-action>
             </v-list-item-action>
-              <v-icon v-if="currentUserId == comment.userRef.id" color="red" @click="deleteComment(comment.id)">
-                mdi-delete
-              </v-icon>
+            <v-icon v-if="currentUserId == comment.userRef.id" color="red" @click="deleteComment(comment.id)">
+              mdi-delete
+            </v-icon>
           </v-list-item>
 
           <v-divider :key="comment.id"></v-divider>
@@ -41,7 +41,7 @@
   import firebase from 'firebase';
 
   export default {
-    name: 'ChatBoard',
+    name: 'CommentBoard',
     props: {
       talkId: {
         type: String

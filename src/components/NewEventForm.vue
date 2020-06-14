@@ -314,7 +314,7 @@
         month_str = ('0' + month_str).slice(-2);
         day_str = ('0' + day_str).slice(-2);
 
-        var format_str = 'YYYY/MM/DD';
+        var format_str = 'YYYY-MM-DD';
         format_str = format_str.replace(/YYYY/g, year_str);
         format_str = format_str.replace(/MM/g, month_str);
         format_str = format_str.replace(/DD/g, day_str);

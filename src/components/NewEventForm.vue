@@ -40,7 +40,7 @@
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="startDate" :max="endDate">
+                <v-date-picker v-model="startDate">
                   <v-spacer></v-spacer>
                   <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
                   <v-btn text color="primary" @click="$refs.dialog1.save(startDate)">OK</v-btn>

@@ -99,46 +99,8 @@
 
         return format_str;
       },
-      // async getTalk(self) {
-      //   if (self.talkData != null) {
-      //     await self.$root.$set(this, 'talk', self.talkData);
-      //     self.getEvent();
-      //     return self.talkData.talkUser.id
-      //   } else {
-      //     let talkData = {}
-      //     await db.collection('talks').doc(this.$route.params['id']).get()
-      //       .then(async (talk) => {
-      //         await talk.data().userRef.get().then(talkUser => {
-      //           talkData =
-      //             {
-      //               id: talk.id,
-      //               data: talk.data(),
-      //               talkUser: {
-      //                 id: talkUser.id,
-      //                 data: talkUser.data()
-      //               }
-      //             };
-      //           self.$root.$set(self, 'talk', talkData);
-      //         });
-      //       });
-      //     self.getEvent();
-      //     return talkData.talkUser.id
-      //   }
-      // },
-      // checkTalker(talkerId, userId) {
-      //   if (talkerId == userId) {
-      //     this.isTalker = true;
-      //   }
-      // },
-      // async getEvent() {
-      //   let event = await this.talk.data.eventRef.get(); //参加イベントの参照オブジェクト
-      //   this.talkEvent = {
-      //     id: event.id,
-      //     title: event.data().title
-      //   }
-      // },
       async deleteTalk() {
-        var res = confirm('ほんとに登壇を取りやめますか？？？？？');
+        var res = confirm('やめちゃうの…？');
         if (res) {
           let self = this;
           db.collection('talks')
@@ -148,8 +110,11 @@
               this.$router.push({ name : 'event', params: {id: self.talk.eventRef.id}});
             })
             .catch(err => {
-              console.error('Error deleting event data: ', err);
+              console.error('Error deleting talk data: ', err);
             });
+          alert('ぱおん')
+        } else {
+          alert('焦った〜！');
         }
       },
       goEventPage() {

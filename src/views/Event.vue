@@ -124,6 +124,22 @@
         if (res) {
           console.log('deleteEvent');
           let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
+          db.collection('participants').where('eventRef', '==', eventRef)
+          .get()
+          .then(participants =>{
+            participants.forEach(participant => {
+              participant.ref.delete();
+            })
+          });
+
+          db.collection('talks').where('eventRef', '==', eventRef)
+            .get()
+            .then(talks =>{
+              talks.forEach(talk => {
+                talk.ref.delete();
+              })
+            });
+
           eventRef
             .delete()
             .then(() => {
@@ -145,7 +161,7 @@
         this.isParticipated = true;
       },
       async cancelParticipate() {
-        var res = confirm('ほんとに取りやめますか？？？？？');
+        var res = confirm('参加を取り消しますか？');
         if (res) {
           this.isParticipated = false;
           let currentUserRef = await db.collection('users').doc(this.currentUserId)
@@ -168,8 +184,10 @@
                 talk.ref.delete();
               })
             });
+          alert('ぴえん');
+        } else {
+          alert('命拾いしましたね');
         }
-        alert('次はないですよ');
       },
       //日付から文字列に変換する関数
       getStringFromDate(date) {

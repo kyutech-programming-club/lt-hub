@@ -13,6 +13,7 @@
                 ref="textarea"
                 @keydown.enter.exact.prevent
                 @keyup.enter.exact="addComment"
+                @blur="clear"
                 v-model="inputComment"
                 :rules="[requiredNotEmpty]"
                 label="コメント"

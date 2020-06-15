@@ -1,8 +1,11 @@
 <template>
   <div class="event-item">
     <div v-if="event.id">
-      <v-card class="pa-4 ma-6" color="#CBFFD3" @click="goEventPage">
-        <v-card-title>{{event.title}}</v-card-title>
+      <v-card class="pa-2 ma-6" color="#CBFFD3" @click="goEventPage">
+        <div class="text-left">
+          <v-chip :color="colors[status]" class="ma-0">{{messages[status]}}</v-chip>
+        </div>
+        <h1 class="text-center mb-3">{{event.title}}</h1>
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
@@ -16,6 +19,23 @@
     props: {
       event: {
         type: Object
+      },
+    },
+    data() {
+      return {
+        status: '',
+        colors: ['#FDD835','#90CAF9','#B0BEC5'],
+        messages: ['開催中！', '開催予定', '終了イベント'],
+      }
+    },
+    created() {
+      let now = new Date();
+      if (this.event.end.toDate() < now) {
+        this.status = 2;
+      } else if (this.event.start.toDate() < now && now < this.event.end.toDate()) {
+        this.status = 0;
+      } else {
+        this.status = 1;
       }
     },
     methods: {

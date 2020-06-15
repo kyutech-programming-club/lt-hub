@@ -2,9 +2,16 @@
   <div class="event-item">
     <div v-if="event.id">
       <v-card class="pa-2 ma-6" color="#CBFFD3" @click="goEventPage">
-        <div class="text-left">
-          <v-chip :color="colors[status]" class="ma-0">{{messages[status]}}</v-chip>
-        </div>
+        <v-container class="pa-0 ma-0">
+          <v-row class="justify-content-between">
+            <v-col class="pa-0 ma-0">
+              <v-chip :color="colors[status]" class="ma-0">{{messages[status]}}</v-chip>
+            </v-col>
+            <v-col class="pa-0 ma-0">
+              <v-chip v-if="isParticipated" color="#FF80AB" class="ma-0">登録済み</v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
         <h1 class="text-center mb-3">{{event.title}}</h1>
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
@@ -15,6 +22,8 @@
 </template>
 
 <script>
+  import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
   export default {
     props: {
       event: {
@@ -26,6 +35,7 @@
         status: '',
         colors: ['#FDD835','#90CAF9','#B0BEC5'],
         messages: ['開催中！', '開催予定', '終了イベント'],
+        isParticipated: false,
       }
     },
     created() {
@@ -37,6 +47,19 @@
       } else {
         this.status = 1;
       }
+      firebase.auth().onAuthStateChanged(async(user) => {
+        let currentUser = await db.collection('users').doc(user.uid);
+        let currentEvent = await db.collection('events').doc(this.event.id);
+        await db.collection('participants')
+          .where('eventRef', '==', currentEvent)
+          .where('userRef', '==', currentUser)
+          .get().then(participant => {
+            // console.dir(participant);
+            if (!participant.empty) {
+              this.isParticipated = true;
+            }
+          });
+      });
     },
     methods: {
       goEventPage() {

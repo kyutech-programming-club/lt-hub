@@ -112,7 +112,7 @@
     },
     watch: {
       async event() {
-        if (this.currentUserId.length) {
+        if (this.currentUserId == '') {
           let currentUserRef = await db.collection('users').doc(this.currentUserId)
           let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
           let participantRef = await db.collection('participants')

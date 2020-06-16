@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer dark v-model="drawer" absolute temporary>
       <v-list class="pt-1" dense>
         <v-divider></v-divider>
         <v-list-item v-for="item in items" :key="item.title" :to="item.to">
@@ -12,6 +12,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <github-auth />
     </v-navigation-drawer>
     <v-app-bar dark clipped-left fixed app>
       <v-app-bar-nav-icon
@@ -22,16 +23,17 @@
         <router-link to="/" class="toolbar-title">LT-Hub</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <github-auth />
+      
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn text to="/events">
-          <v-icon>mdi-presentation</v-icon>
+          <v-icon class="ma-2">mdi-calendar</v-icon>
           Events
         </v-btn>
         <v-btn text to="/users">
-          <v-icon>mdi-account-group</v-icon>
+          <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
+        <github-auth />
       </v-toolbar-items>
     </v-app-bar>
   </div>
@@ -49,7 +51,7 @@
         drawer: null,
         items: [
           { title: 'Home', icon: 'mdi-home', to: '/' },
-          { title: 'Events', icon: 'mdi-presentation', to: '/events' },
+          { title: 'Events', icon: 'mdi-calendar', to: '/events' },
           { title: 'Users', icon: 'mdi-account-group', to: '/users' }
         ]
       };

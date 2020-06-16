@@ -112,19 +112,21 @@
     },
     watch: {
       async event() {
-        let currentUserRef = await db.collection('users').doc(this.currentUserId)
-        let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
-        let participantRef = await db.collection('participants')
-          .where('userRef', '==', currentUserRef)
-          .where('eventRef', '==', currentEventRef)
-          .get();
-        if (!participantRef.empty) {
-          this.isParticipated = true;
-        }
-        let now = new Date();
-        if (this.event.end.toDate() < now) {
-          console.log("ahi");
-          this.isEventActive = false;
+        if (this.currentUserId == '') {
+          let currentUserRef = await db.collection('users').doc(this.currentUserId)
+          let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
+          let participantRef = await db.collection('participants')
+            .where('userRef', '==', currentUserRef)
+            .where('eventRef', '==', currentEventRef)
+            .get();
+          if (!participantRef.empty) {
+            this.isParticipated = true;
+          }
+          let now = new Date();
+          if (this.event.end.toDate() < now) {
+            console.log("ahi");
+            this.isEventActive = false;
+          }
         }
       }
     },

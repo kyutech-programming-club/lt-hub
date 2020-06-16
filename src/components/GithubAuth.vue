@@ -24,7 +24,8 @@
              @click="doLogin"
              outlined
              dark>
-        <v-img src="@/assets/google-logo.png" left/>
+        <v-img src="@/assets/google-logo.png" left class="mr-2"/>
+        Login
       </v-btn>
     </div>
   </div>

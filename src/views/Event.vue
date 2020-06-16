@@ -20,8 +20,11 @@
         <user-item-small
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
-          <edit-event-form :event="event"/>
-          <v-chip class="ma-2"
+          <edit-event-form
+            v-if="isEventActive"
+            :event="event"/>
+          <v-chip
+            class="ma-2"
             color="red"
             text-color="white"
             @click="deleteEvent">
@@ -33,21 +36,23 @@
         </div>
       </div>
     </div>
-    <div  v-if="isParticipated">
-      <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-        Cancel
-      </v-btn>
-      <new-talk-form
-        :eventId="event.id"
-        :userId="currentUserId"/>
-    </div>
-    <div v-else-if="currentUserId">
-      <v-btn
-        class="white--text font-weight-bold"
-        color="#009eff"
-        @click="participate">
-        Join
-      </v-btn>
+    <div v-if="isEventActive">
+      <div  v-if="isParticipated">
+        <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
+          Cancel
+        </v-btn>
+        <new-talk-form
+          :eventId="event.id"
+          :userId="currentUserId"/>
+      </div>
+      <div v-else-if="currentUserId">
+        <v-btn
+          class="white--text font-weight-bold"
+          color="#009eff"
+          @click="participate">
+          Join
+        </v-btn>
+      </div>
     </div>
     <div class="talks-list">
       <talk-item
@@ -93,6 +98,7 @@
         currentUserId: '',
         participated: false,
         isAuthor: false,
+        isEventActive: true
       }
     },
     created() {
@@ -115,6 +121,11 @@
         if (!participantRef.empty) {
           this.isParticipated = true;
         }
+        let now = new Date();
+        if (this.event.end.toDate() < now) {
+          console.log("ahi");
+          this.isEventActive = false;
+        }
       }
     },
     firestore(){
@@ -134,12 +145,12 @@
           console.log('deleteEvent');
           let eventRef = await db.collection('events').doc(this.event.id); //参加イベントの参照オブジェクト
           db.collection('participants').where('eventRef', '==', eventRef)
-          .get()
-          .then(participants =>{
-            participants.forEach(participant => {
-              participant.ref.delete();
-            })
-          });
+            .get()
+            .then(participants =>{
+              participants.forEach(participant => {
+                participant.ref.delete();
+              })
+            });
 
           db.collection('talks').where('eventRef', '==', eventRef)
             .get()

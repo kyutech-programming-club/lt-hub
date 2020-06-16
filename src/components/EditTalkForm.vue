@@ -1,6 +1,7 @@
 <template>
   <div class="new-talk-form">
-    <v-chip class="ma-2"
+    <v-chip
+      class="ma-2"
       id="talk-activator"
       @click:on="openDialog"
       color="blue"
@@ -46,7 +47,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="updateTalk">トーク更新</v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="updateTalk">
+              Update talk
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

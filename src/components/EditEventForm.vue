@@ -1,6 +1,7 @@
 <template>
   <div class="new-item-form">
-    <v-chip class="ma-2"
+    <v-chip
+      class="ma-2"
       id="activator"
       @click:on="openDialog"
       color="blue"
@@ -154,7 +155,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="updateEvent">更新</v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="updateEvent">
+              Update event
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

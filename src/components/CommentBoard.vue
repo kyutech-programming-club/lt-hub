@@ -7,23 +7,23 @@
     >
       <v-list>
         <template v-for="(comment, index) in comments">
-          <v-list-item :key="index">
-            <v-list-item-avatar @click="goUserPage(comment.userRef)">
-              <img :src="comment.userRef.photoURL">
-            </v-list-item-avatar>
-            <v-list-item-content class="pa-0">
-              <p class="text-left mt-4">
-                {{comment.content}}
-              </p>
-            </v-list-item-content>
-            <v-icon
-              v-if="currentUserId == comment.userRef.id"
-              color="red"
-              @click="deleteComment(comment.id)">
-              mdi-delete
-            </v-icon>
-          </v-list-item>
-          <v-divider :key="comment.id"></v-divider>
+          <v-card :key="index">
+            <v-list-item>
+              <v-list-item-avatar @click="goUserPage(comment.userRef)">
+                <img :src="comment.userRef.photoURL">
+              </v-list-item-avatar>
+              <v-list-item-content class="pa-0">
+                <v-card-text class="text-left">{{comment.content}}</v-card-text>
+              </v-list-item-content>
+              <v-icon
+                v-if="currentUserId == comment.userRef.id"
+                color="red"
+                @click="deleteComment(comment.id)">
+                mdi-delete
+              </v-icon>
+            </v-list-item>
+            <v-divider :key="comment.id"></v-divider>
+          </v-card>
         </template>
       </v-list>
     </v-card>

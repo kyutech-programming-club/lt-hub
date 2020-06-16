@@ -1,12 +1,15 @@
 <template>
   <div class="new-item-form">
-    <v-icon
+    <v-chip class="ma-2"
       id="activator"
       @click:on="openDialog"
       color="blue"
-      large>
-      mdi-pencil
-    </v-icon>
+      text-color="white">
+      <v-icon left>
+        mdi-pencil
+      </v-icon>
+      Edit event
+    </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#activator"

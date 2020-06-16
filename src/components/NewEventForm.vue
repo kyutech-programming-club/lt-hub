@@ -1,12 +1,15 @@
 <template>
   <div class="new-item-form">
-    <v-icon
+    <v-chip
       id="activator"
-      @click:on="openDialog"
-      color="blue"
-      large>
-      mdi-plus-box-multiple
-    </v-icon>
+      color = "blue"
+      text-color="white"
+      @click:on="openDialog">
+      <v-icon left>
+        mdi-calendar-plus
+      </v-icon>
+    Create event
+  </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#activator"

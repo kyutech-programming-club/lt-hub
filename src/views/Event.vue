@@ -20,7 +20,15 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form :event="event"/>
-          <v-icon color="red" @click="deleteEvent" large>mdi-delete</v-icon>
+          <v-chip class="ma-2"
+            color="red"
+            text-color="white"
+            @click="deleteEvent">
+            <v-icon left>
+              mdi-delete
+            </v-icon>
+            Delete event
+          </v-chip>
         </div>
       </div>
     </div>

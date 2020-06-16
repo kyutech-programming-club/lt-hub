@@ -1,12 +1,16 @@
 <template>
   <div class="edit-user-form">
-    <v-icon
+    <v-chip
+      class="ma-2"
       id="user-activator"
       @click:on="openDialog"
       color="blue"
-      large>
-      mdi-account-edit
-    </v-icon>
+      text-color="white">
+      <v-icon left>
+        mdi-account-edit
+      </v-icon>
+      Edit profile
+    </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#user-activator">
@@ -33,7 +37,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="updateUser">ユーザー更新</v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="updateUser">
+              Update profile
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

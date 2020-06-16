@@ -1,12 +1,16 @@
 <template>
   <div class="new-item-form">
-    <v-icon
+    <v-chip
+      class="ma-2"
       id="activator"
       @click:on="openDialog"
       color="blue"
-      large>
-      mdi-pencil
-    </v-icon>
+      text-color="white">
+      <v-icon left>
+        mdi-pencil
+      </v-icon>
+      Edit event
+    </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#activator"
@@ -151,7 +155,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="updateEvent">更新</v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="updateEvent">
+              Update event
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

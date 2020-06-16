@@ -46,7 +46,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="createTalk">トーク作成</v-btn>
+            <v-btn class="white--text font-weight-bold"
+             color="blue darken-1"
+             @click="createTalk">
+             Create new talk
+           </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

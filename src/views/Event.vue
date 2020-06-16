@@ -34,7 +34,7 @@
     </div>
     <div  v-if="isParticipated">
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-        参加取り消し
+        Cancel
       </v-btn>
       <new-talk-form
         :eventId="event.id"
@@ -45,7 +45,7 @@
         class="white--text font-weight-bold"
         color="#009eff"
         @click="participate">
-        参加
+        Join
       </v-btn>
     </div>
     <div class="talks-list">

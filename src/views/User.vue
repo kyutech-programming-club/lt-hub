@@ -67,14 +67,9 @@
       name() {
         console.log('name: '+this.name);
       },
-      $route (to) {
-        db.collection('users')
-          .doc(to.params.uid)
-          .get()
-          .then(user => {
-            this.user = user.data()
-          })
-      }
+      $route () {
+        this.$router.go(this.$router.currentRoute);
+      },
     },
     firestore() {
       return {

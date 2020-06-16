@@ -20,13 +20,21 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form :event="event"/>
-          <v-icon color="red" @click="deleteEvent" large>mdi-delete</v-icon>
+          <v-chip class="ma-2"
+            color="red"
+            text-color="white"
+            @click="deleteEvent">
+            <v-icon left>
+              mdi-delete
+            </v-icon>
+            Delete event
+          </v-chip>
         </div>
       </div>
     </div>
     <div  v-if="isParticipated">
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-        参加取り消し
+        Cancel
       </v-btn>
       <new-talk-form
         :eventId="event.id"
@@ -37,7 +45,7 @@
         class="white--text font-weight-bold"
         color="#009eff"
         @click="participate">
-        参加
+        Join
       </v-btn>
     </div>
     <div class="talks-list">

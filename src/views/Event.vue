@@ -112,7 +112,7 @@
     },
     watch: {
       async event() {
-        if (this.currentUserId == '') {
+        if (this.currentUserId != '') {
           let currentUserRef = await db.collection('users').doc(this.currentUserId)
           let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
           let participantRef = await db.collection('participants')
@@ -122,11 +122,11 @@
           if (!participantRef.empty) {
             this.isParticipated = true;
           }
-          let now = new Date();
-          if (this.event.end.toDate() < now) {
-            console.log("ahi");
-            this.isEventActive = false;
-          }
+        }
+
+        let now = new Date();
+        if (this.event.end.toDate() < now) {
+          this.isEventActive = false;
         }
       }
     },

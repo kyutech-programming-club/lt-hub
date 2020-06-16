@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer dark v-model="drawer" absolute temporary>
+    <v-navigation-drawer dark v-model="drawer" absolute temporary style="position: fixed;">
       <v-list class="pt-1" dense>
         <v-divider></v-divider>
         <v-list-item v-for="item in items" :key="item.title" :to="item.to">

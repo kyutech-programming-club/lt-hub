@@ -5,31 +5,25 @@
       class="overflow-y-auto"
       max-height="400"
     >
-      <v-list three-line>
+      <v-list>
         <template v-for="(comment, index) in comments">
-          <v-list-item
-            :key="index"
-          >
-            <v-list-item-avatar @click="goUserPage(comment.userRef)">
-              <img :src="comment.userRef.photoURL">
-            </v-list-item-avatar>
-
-            {{comment.userRef.name}}
-
-            <v-list-item-content>
-              <v-list-item-title>{{comment.content}}</v-list-item-title>
-              <v-list-item-subtitle v-if="comment.createdTime">
-                {{getStringFromDate(comment.createdTime.toDate())}}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-            </v-list-item-action>
-            <v-icon v-if="currentUserId == comment.userRef.id" color="red" @click="deleteComment(comment.id)">
-              mdi-delete
-            </v-icon>
-          </v-list-item>
-
-          <v-divider :key="comment.id"></v-divider>
+          <v-card :key="index">
+            <v-list-item>
+              <v-list-item-avatar @click="goUserPage(comment.userRef)">
+                <img :src="comment.userRef.photoURL">
+              </v-list-item-avatar>
+              <v-list-item-content class="pa-0">
+                <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
+              </v-list-item-content>
+              <v-icon
+                v-if="currentUserId == comment.userRef.id"
+                color="red"
+                @click="deleteComment(comment.id)">
+                mdi-delete
+              </v-icon>
+            </v-list-item>
+            <v-divider :key="comment.id"></v-divider>
+          </v-card>
         </template>
       </v-list>
     </v-card>
@@ -108,3 +102,9 @@
     },
   }
 </script>
+<style scoped>
+  .reline {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>

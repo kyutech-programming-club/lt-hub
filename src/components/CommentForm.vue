@@ -9,13 +9,20 @@
           <v-row no-gutters>
             <v-col
               :cols="11">
-              <v-text-field
-                @keydown.enter="addComment"
+              <v-textarea
+                ref="textarea"
+                @keydown.enter.exact.prevent
+                @keyup.enter.exact="addComment"
+                @blur="onBlur"
                 v-model="inputComment"
                 :rules="[requiredNotEmpty]"
                 label="コメント"
+                hint="Shift + Enter で改行"
+                :row-height="1"
+                :auto-grow="true"
+                :persistent-hint="true"
                 required
-              ></v-text-field>
+              ></v-textarea>
             </v-col>
             <v-col
               :cols="1">
@@ -50,7 +57,7 @@
     },
     data: () => ({
       // form入力データ
-      inputComment: "",
+      inputComment: '',
       // バリデーション
       isValid: false,
       // Formダイアログの表示可否
@@ -66,7 +73,7 @@
             content: this.inputComment,
             userRef: userRef,
             createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-          })
+          });
           this.clear();
         }
       },
@@ -87,7 +94,13 @@
       // Formの初期化
       clear() {
         this.$refs.form.reset()
+        this.inputComment='';
       },
+      onBlur() {
+        if (!this.isValid) {
+          this.clear();
+        }
+      }
     },
   }
 </script>

@@ -1,8 +1,18 @@
 <template>
   <div class="event-item">
     <div v-if="event.id">
-      <v-card class="pa-4 ma-6" color="#CBFFD3" @click="goEventPage">
-        <v-card-title>{{event.title}}</v-card-title>
+      <v-card class="pa-2 ma-6" :color="colors[status]" @click="goEventPage">
+        <v-container class="pa-0 ma-0">
+          <v-row class="justify-content-between">
+            <v-col class="pa-0 ma-0">
+              <v-chip :color="colors[status]" class="ma-0">{{messages[status]}}</v-chip>
+            </v-col>
+            <v-col class="pa-0 ma-0">
+              <v-chip v-if="isParticipated" color="#FF80AB" class="ma-0">登録済み</v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
+        <h1 class="text-center mb-3">{{event.title}}</h1>
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
@@ -12,11 +22,44 @@
 </template>
 
 <script>
+  import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
   export default {
     props: {
       event: {
         type: Object
+      },
+    },
+    data() {
+      return {
+        status: '',
+        colors: ['#FDD835','#90CAF9','#B0BEC5'],
+        messages: ['開催中！', '開催予定', '終了イベント'],
+        isParticipated: false,
       }
+    },
+    created() {
+      let now = new Date();
+      if (this.event.end.toDate() < now) {
+        this.status = 2;
+      } else if (this.event.start.toDate() < now && now < this.event.end.toDate()) {
+        this.status = 0;
+      } else {
+        this.status = 1;
+      }
+      firebase.auth().onAuthStateChanged(async(user) => {
+        let currentUser = await db.collection('users').doc(user.uid);
+        let currentEvent = await db.collection('events').doc(this.event.id);
+        await db.collection('participants')
+          .where('eventRef', '==', currentEvent)
+          .where('userRef', '==', currentUser)
+          .get().then(participant => {
+            // console.dir(participant);
+            if (!participant.empty) {
+              this.isParticipated = true;
+            }
+          });
+      });
     },
     methods: {
       goEventPage() {

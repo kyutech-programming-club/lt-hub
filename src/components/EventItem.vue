@@ -48,17 +48,19 @@
         this.status = 1;
       }
       firebase.auth().onAuthStateChanged(async(user) => {
-        let currentUser = await db.collection('users').doc(user.uid);
-        let currentEvent = await db.collection('events').doc(this.event.id);
-        await db.collection('participants')
-          .where('eventRef', '==', currentEvent)
-          .where('userRef', '==', currentUser)
-          .get().then(participant => {
-            // console.dir(participant);
-            if (!participant.empty) {
-              this.isParticipated = true;
-            }
-          });
+        if (user) {
+          let currentUser = await db.collection('users').doc(user.uid);
+          let currentEvent = await db.collection('events').doc(this.event.id);
+          await db.collection('participants')
+            .where('eventRef', '==', currentEvent)
+            .where('userRef', '==', currentUser)
+            .get().then(participant => {
+              // console.dir(participant);
+              if (!participant.empty) {
+                this.isParticipated = true;
+              }
+            });
+        }
       });
     },
     methods: {

@@ -13,7 +13,7 @@
                 ref="textarea"
                 @keydown.enter.exact.prevent
                 @keyup.enter.exact="addComment"
-                @blur="clear"
+                @blur="onBlur"
                 v-model="inputComment"
                 :rules="[requiredNotEmpty]"
                 label="コメント"
@@ -96,6 +96,11 @@
         this.$refs.form.reset()
         this.inputComment='';
       },
+      onBlur() {
+        if (!this.isValid) {
+          this.clear();
+        }
+      }
     },
   }
 </script>

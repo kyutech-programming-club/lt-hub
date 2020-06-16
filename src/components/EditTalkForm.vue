@@ -1,12 +1,16 @@
 <template>
   <div class="new-talk-form">
-    <v-icon
+    <v-chip
+      class="ma-2"
       id="talk-activator"
       @click:on="openDialog"
       color="blue"
-      large>
-      mdi-tooltip-edit
-    </v-icon>
+      text-color="white">
+      <v-icon left>
+        mdi-pencil
+      </v-icon>
+      Edit talk
+    </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#talk-activator">
@@ -43,7 +47,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn color="blue darken-1" @click="updateTalk">トーク更新</v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="updateTalk">
+              Update talk
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>

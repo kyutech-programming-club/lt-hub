@@ -6,6 +6,7 @@
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
+        概要：{{event.description}}<br>
         場所：{{ event.place }}<br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
@@ -20,13 +21,21 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form :event="event"/>
-          <v-icon color="red" @click="deleteEvent" large>mdi-delete</v-icon>
+          <v-chip class="ma-2"
+            color="red"
+            text-color="white"
+            @click="deleteEvent">
+            <v-icon left>
+              mdi-delete
+            </v-icon>
+            Delete event
+          </v-chip>
         </div>
       </div>
     </div>
     <div  v-if="isParticipated">
       <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-        参加取り消し
+        Cancel
       </v-btn>
       <new-talk-form
         :eventId="event.id"
@@ -37,7 +46,7 @@
         class="white--text font-weight-bold"
         color="#009eff"
         @click="participate">
-        参加
+        Join
       </v-btn>
     </div>
     <div class="talks-list">

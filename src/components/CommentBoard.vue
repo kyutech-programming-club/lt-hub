@@ -13,7 +13,7 @@
                 <img :src="comment.userRef.photoURL">
               </v-list-item-avatar>
               <v-list-item-content class="pa-0">
-                <v-card-text class="text-left">{{comment.content}}</v-card-text>
+                <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>
               <v-icon
                 v-if="currentUserId == comment.userRef.id"
@@ -103,7 +103,8 @@
   }
 </script>
 <style scoped>
-  p {
-    white-space: pre-line
+  .reline {
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 </style>

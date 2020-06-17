@@ -35,7 +35,8 @@
               <v-flex xs12>
                 <v-text-field
                   v-model="movieUrl"
-                  label="動画URL" />
+                  label="動画URL"
+                  :rules="[requireValidMovieUrl]" />
               </v-flex>
               <v-flex xs12>
                 <v-text-field
@@ -71,8 +72,9 @@
       return {
         title: this.talk.title,
         slideUrl: this.talk.slideUrl,
-        movieUrl: this.talk.movieUrl,
+        movieUrl: 'https://www.youtube.com/watch?v=' + this.talk.movieUrl,
         isValid: false,
+        isValidMovieUrl: true, 
         dialog: false
       };
     },
@@ -89,13 +91,13 @@
     },
     methods: {
       async updateTalk() {
-        if (this.isValid) {
+        if (this.isValid && this.isValidMovieUrl) {
           db.collection('talks')
             .doc(this.talk.id)
             .update({
               title: this.title,
               slideUrl: this.slideUrl,
-              movieUrl: this.movieUrl,
+              movieUrl: this.getMovieId(this.movieUrl),
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
@@ -124,10 +126,18 @@
         this.isValid = true;
         return true;
       },
+      requireValidMovieUrl(value) {
+        if (value.indexOf('watch?v=') != -1 || value.indexOf('youtu.be/') != -1 || value == '') {
+          this.isValidMovieUrl = true;
+          return true;
+        } 
+        this.isValidMovieUrl = false;
+        return 'Invalid url.';
+      },
       // Formの初期化
       clear() {
         this.title = this.talk.title;
-        this.movieUrl = this.talk.movieUrl;
+        this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
         this.slideUrl = this.talk.slideUrl;
         this.isValid =  false;
       },
@@ -140,6 +150,18 @@
         this.clear();
         this.dialog= false;
       },
+      getMovieId(url) {
+        let idx;
+        // 再生リスト未対応
+        if (url.indexOf('watch?v=') != -1) {
+          idx = url.indexOf('watch?v=');
+          return url.slice( idx + 8 );
+        } else if (url.indexOf('youtu.be/') != -1) {
+          idx = url.indexOf('youtu.be/');
+          return url.slice( idx + 9 );
+        }
+        return url;
+      }
     }
   };
 </script>

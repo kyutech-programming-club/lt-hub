@@ -14,7 +14,7 @@
     },
     computed: {
       embedMovieUrl: function() {
-        return this.movieUrl
+        return 'https://www.youtube.com/embed/' + this.movieUrl;
       }
     },
     data() {

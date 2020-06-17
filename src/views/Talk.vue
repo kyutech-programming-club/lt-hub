@@ -14,8 +14,13 @@
       <div v-if="talk.updatedTime">
         最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
       </div>
-      動画URL: {{ talk.movieUrl }}<br>
-      スライドURL: {{ talk.slideUrl }}<br>
+      <div v-if="talk.movieUrl != ''">
+        <a :href="generateMovieLink" target="_blank">Youtube</a><br>
+        <EmbedMovie :movieUrl="talk.movieUrl"/>
+      </div>
+      <div v-if="talk.slideUrl != ''">
+        スライドURL: {{ talk.slideUrl }}<br>
+      </div>
       <div v-if="talk.userRef.id">
         登壇者：
         <user-item-small
@@ -37,7 +42,6 @@
     </div>
     <div v-if="talk.id">
       <div v-if="currentUserId">
-        <EmbedMovie :movieUrl="talk.movieUrl"/>
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
       </div>
       <CommentBoard :talkId="talk.id"/>
@@ -78,6 +82,11 @@
           this.$root.$set(self, 'currentUserId', user.uid);
         }
       });
+    },
+    computed: {
+      generateMovieLink() {
+        return "https://www.youtube.com/watch?v=" + this.talk.movieUrl
+      }
     },
     firestore(){
       return {

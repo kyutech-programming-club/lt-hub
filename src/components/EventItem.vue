@@ -1,7 +1,7 @@
 <template>
   <div class="event-item">
     <div v-if="event.id">
-      <v-card class="pa-2 ma-6" :color="colors[status]" @click="goEventPage">
+      <v-card class="pa-2 mb-2" :color="colors[status]" @click="goEventPage">
         <v-container class="pa-0 ma-0">
           <v-row class="justify-content-between">
             <v-col class="pa-0 ma-0">

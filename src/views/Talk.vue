@@ -9,20 +9,26 @@
     <div v-if="talk.id">
       <h1>{{ talk.title }}</h1>
       <div v-if="talk.createdTime">
-      作成日時：{{ getStringFromDate(talk.createdTime.toDate()) }}<br>
+        作成日時：{{ getStringFromDate(talk.createdTime.toDate()) }}<br>
       </div>
       <div v-if="talk.updatedTime">
-      最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
+        最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
       </div>
-      動画URL: {{ talk.movieUrl }}<br>
-      スライドURL: {{ talk.slideUrl }}<br>
+      <div v-if="talk.movieUrl != ''">
+        <a :href="generateMovieLink" target="_blank">Youtube</a><br>
+        <EmbedMovie :movieUrl="talk.movieUrl"/>
+      </div>
+      <div v-if="talk.slideUrl != ''">
+        スライドURL: {{ talk.slideUrl }}<br>
+      </div>
       <div v-if="talk.userRef.id">
         登壇者：
         <user-item-small
           :user = "talk.userRef" />
         <div v-if="talk.userRef.id == currentUserId">
           <edit-talk-form :talk="talk"/>
-          <v-chip class="ma-2"
+          <v-chip
+            class="ma-2"
             color="red"
             text-color="white"
             @click="deleteTalk">
@@ -34,7 +40,6 @@
         </div>
       </div>
     </div>
-
     <div v-if="talk.id">
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
@@ -48,6 +53,7 @@
   import EditTalkForm from '@/components/EditTalkForm.vue';
   import CommentBoard from '@/components/CommentBoard.vue'
   import CommentForm from '@/components/CommentForm.vue'
+  import EmbedMovie from '@/components/EmbedMovie.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
   import UserItemSmall from "../components/UserItemSmall";
@@ -58,7 +64,8 @@
       UserItemSmall,
       EditTalkForm,
       CommentBoard,
-      CommentForm
+      CommentForm,
+      EmbedMovie
     },
     data() {
       return {
@@ -75,6 +82,11 @@
           this.$root.$set(self, 'currentUserId', user.uid);
         }
       });
+    },
+    computed: {
+      generateMovieLink() {
+        return "https://www.youtube.com/watch?v=" + this.talk.movieUrl
+      }
     },
     firestore(){
       return {

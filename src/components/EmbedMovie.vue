@@ -8,7 +8,7 @@
 
 <script>
   export default {
-    name: "EmbedMovie",
+    name: 'EmbedMovie',
     props: {
       movieUrl: String
     },

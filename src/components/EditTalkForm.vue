@@ -151,15 +151,25 @@
         this.dialog= false;
       },
       getMovieId(url) {
-        let idx;
-        // 再生リスト未対応
+        let idx, url_str, and_idx;
         if (url.indexOf('watch?v=') != -1) {
           idx = url.indexOf('watch?v=');
-          return url.slice( idx + 8 );
+          url_str = url.slice( idx + 8 );
+          if (url_str.indexOf('&') != -1) {
+            and_idx = url_str.indexOf('&');
+            url_str = url_str.substr(0, and_idx);
+          }
+          return url_str;
         } else if (url.indexOf('youtu.be/') != -1) {
           idx = url.indexOf('youtu.be/');
-          return url.slice( idx + 9 );
+          url_str = url.slice( idx + 8 );
+          if (url_str.indexOf('&') != -1) {
+            and_idx = url_str.indexOf('&');
+            url_str = url_str.substr(0, and_idx);
+          }
+          return url_str;
         }
+
         return url;
       }
     }

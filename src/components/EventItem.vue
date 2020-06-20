@@ -13,7 +13,7 @@
           </v-row>
         </v-container>
         <h1 class="text-center mb-3">{{event.title}}</h1>
-        参加者数  {{participants.length}}人（ 登壇者数  {{talks.length}}人 ）
+        参加者数  {{participants.length}}人（ LT数 {{talks.length}} ）
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>

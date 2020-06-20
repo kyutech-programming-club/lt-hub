@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="talks-list">
-      登壇者数  {{talks.length}}人
+      LT数 {{talks.length}}
       <talk-item
         v-for="talk in talks"
         :key="talk.id"

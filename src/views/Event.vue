@@ -55,13 +55,14 @@
       </div>
     </div>
     <div class="talks-list">
+      LT数 {{talks.length}}
       <talk-item
         v-for="talk in talks"
         :key="talk.id"
         :talk="talk"/>
     </div>
     <div v-if="participants" class="users-list">
-      参加者リスト<br>
+      参加者数  {{participants.length}}人<br />
       <participate-item
         v-for="user in participants"
         :key="user.id"
@@ -131,7 +132,7 @@
       }
     },
     firestore(){
-      console.log("firestore")
+      console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
         talks: db.collection('talks')

@@ -13,6 +13,7 @@
           </v-row>
         </v-container>
         <h1 class="text-center mb-3">{{event.title}}</h1>
+        参加者数  {{participants.length}}人（ LT数 {{talks.length}} ）
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
@@ -36,6 +37,8 @@
         colors: ['#FDD835','#90CAF9','#B0BEC5'],
         messages: ['開催中！', '開催予定', '終了イベント'],
         isParticipated: false,
+        participants: [],
+        talks: []
       }
     },
     created() {
@@ -62,6 +65,15 @@
             });
         }
       });
+    },
+    firestore(){
+      console.log("firestore");
+      return {
+        talks: db.collection('talks')
+          .where('eventRef', '==', db.collection('events').doc(this.event.id)),
+        participants: db.collection('participants')
+          .where('eventRef', '==', db.collection('events').doc(this.event.id)),
+      }
     },
     methods: {
       goEventPage() {

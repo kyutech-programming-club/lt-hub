@@ -69,10 +69,14 @@
       talk: Object
     },
     data() {
+      let movieUrl = ''
+      if (this.talk.movieUrl != '') {
+        movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+      }
       return {
         title: this.talk.title,
         slideUrl: this.talk.slideUrl,
-        movieUrl: 'https://www.youtube.com/watch?v=' + this.talk.movieUrl,
+        movieUrl: movieUrl,
         isValid: true,
         isValidMovieUrl: true, 
         dialog: false
@@ -137,7 +141,11 @@
       // Formの初期化
       clear() {
         this.title = this.talk.title;
-        this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        if (this.talk.movieUrl == '') {
+          this.movieUrl = '';
+        } else {
+          this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        }
         this.slideUrl = this.talk.slideUrl;
         this.isValid = true;
         this.isValidMovieUrl = true;

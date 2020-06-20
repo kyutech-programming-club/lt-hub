@@ -6,10 +6,14 @@
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
-        <div class="reline">
-          概要<br>
+        概要
+        <v-card
+          v-scroll.self="onScroll"
+          class="overflow-y-auto reline"
+          max-height="400"
+          flat>
           {{event.description}}<br>
-        </div>
+        </v-card>
         場所：{{ event.place }}<br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
@@ -239,7 +243,10 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
-      }
+      },
+      onScroll () {
+        this.scrollInvoked++
+      },
     }
   }
 </script>

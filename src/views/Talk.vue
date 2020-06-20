@@ -18,8 +18,7 @@
         <a :href="generateMovieLink" target="_blank">Youtube</a><br>
         <EmbedMovie :movieUrl="talk.movieUrl"/>
       </div>
-      <div v-if="talk.slideUrl != ''">
-        スライドURL: {{ talk.slideUrl }}<br>
+      <div class="slide" v-html="talk.slideUrl">
       </div>
       <div v-if="talk.userRef.id">
         登壇者：

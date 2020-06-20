@@ -6,7 +6,10 @@
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
-        概要：{{event.description}}<br>
+        <div class="reline">
+          概要<br>
+          {{event.description}}<br>
+        </div>
         場所：{{ event.place }}<br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
@@ -242,4 +245,8 @@
 </script>
 
 <style scoped>
+  .reline {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
 </style>

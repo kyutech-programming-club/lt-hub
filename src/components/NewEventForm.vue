@@ -139,7 +139,7 @@
                   :rules="[requiredNotEmpty]"/>
               </v-flex>
               <v-flex xs12>
-                <v-text-field
+                <v-textarea
                   v-model="description"
                   label="イベント概要" />
               </v-flex>

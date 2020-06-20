@@ -132,7 +132,7 @@
       }
     },
     firestore(){
-      console.log("firestore")
+      console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
         talks: db.collection('talks')

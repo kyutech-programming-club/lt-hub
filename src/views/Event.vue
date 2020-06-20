@@ -55,13 +55,14 @@
       </div>
     </div>
     <div class="talks-list">
+      登壇者数  {{talks.length}}人
       <talk-item
         v-for="talk in talks"
         :key="talk.id"
         :talk="talk"/>
     </div>
     <div v-if="participants" class="users-list">
-      参加者リスト<br>
+      参加者数  {{participants.length}}人<br />
       <participate-item
         v-for="user in participants"
         :key="user.id"

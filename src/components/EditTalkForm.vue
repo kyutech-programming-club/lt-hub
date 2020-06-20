@@ -73,7 +73,7 @@
         title: this.talk.title,
         slideUrl: this.talk.slideUrl,
         movieUrl: 'https://www.youtube.com/watch?v=' + this.talk.movieUrl,
-        isValid: false,
+        isValid: true,
         isValidMovieUrl: true, 
         dialog: false
       };
@@ -139,7 +139,8 @@
         this.title = this.talk.title;
         this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
         this.slideUrl = this.talk.slideUrl;
-        this.isValid =  false;
+        this.isValid = true;
+        this.isValidMovieUrl = true;
       },
       // Formダイアログの表示
       openDialog() {

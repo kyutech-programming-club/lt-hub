@@ -23,28 +23,29 @@
           </v-card-actions>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  ref="title"
-                  v-model="title"
-                  label="タイトル"
-                  :rules="[requiredNotEmpty]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="movieUrl"
-                  label="動画URL"
-                  :rules="[requireValidMovieUrl]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="slideUrl"
-                  label="スライドURL" />
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-form ref="form">
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="title"
+                    label="タイトル"
+                    :rules="[requiredNotEmpty]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="movieUrl"
+                    label="動画URL"
+                    :rules="[requireValidMovieUrl]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="slideUrl"
+                    label="スライドURL" />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
@@ -69,12 +70,14 @@
       talk: Object
     },
     data() {
+      let movieUrl = ''
+      if (this.talk.movieUrl != '') {
+        movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+      }
       return {
         title: this.talk.title,
         slideUrl: this.talk.slideUrl,
-        movieUrl: 'https://www.youtube.com/watch?v=' + this.talk.movieUrl,
-        isValid: false,
-        isValidMovieUrl: true, 
+        movieUrl: movieUrl,
         dialog: false
       };
     },
@@ -91,7 +94,7 @@
     },
     methods: {
       async updateTalk() {
-        if (this.isValid && this.isValidMovieUrl) {
+        if (this.$refs.form.validate()) {
           db.collection('talks')
             .doc(this.talk.id)
             .update({
@@ -114,32 +117,30 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       requireValidMovieUrl(value) {
         if (value.indexOf('watch?v=') != -1 || value.indexOf('youtu.be/') != -1 || value == '') {
-          this.isValidMovieUrl = true;
           return true;
-        } 
-        this.isValidMovieUrl = false;
+        }
         return 'Invalid url.';
       },
       // Formの初期化
       clear() {
         this.title = this.talk.title;
-        this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        if (this.talk.movieUrl == '') {
+          this.movieUrl = '';
+        } else {
+          this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        }
         this.slideUrl = this.talk.slideUrl;
-        this.isValid =  false;
       },
       // Formダイアログの表示
       openDialog() {

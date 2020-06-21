@@ -15,11 +15,10 @@
         最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
       </div>
       <div v-if="talk.movieUrl != ''">
-        <a :href="generateMovieLink" target="_blank">Youtube</a><br>
+        <a :href="generateMovieLink" target="_blank">Youtubeで視聴</a><br>
         <EmbedMovie :movieUrl="talk.movieUrl"/>
       </div>
-      <div v-if="talk.slideUrl != ''">
-        スライドURL: {{ talk.slideUrl }}<br>
+      <div class="iframe-wrap" v-html="talk.slideUrl">
       </div>
       <div v-if="talk.userRef.id">
         登壇者：
@@ -146,4 +145,18 @@
 </script>
 
 <style scoped>
+  .iframe-wrap {
+  position: relative;
+  overflow: hidden;
+  margin: 15px 0 20px 0;
+  padding-bottom: 50%;
+  padding-top: 65px;
+  }
+  .iframe-wrap >>> iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  }
 </style>

@@ -18,7 +18,7 @@
         <a :href="generateMovieLink" target="_blank">Youtubeで視聴</a><br>
         <EmbedMovie :movieUrl="talk.movieUrl"/>
       </div>
-      <div class="iframe-wrap" v-html="talk.slideUrl">
+      <div v-if="talk.slideUrl != ''" class="iframe-wrap" v-html="talk.slideUrl">
       </div>
       <div v-if="talk.userRef.id">
         登壇者：

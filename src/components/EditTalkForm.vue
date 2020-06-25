@@ -184,7 +184,7 @@
           return url_str;
         } else if (url.indexOf('youtu.be/') != -1) {
           idx = url.indexOf('youtu.be/');
-          url_str = url.slice( idx + 8 );
+          url_str = url.slice( idx + 9 );
           if (url_str.indexOf('&') != -1) {
             and_idx = url_str.indexOf('&');
             url_str = url_str.substr(0, and_idx);

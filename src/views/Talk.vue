@@ -18,7 +18,8 @@
         <a :href="generateMovieLink" target="_blank">Youtubeで視聴</a><br>
         <EmbedMovie :movieUrl="talk.movieUrl"/>
       </div>
-      <div v-if="talk.slideUrl != ''" class="iframe-wrap" v-html="talk.slideUrl">
+      <div v-if="talk.slideUrl != ''">
+        <EmbedSlide :slideUrl="talk.slideUrl"/>
       </div>
       <div v-if="talk.userRef.id">
         登壇者：
@@ -49,10 +50,11 @@
 </template>
 
 <script>
-  import EditTalkForm from '@/components/EditTalkForm.vue';
+  import EditTalkForm from '@/components/EditTalkForm.vue'
   import CommentBoard from '@/components/CommentBoard.vue'
   import CommentForm from '@/components/CommentForm.vue'
   import EmbedMovie from '@/components/EmbedMovie.vue'
+  import EmbedSlide from '@/components/EmbedSlide.vue'
   import { db } from '@/firebase/firestore.js';
   import firebase from 'firebase';
   import UserItemSmall from "../components/UserItemSmall";
@@ -64,7 +66,8 @@
       EditTalkForm,
       CommentBoard,
       CommentForm,
-      EmbedMovie
+      EmbedMovie,
+      EmbedSlide
     },
     data() {
       return {

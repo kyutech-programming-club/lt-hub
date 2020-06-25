@@ -1,6 +1,7 @@
 <template>
   <div class="new-talk-form">
-    <v-chip class="ma-2"
+    <v-chip
+      class="ma-2"
       id="talk-activator"
       @click:on="openDialog"
       color="blue"
@@ -23,36 +24,40 @@
           </v-card-actions>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  ref="title"
-                  v-model="title"
-                  label="タイトル"
-                  :rules="[requiredNotEmpty]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="movieUrl"
-                  label="動画URL"
-                  :rules="[requireValidMovieUrl]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="slideUrl"
-                  label="スライドURL" />
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-form ref="form">
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    ref="title"
+                    v-model="title"
+                    label="タイトル"
+                    :rules="[requiredNotEmpty]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="movieUrl"
+                    label="動画URL"
+                    :rules="[requireValidMovieUrl]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="slideUrl"
+                    label="スライドURL"
+                    :rules="[requireValidSlideUrl]" />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
-            <v-btn class="white--text font-weight-bold"
-             color="blue darken-1"
-             @click="createTalk">
-             Create new talk
-           </v-btn>
+            <v-btn
+              class="white--text font-weight-bold"
+              color="blue darken-1"
+              @click="createTalk">
+              Create new talk
+            </v-btn>
           </v-spacer>
         </v-card-actions>
       </v-card>
@@ -77,8 +82,6 @@
         title: '',
         slideUrl: '',
         movieUrl: '',
-        isValid: false,
-        isValidMovieUrl: true, 
         dialog: false
       };
     },
@@ -95,7 +98,7 @@
     },
     methods: {
       async createTalk() {
-        if (this.isValid && this.isValidMovieUrl) {
+        if (this.$refs.form.validate()){
           let eventRef = await db.collection('events').doc(this.eventId)
           let userRef = await db.collection('users').doc(this.userId)
           db.collection('talks')
@@ -103,7 +106,7 @@
               eventRef: eventRef,
               userRef: userRef,
               title: this.title,
-              slideUrl: this.slideUrl,
+              slideUrl: this.getSlideId(this.slideUrl),
               movieUrl: this.getMovieId(this.movieUrl),
               createdTime: firebase.firestore.FieldValue.serverTimestamp(),
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
@@ -122,25 +125,26 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       requireValidMovieUrl(value) {
         if (value.indexOf('watch?v=') != -1 || value.indexOf('youtu.be/') != -1 || value == '') {
-          this.isValidMovieUrl = true;
           return true;
-        } 
-        this.isValidMovieUrl = false;
+        }
         return 'Invalid url.';
+      },
+      requireValidSlideUrl(value) {
+        if (value.indexOf('https://docs.google.com/presentation/d/e/') != -1 || value == '') {
+          return true;
+        }
+        return 'Invalid url'
       },
       // Formの初期化
       clear() {
@@ -148,8 +152,6 @@
         this.title = '';
         this.movieUrl = '';
         this.slideUrl = '';
-        this.isValid = false;
-        this.isValidMovieUrl = true;
       },
       // Formダイアログの表示
       openDialog() {
@@ -180,6 +182,11 @@
           return url_str;
         }
 
+        return url;
+      },
+      getSlideId(url) {
+        url = url.replace('https://docs.google.com/presentation/d/e/', '');
+        url = url.replace(/\/pub\?.*/, '');
         return url;
       }
     }

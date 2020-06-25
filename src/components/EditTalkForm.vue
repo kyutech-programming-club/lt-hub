@@ -42,7 +42,8 @@
                 <v-flex xs12>
                   <v-text-field
                     v-model="slideUrl"
-                    label="スライドURL" />
+                    label="スライドURL"
+                    :rules="[requireValidSlideUrl]" />
                 </v-flex>
               </v-layout>
             </v-container>
@@ -79,9 +80,13 @@
       if (this.talk.movieUrl != '') {
         movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
       }
+      let slideUrl = ''
+      if (this.talk.slideUrl != '') {
+        slideUrl = 'https://docs.google.com/presentation/d/e/' + this.talk.slideUrl;
+      }
       return {
         title: this.talk.title,
-        slideUrl: this.talk.slideUrl,
+        slideUrl: slideUrl,
         movieUrl: movieUrl,
         dialog: false
       };
@@ -104,7 +109,7 @@
             .doc(this.talk.id)
             .update({
               title: this.title,
-              slideUrl: this.slideUrl,
+              slideUrl: this.getSlideId(this.slideUrl),
               movieUrl: this.getMovieId(this.movieUrl),
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
@@ -137,6 +142,12 @@
         }
         return 'Invalid url.';
       },
+      requireValidSlideUrl(value) {
+        if (value.indexOf('https://docs.google.com/presentation/d/e/') != -1 || value == '') {
+          return true;
+        }
+        return 'Invalid url'
+      },
       // Formの初期化
       clear() {
         this.title = this.talk.title;
@@ -144,6 +155,11 @@
           this.movieUrl = '';
         } else {
           this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        }
+        if (this.talk.slideUrl == '') {
+          this.slideUrl = '';
+        } else {
+          this.slideUrl = 'https://docs.google.com/presentation/d/e/' + this.talk.movieUrl;
         }
         this.slideUrl = this.talk.slideUrl;
       },
@@ -176,6 +192,11 @@
           return url_str;
         }
 
+        return url;
+      },
+      getSlideId(url) {
+        url = url.replace('https://docs.google.com/presentation/d/e/', '');
+        url = url.replace(/\/pub\?.*/, '');
         return url;
       }
     }

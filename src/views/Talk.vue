@@ -55,9 +55,9 @@
   import CommentForm from '@/components/CommentForm.vue'
   import EmbedMovie from '@/components/EmbedMovie.vue'
   import EmbedSlide from '@/components/EmbedSlide.vue'
-  import { db } from '@/firebase/firestore.js';
-  import firebase from 'firebase';
-  import UserItemSmall from "../components/UserItemSmall";
+  import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
+  import UserItemSmall from "../components/UserItemSmall"
 
   export default {
     name: 'Talk',

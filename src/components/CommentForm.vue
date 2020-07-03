@@ -73,6 +73,7 @@
             content: this.inputComment,
             userRef: userRef,
             createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+            favoriteNum: 0
           });
           this.clear();
         }

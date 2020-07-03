@@ -15,7 +15,7 @@
               <v-icon
                 color="light-blue"
                 @click="favoriteComment(comment.id)">
-                mdi-hand-heart
+                mdi-thumb-up
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">

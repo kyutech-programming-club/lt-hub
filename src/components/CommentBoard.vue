@@ -12,6 +12,12 @@
               <v-list-item-avatar @click="goUserPage(comment.userRef)">
                 <img :src="comment.userRef.photoURL">
               </v-list-item-avatar>
+              <v-icon
+                color="blue"
+                @click="favoriteComment(comment.id)">
+                mdi-hand-heart
+              </v-icon>
+              {{comment.favoriteNum}}
               <v-list-item-content class="pa-0">
                 <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>
@@ -61,6 +67,17 @@
       }
     },
     methods: {
+      async favoriteComment(id) {
+        let favoriteNum;
+        await db.collection('talks').doc(this.talkId).collection('comments').doc(id).get()
+          .then(comment => {
+            favoriteNum = comment.data().favoriteNum;
+          })
+        await db.collection('talks').doc(this.talkId).collection('comments').doc(id)
+          .update({
+            favoriteNum: favoriteNum + 1
+          })
+      },
       deleteComment(id) {
         if (!confirm('コメントを削除してよろしいですか？')) {
           return

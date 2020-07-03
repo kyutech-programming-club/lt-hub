@@ -13,11 +13,11 @@
                 <img :src="comment.userRef.photoURL">
               </v-list-item-avatar>
               <v-icon
-                color="blue"
+                color="light-blue"
                 @click="favoriteComment(comment.id)">
                 mdi-hand-heart
               </v-icon>
-              {{comment.favoriteNum}}
+              <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
                 <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>

@@ -6,7 +6,14 @@
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
-        概要：{{event.description}}<br>
+        概要
+        <v-card
+          v-scroll.self="onScroll"
+          class="overflow-y-auto reline"
+          max-height="400"
+          flat>
+          {{event.description}}<br>
+        </v-card>
         場所：{{ event.place }}<br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
@@ -55,13 +62,14 @@
       </div>
     </div>
     <div class="talks-list">
+      LT数 {{talks.length}}
       <talk-item
         v-for="talk in talks"
         :key="talk.id"
         :talk="talk"/>
     </div>
     <div v-if="participants" class="users-list">
-      参加者リスト<br>
+      参加者数  {{participants.length}}人<br />
       <participate-item
         v-for="user in participants"
         :key="user.id"
@@ -131,7 +139,7 @@
       }
     },
     firestore(){
-      console.log("firestore")
+      console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
         talks: db.collection('talks')
@@ -236,10 +244,17 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
-      }
+      },
+      onScroll () {
+        this.scrollInvoked++
+      },
     }
   }
 </script>
 
 <style scoped>
+  .reline {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
 </style>

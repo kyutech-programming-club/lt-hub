@@ -15,11 +15,11 @@
         最終更新日時：{{ getStringFromDate(talk.updatedTime.toDate()) }}<br>
       </div>
       <div v-if="talk.movieUrl != ''">
-        <a :href="generateMovieLink" target="_blank">Youtube</a><br>
+        <a :href="generateMovieLink" target="_blank">Youtubeで視聴</a><br>
         <EmbedMovie :movieUrl="talk.movieUrl"/>
       </div>
       <div v-if="talk.slideUrl != ''">
-        スライドURL: {{ talk.slideUrl }}<br>
+        <EmbedSlide :slideUrl="talk.slideUrl"/>
       </div>
       <div v-if="talk.userRef.id">
         登壇者：
@@ -50,13 +50,14 @@
 </template>
 
 <script>
-  import EditTalkForm from '@/components/EditTalkForm.vue';
+  import EditTalkForm from '@/components/EditTalkForm.vue'
   import CommentBoard from '@/components/CommentBoard.vue'
   import CommentForm from '@/components/CommentForm.vue'
   import EmbedMovie from '@/components/EmbedMovie.vue'
-  import { db } from '@/firebase/firestore.js';
-  import firebase from 'firebase';
-  import UserItemSmall from "../components/UserItemSmall";
+  import EmbedSlide from '@/components/EmbedSlide.vue'
+  import { db } from '@/firebase/firestore.js'
+  import firebase from 'firebase'
+  import UserItemSmall from "../components/UserItemSmall"
 
   export default {
     name: 'Talk',
@@ -65,7 +66,8 @@
       EditTalkForm,
       CommentBoard,
       CommentForm,
-      EmbedMovie
+      EmbedMovie,
+      EmbedSlide
     },
     data() {
       return {
@@ -146,4 +148,18 @@
 </script>
 
 <style scoped>
+  .iframe-wrap {
+  position: relative;
+  overflow: hidden;
+  margin: 15px 0 20px 0;
+  padding-bottom: 50%;
+  padding-top: 65px;
+  }
+  .iframe-wrap >>> iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="iframe-wrap">
     <iframe
       :src="embedMovieUrl">
     </iframe>

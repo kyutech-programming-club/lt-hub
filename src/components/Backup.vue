@@ -12,8 +12,9 @@
     name: 'Backup.vue',
     methods: {
       async backup() {
-        let backupData = {usersData: {}};
+        let backupData = {};
         let usersData = {};
+        let eventsData = {};
         await db.collection('users').get().then(
           users => {
             users.forEach(user => {
@@ -22,7 +23,29 @@
             );
           }
         );
-        backupData.usersData = usersData;
+
+        await db.collection('events').get().then(
+          events => {
+            events.forEach(event => {
+                eventsData[event.id] = {
+                  title: event.data().title,
+                  description: event.data().description,
+                  author: event.data().author.id,
+                  start: event.data().start,
+                  end: event.data().end,
+                  place: event.data().place,
+                  createdTime: event.data().createdTime,
+                  updatedTime: event.data().updatedTime,
+                };
+              }
+            );
+          }
+        );
+
+        console.log(eventsData);
+
+        backupData['usersData'] = usersData;
+        backupData['eventsData'] = eventsData;
 
         const fileName = 'backup.json';
         const data = JSON.stringify(backupData);
@@ -58,6 +81,7 @@
       },
       save(data) {
         let usersData = data.usersData;
+        let eventsData = data.eventsData;
         Object.keys(usersData).forEach(function (key) {
           db.collection('backupUsers').doc(key).set(
             {
@@ -71,6 +95,33 @@
               ),
               name: usersData[key].name,
               photoURL: usersData[key].photoURL
+            }
+          );
+        });
+
+        Object.keys(eventsData).forEach(function (key) {
+          db.collection('backupEvents').doc(key).set(
+            {
+              title: eventsData[key].title,
+              description: eventsData[key].description,
+              place: eventsData[key].place,
+              author: db.collection('users').doc(eventsData[key].author),
+              start: new firebase.firestore.Timestamp(
+                eventsData[key].start.seconds,
+                eventsData[key].start.nanoseconds
+              ),
+              end: new firebase.firestore.Timestamp(
+                eventsData[key].end.seconds,
+                eventsData[key].end.nanoseconds
+              ),
+              updatedTime: new firebase.firestore.Timestamp(
+                eventsData[key].updatedTime.seconds,
+                eventsData[key].updatedTime.nanoseconds
+              ),
+              createdTime: new firebase.firestore.Timestamp(
+                eventsData[key].createdTime.seconds,
+                eventsData[key].createdTime.nanoseconds
+              ),
             }
           );
         });

@@ -15,37 +15,72 @@
         let backupData = {};
         let usersData = {};
         let eventsData = {};
+        let talksData = {};
+
         await db.collection('users').get().then(
           users => {
             users.forEach(user => {
-                usersData[user.id] = user.data();
-              }
-            );
+              usersData[user.id] = user.data();
+            });
           }
         );
 
         await db.collection('events').get().then(
           events => {
             events.forEach(event => {
-                eventsData[event.id] = {
-                  title: event.data().title,
-                  description: event.data().description,
-                  author: event.data().author.id,
-                  start: event.data().start,
-                  end: event.data().end,
-                  place: event.data().place,
-                  createdTime: event.data().createdTime,
-                  updatedTime: event.data().updatedTime,
-                };
-              }
-            );
+              eventsData[event.id] = {
+                title: event.data().title,
+                description: event.data().description,
+                author: event.data().author.id,
+                start: event.data().start,
+                end: event.data().end,
+                place: event.data().place,
+                createdTime: event.data().createdTime,
+                updatedTime: event.data().updatedTime,
+              };
+            });
           }
         );
 
-        console.log(eventsData);
+        await db.collection('talks').get().then(
+          talks => {
+            talks.forEach(async(talk) => {
+              let commentsList = {};
+
+              await db.collection('talks').doc(talk.id).collection('comments').get().then(
+                comments => {
+                  comments.forEach(comment => {
+                    // console.log(comment.data().content);
+                    commentsList[comment.id] = {
+                      content: comment.data().content,
+                      favoriteNum: comment.data().favoriteNum,
+                      userRef: comment.data().userRef.id,
+                      createdTime: comment.data().createdTime
+                    }
+                  });
+                }
+              )
+
+              console.log(commentsList)
+
+              talksData[talk.id] = {
+                title: talk.data().title,
+                movieUrl: talk.data().movieUrl,
+                slideUrl: talk.data().slideUrl,
+                userRef: talk.data().userRef.id,
+                eventRef: talk.data().eventRef.id,
+                createdTime: talk.data().createdTime,
+                updatedTime: talk.data().updatedTime,
+                comments: commentsList
+              };
+
+            });
+          }
+        );
 
         backupData['usersData'] = usersData;
         backupData['eventsData'] = eventsData;
+        backupData['talksData'] = talksData;
 
         const fileName = 'backup.json';
         const data = JSON.stringify(backupData);

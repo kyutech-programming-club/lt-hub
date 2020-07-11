@@ -11,12 +11,10 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="headline">スライド＆動画の公開方法！</span>
+          <span class="headline">スライドの公開方法について</span>
         </v-card-title>
         <template>
-          <h1 class="ma-2">LTの振り返りのためにスライドと動画の公開をお願いします</h1>
           <div align="left" class="ma-5">
-            <h2 class="mt-1 mb-1">スライドの公開方法について</h2><br>
             <h3>1.Googleドライブにスライドをアップロード</h3><br><br>
             <h3>2.該当スライドを右クリックしアプリで開くからGoogleスライドを選択</h3><br>
               <v-container fluid>

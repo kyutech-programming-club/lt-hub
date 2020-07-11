@@ -23,28 +23,30 @@
           </v-card-actions>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  ref="title"
-                  v-model="title"
-                  label="タイトル"
-                  :rules="[requiredNotEmpty]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="movieUrl"
-                  label="動画URL"
-                  :rules="[requireValidMovieUrl]" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="slideUrl"
-                  label="スライドURL" />
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-form ref="form">
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="title"
+                    label="タイトル"
+                    :rules="[requiredNotEmpty]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="movieUrl"
+                    label="動画URL"
+                    :rules="[requireValidMovieUrl]" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="slideUrl"
+                    label="スライドURL"
+                    :rules="[requireValidSlideUrl]" />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
@@ -69,12 +71,18 @@
       talk: Object
     },
     data() {
+      let movieUrl = ''
+      if (this.talk.movieUrl != '') {
+        movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+      }
+      let slideUrl = ''
+      if (this.talk.slideUrl != '') {
+        slideUrl = 'https://docs.google.com/presentation/d/e/' + this.talk.slideUrl;
+      }
       return {
         title: this.talk.title,
-        slideUrl: this.talk.slideUrl,
-        movieUrl: 'https://www.youtube.com/watch?v=' + this.talk.movieUrl,
-        isValid: false,
-        isValidMovieUrl: true, 
+        slideUrl: slideUrl,
+        movieUrl: movieUrl,
         dialog: false
       };
     },
@@ -91,12 +99,12 @@
     },
     methods: {
       async updateTalk() {
-        if (this.isValid && this.isValidMovieUrl) {
+        if (this.$refs.form.validate()) {
           db.collection('talks')
             .doc(this.talk.id)
             .update({
               title: this.title,
-              slideUrl: this.slideUrl,
+              slideUrl: this.getSlideId(this.slideUrl),
               movieUrl: this.getMovieId(this.movieUrl),
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
@@ -114,32 +122,41 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       requireValidMovieUrl(value) {
         if (value.indexOf('watch?v=') != -1 || value.indexOf('youtu.be/') != -1 || value == '') {
-          this.isValidMovieUrl = true;
           return true;
-        } 
-        this.isValidMovieUrl = false;
+        }
         return 'Invalid url.';
+      },
+      requireValidSlideUrl(value) {
+        if (value.indexOf('https://docs.google.com/presentation/d/e/') != -1 || value == '') {
+          return true;
+        }
+        return 'Invalid url'
       },
       // Formの初期化
       clear() {
         this.title = this.talk.title;
-        this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        if (this.talk.movieUrl == '') {
+          this.movieUrl = '';
+        } else {
+          this.movieUrl = 'https://www.youtube.com/watch?v=' + this.talk.movieUrl;
+        }
+        if (this.talk.slideUrl == '') {
+          this.slideUrl = '';
+        } else {
+          this.slideUrl = 'https://docs.google.com/presentation/d/e/' + this.talk.movieUrl;
+        }
         this.slideUrl = this.talk.slideUrl;
-        this.isValid =  false;
       },
       // Formダイアログの表示
       openDialog() {
@@ -162,7 +179,7 @@
           return url_str;
         } else if (url.indexOf('youtu.be/') != -1) {
           idx = url.indexOf('youtu.be/');
-          url_str = url.slice( idx + 8 );
+          url_str = url.slice( idx + 9 );
           if (url_str.indexOf('&') != -1) {
             and_idx = url_str.indexOf('&');
             url_str = url_str.substr(0, and_idx);
@@ -170,6 +187,11 @@
           return url_str;
         }
 
+        return url;
+      },
+      getSlideId(url) {
+        url = url.replace('https://docs.google.com/presentation/d/e/', '');
+        url = url.replace(/\/pub\?.*/, '');
         return url;
       }
     }

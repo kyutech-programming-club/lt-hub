@@ -6,6 +6,8 @@
         登壇者：
         <user-item-small
         :user = "talk.userRef" />
+        <v-icon v-if="talk.movieUrl != ''">mdi-youtube</v-icon>
+        <v-icon v-if="talk.slideUrl != ''">mdi-presentation</v-icon>
       </v-card-text>
     </v-card>
   </div>

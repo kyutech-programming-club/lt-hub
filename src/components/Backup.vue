@@ -17,6 +17,7 @@
         let usersData = {};
         let eventsData = {};
         let talksData = {};
+        let participantsData = {};
 
         await db.collection('users').get().then(
           users => {
@@ -45,8 +46,7 @@
 
         await db.collection('talks').get().then(
           talks => {
-            talks.forEach(async(talk) => {
-
+            talks.forEach(talk => {
               talksData[talk.id] = {
                 title: talk.data().title,
                 movieUrl: talk.data().movieUrl,
@@ -56,7 +56,17 @@
                 createdTime: talk.data().createdTime,
                 updatedTime: talk.data().updatedTime,
               };
+            });
+          }
+        );
 
+        await db.collection('participants').get().then(
+          participants => {
+            participants.forEach(participant => {
+              participantsData[participant.id] = {
+                userRef: participant.data().userRef.id,
+                eventRef: participant.data().eventRef.id,
+              };
             });
           }
         );
@@ -64,6 +74,7 @@
         backupData['usersData'] = usersData;
         backupData['eventsData'] = eventsData;
         backupData['talksData'] = talksData;
+        backupData['participantsData'] = participantsData;
 
         const fileName = 'backupWithoutComments.json';
         const data = JSON.stringify(backupData);

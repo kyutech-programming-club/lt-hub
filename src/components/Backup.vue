@@ -2,7 +2,8 @@
   <div>
     <v-btn @click="backupWithoutComments" color="light-blue">Backup without comments</v-btn>
     <v-btn @click="backupOnlyComments" color="blue">Backup only comments</v-btn>
-    <v-btn @click="restore" color="orange">Restore</v-btn>
+    <v-btn @click="restoreWithoutComments" color="pink">Restore without comments</v-btn>
+    <v-btn @click="restoreOnlyComments" color="red">Restore only comments</v-btn>
   </div>
 </template>
 
@@ -85,40 +86,44 @@
       },
       async backupOnlyComments() {
         let backupData = {};
-        let commentsData = {};
-        let talkIdList = [];
 
-        await db.collection('talks').get().then(
-          talks => {
-            talks.forEach(talk => {
-              talkIdList.push(talk.id);
-            });
-          }
-        );
 
-        let commentsList = {};
+        // let commentsData = {};
+        // let talkIdList = [];
 
-        for (let i = 0; i < talkIdList.length; i++) {
-          await db.collection('talks').doc(talkIdList[i]).collection('comments').get().then(
-            comments => {
-              comments.forEach(comment => {
-                commentsList[comment.id] = {
-                  content: comment.data().content,
-                  favoriteNum: comment.data().favoriteNum,
-                  userRef: comment.data().userRef.id,
-                  createdTime: comment.data().createdTime
-                }
-              });
-            }
-          )
+        // await db.collection('talks').get().then(
+        //   talks => {
+        //     talks.forEach(talk => {
+        //       talkIdList.push(talk.id);
+        //     });
+        //   }
+        // );
 
-          commentsData[talkIdList[i]] = {
-            comments: commentsList
-          };
+        // let commentsList = {};
 
-        }
 
-        backupData['commentsData'] = commentsData;
+        // ここら辺怪しい。
+        // for (let i = 0; i < talkIdList.length; i++) {
+        //   await db.collection('talks').doc(talkIdList[i]).collection('comments').get().then(
+        //     comments => {
+        //       comments.forEach(comment => {
+        //         commentsList[comment.id] = {
+        //           content: comment.data().content,
+        //           favoriteNum: comment.data().favoriteNum,
+        //           userRef: comment.data().userRef.id,
+        //           createdTime: comment.data().createdTime
+        //         }
+        //       });
+        //     }
+        //   )
+
+        //   commentsData[talkIdList[i]] = {
+        //     comments: commentsList
+        //   };
+
+        // }
+
+        // backupData['commentsData'] = commentsData;
 
         const fileName = 'backupOnlyComments.json';
         const data = JSON.stringify(backupData);
@@ -127,7 +132,7 @@
         link.download = fileName;
         link.click();
       },
-      restore() {
+      restoreWithoutComments() {
         const input = document.createElement('input');
         input.type = 'file';
 
@@ -145,16 +150,19 @@
           reader.addEventListener('load', () => {
 
             // 読み込んだデータ（JSON形式の文字列）をJavaScriptオブジェクトに変換する。
-            this.save(JSON.parse(reader.result));
+            this.uploadWithoutComments(JSON.parse(reader.result));
           });
         });
 
         // 「ファイルを開く」ダイアログを表示する。
         input.click();
       },
-      save(data) {
+      uploadWithoutComments(data) {
         let usersData = data.usersData;
         let eventsData = data.eventsData;
+        let talksData = data.talksData;
+        let participantsData = data.participantsData;
+
         Object.keys(usersData).forEach(function (key) {
           db.collection('backupUsers').doc(key).set(
             {
@@ -197,6 +205,80 @@
               ),
             }
           );
+        });
+
+        Object.keys(talksData).forEach(function (key) {
+          db.collection('backupTalks').doc(key).set(
+            {
+              title: talksData[key].title,
+              userRef: db.collection('users').doc(talksData[key].userRef),
+              eventRef: db.collection('events').doc(talksData[key].eventRef),
+              movieUrl: talksData[key].movieUrl,
+              slideUrl: talksData[key].slideUrl,
+              updatedTime: new firebase.firestore.Timestamp(
+                talksData[key].updatedTime.seconds,
+                talksData[key].updatedTime.nanoseconds
+              ),
+              createdTime: new firebase.firestore.Timestamp(
+                talksData[key].createdTime.seconds,
+                talksData[key].createdTime.nanoseconds
+              ),
+            }
+          );
+        });
+
+        Object.keys(participantsData).forEach(function (key) {
+          db.collection('backupParticipants').doc(key).set(
+            {
+              userRef: db.collection('users').doc(participantsData[key].userRef),
+              eventRef: db.collection('events').doc(participantsData[key].eventRef),
+            }
+          );
+        });
+      },
+      restoreOnlyComments() {
+        const input = document.createElement('input');
+        input.type = 'file';
+
+        // ファイルが指定された後に行う処理を定義する。
+        input.addEventListener('change', e => {
+          // ファイルの中身
+          let result = e.target.files[0];
+
+          let reader = new FileReader();
+
+          // ファイルの中身をテキストデータとして読み取る。
+          reader.readAsText(result);
+
+          // ファイルの中身が読み取られた後に行う処理を定義する。
+          reader.addEventListener('load', () => {
+
+            // 読み込んだデータ（JSON形式の文字列）をJavaScriptオブジェクトに変換する。
+            this.uploadOnlyComments(JSON.parse(reader.result));
+          });
+        });
+
+        // 「ファイルを開く」ダイアログを表示する。
+        input.click();
+      },
+      uploadOnlyComments(data) {
+        let commentsData = data.commentsData;
+
+        Object.keys(commentsData).forEach(function (talkKey) {
+          Object.keys(commentsData[talkKey]).forEach(function (commentsKey) {
+            Object.keys(commentsData[talkKey][commentsKey]).forEach(function (commentKey) {
+              // db.collection('backupTalks').doc(talkKey).collection('comments').doc(commentKey).set({
+              //   content: commentsData[talkKey][commentsKey][commentKey].content,
+              //   userRef: commentsData[talkKey][commentsKey][commentKey].userRef,
+              //   createdTime: new firebase.firestore.Timestamp(
+              //     commentsData[talkKey][commentsKey][commentKey].createdTime.seconds,
+              //     commentsData[talkKey][commentsKey][commentKey].createdTime.nanoseconds
+              //   ),
+              //   favoriteNum: commentsData[talkKey][commentsKey][commentKey].favoriteNum
+              // });
+              console.log(commentsData[talkKey][commentsKey][commentKey].content);
+            });
+          });
         });
       }
     },

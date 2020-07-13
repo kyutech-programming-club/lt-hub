@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-btn @click="backup" color="blue">Backup</v-btn>
+    <v-btn @click="backupWithoutComments" color="light-blue">Backup without comments</v-btn>
+    <v-btn @click="backupOnlyComments" color="blue">Backup only comments</v-btn>
     <v-btn @click="restore" color="orange">Restore</v-btn>
   </div>
 </template>
@@ -11,7 +12,7 @@
   export default {
     name: 'Backup.vue',
     methods: {
-      async backup() {
+      async backupWithoutComments() {
         let backupData = {};
         let usersData = {};
         let eventsData = {};
@@ -45,23 +46,6 @@
         await db.collection('talks').get().then(
           talks => {
             talks.forEach(async(talk) => {
-              let commentsList = {};
-
-              await db.collection('talks').doc(talk.id).collection('comments').get().then(
-                comments => {
-                  comments.forEach(comment => {
-                    // console.log(comment.data().content);
-                    commentsList[comment.id] = {
-                      content: comment.data().content,
-                      favoriteNum: comment.data().favoriteNum,
-                      userRef: comment.data().userRef.id,
-                      createdTime: comment.data().createdTime
-                    }
-                  });
-                }
-              )
-
-              console.log(commentsList)
 
               talksData[talk.id] = {
                 title: talk.data().title,
@@ -71,7 +55,6 @@
                 eventRef: talk.data().eventRef.id,
                 createdTime: talk.data().createdTime,
                 updatedTime: talk.data().updatedTime,
-                comments: commentsList
               };
 
             });
@@ -82,7 +65,51 @@
         backupData['eventsData'] = eventsData;
         backupData['talksData'] = talksData;
 
-        const fileName = 'backup.json';
+        const fileName = 'backupWithoutComments.json';
+        const data = JSON.stringify(backupData);
+        const link = document.createElement('a');
+        link.href = 'data:text/plain,' + encodeURIComponent(data);
+        link.download = fileName;
+        link.click();
+      },
+      async backupOnlyComments() {
+        let backupData = {};
+        let commentsData = {};
+        let talkIdList = [];
+
+        await db.collection('talks').get().then(
+          talks => {
+            talks.forEach(talk => {
+              talkIdList.push(talk.id);
+            });
+          }
+        );
+
+        let commentsList = {};
+
+        for (let i = 0; i < talkIdList.length; i++) {
+          await db.collection('talks').doc(talkIdList[i]).collection('comments').get().then(
+            comments => {
+              comments.forEach(comment => {
+                commentsList[comment.id] = {
+                  content: comment.data().content,
+                  favoriteNum: comment.data().favoriteNum,
+                  userRef: comment.data().userRef.id,
+                  createdTime: comment.data().createdTime
+                }
+              });
+            }
+          )
+
+          commentsData[talkIdList[i]] = {
+            comments: commentsList
+          };
+
+        }
+
+        backupData['commentsData'] = commentsData;
+
+        const fileName = 'backupOnlyComments.json';
         const data = JSON.stringify(backupData);
         const link = document.createElement('a');
         link.href = 'data:text/plain,' + encodeURIComponent(data);

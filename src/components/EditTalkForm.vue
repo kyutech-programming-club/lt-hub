@@ -14,7 +14,7 @@
     <v-dialog
       v-model="dialog"
       activator="#talk-activator"
-      max-width="50%">
+      max-width="90%">
       <v-card>
         <v-card-title>
           <span class="headline">トーク編集</span>

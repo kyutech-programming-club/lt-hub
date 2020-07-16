@@ -23,17 +23,19 @@
           </v-card-actions>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  ref="name"
-                  v-model="name"
-                  label="名前"
-                  :rules="[requiredNotEmpty]" />
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-form ref="form">
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    ref="name"
+                    v-model="name"
+                    label="名前"
+                    :rules="[requiredNotEmpty]" />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
@@ -61,13 +63,12 @@
     data() {
       return {
         name: this.user.name,
-        isValid: false,
         dialog: false
       };
     },
     methods: {
       async updateUser() {
-        if (this.isValid) {
+        if (this.$refs.form.validate()) {
           db.collection('users')
             .doc(this.user.id)
             .update({
@@ -88,22 +89,18 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       // Formの初期化
       clear() {
         this.name = this.user.name;
-        this.isValid =  false;
       },
       // Formダイアログの表示
       openDialog() {

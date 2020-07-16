@@ -8,8 +8,8 @@
       <v-icon left>
         mdi-calendar-plus
       </v-icon>
-    Create event
-  </v-chip>
+      Create event
+    </v-chip>
     <v-dialog
       v-model="dialog"
       activator="#activator"
@@ -23,141 +23,143 @@
           </v-card-actions>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
+          <v-form ref="form">
+            <v-container grid-list-md>
+              <v-layout wrap>
 
-              <v-dialog
-                ref="dialog1"
-                v-model="modal"
-                :return-value.sync="startDate"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="startDate"
-                    label="開始日"
-                    prepend-icon="mdi-event"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="startDate">
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                  <v-btn text color="primary" @click="$refs.dialog1.save(startDate)">OK</v-btn>
-                </v-date-picker>
-              </v-dialog>
+                <v-dialog
+                  ref="dialog1"
+                  v-model="modal"
+                  :return-value.sync="startDate"
+                  persistent
+                  width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="startDate"
+                      label="開始日"
+                      prepend-icon="mdi-event"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="startDate">
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.dialog1.save(startDate)">OK</v-btn>
+                  </v-date-picker>
+                </v-dialog>
 
-              <v-dialog
-                ref="dialog2"
-                v-model="modal1"
-                :return-value.sync="startTime"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                <v-dialog
+                  ref="dialog2"
+                  v-model="modal1"
+                  :return-value.sync="startTime"
+                  persistent
+                  width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="startTime"
+                      label="開始時間"
+                      prepend-icon="mdi-clock-outline"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="modal1"
                     v-model="startTime"
-                    label="開始時間"
-                    prepend-icon="mdi-clock-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="modal1"
-                  v-model="startTime"
-                  full-width
-                  :max="maxTime"
+                    full-width
+                    :max="maxTime"
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.dialog2.save(startTime)">OK</v-btn>
+                  </v-time-picker>
+                </v-dialog>
+
+                <v-dialog
+                  ref="dialog3"
+                  v-model="modal3"
+                  :return-value.sync="endDate"
+                  persistent
+                  width="290px"
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
-                  <v-btn text color="primary" @click="$refs.dialog2.save(startTime)">OK</v-btn>
-                </v-time-picker>
-              </v-dialog>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="endDate"
+                      label="終了日"
+                      prepend-icon="mdi-event"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="endDate" :min="startDate" >
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.dialog3.save(endDate)">OK</v-btn>
+                  </v-date-picker>
+                </v-dialog>
 
-              <v-dialog
-                ref="dialog3"
-                v-model="modal3"
-                :return-value.sync="endDate"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="endDate"
-                    label="終了日"
-                    prepend-icon="mdi-event"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="endDate" :min="startDate" >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
-                  <v-btn text color="primary" @click="$refs.dialog3.save(endDate)">OK</v-btn>
-                </v-date-picker>
-              </v-dialog>
-
-              <v-dialog
-                ref="dialog4"
-                v-model="modal2"
-                :return-value.sync="endTime"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                <v-dialog
+                  ref="dialog4"
+                  v-model="modal2"
+                  :return-value.sync="endTime"
+                  persistent
+                  width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="endTime"
+                      label="終了時間"
+                      prepend-icon="mdi-clock-outline"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="modal2"
                     v-model="endTime"
-                    label="終了時間"
-                    prepend-icon="mdi-clock-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="modal2"
-                  v-model="endTime"
-                  full-width
-                  :min="minTime"
-                >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
-                  <v-btn text color="primary" @click="$refs.dialog4.save(endTime)">OK</v-btn>
-                </v-time-picker>
-              </v-dialog>
-              <v-flex xs12>
-                <v-text-field
-                  ref="title"
-                  v-model="title"
-                  label="イベント名"
-                  :rules="[requiredNotEmpty]"/>
-              </v-flex>
-              <v-flex xs12>
-                <v-textarea
-                  v-model="description"
-                  label="イベント概要" />
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="place"
-                  label="会場"
-                  hint="オンラインの場合は使用ツール・視聴URLなど"/>
-              </v-flex>
-            </v-layout>
-          </v-container>
+                    full-width
+                    :min="minTime"
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.dialog4.save(endTime)">OK</v-btn>
+                  </v-time-picker>
+                </v-dialog>
+                <v-flex xs12>
+                  <v-text-field
+                    ref="title"
+                    v-model="title"
+                    label="イベント名"
+                    :rules="[requiredNotEmpty]"/>
+                </v-flex>
+                <v-flex xs12>
+                  <v-textarea
+                    v-model="description"
+                    label="イベント概要" />
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="place"
+                    label="会場"
+                    hint="オンラインの場合は使用ツール・視聴URLなど"/>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer>
             <v-btn class="white--text font-weight-bold"
-            color="blue darken-1"
-            @click="createEvent">
-            Create new event
+                   color="blue darken-1"
+                   @click="createEvent">
+              Create new event
             </v-btn>
           </v-spacer>
         </v-card-actions>
@@ -175,7 +177,6 @@
         title: '',
         description: '',
         place: '',
-        isValid: false,
         dialog: false,
         modal: false,
         modal1: false,
@@ -246,7 +247,7 @@
     },
     methods: {
       async createEvent() {
-        if (this.isValid) {
+        if (this.$refs.form.validate()) {
           firebase.auth().onAuthStateChanged(user => {
             db.collection('events')
               .add({
@@ -274,16 +275,13 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       // Formの初期化
@@ -296,7 +294,6 @@
         this.startTime = '19:00';
         this.endTime = '21:00';
         this.place =  '';
-        this.isValid =  false;
       },
       // Formダイアログの表示
       openDialog() {
@@ -305,9 +302,6 @@
       //
       // Formダイアログの非表示
       hideDialog() {
-        // if (!this.isValid) {
-        //   this.clear();
-        // }
         this.clear();
         this.dialog= false;
       },

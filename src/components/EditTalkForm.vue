@@ -13,10 +13,12 @@
     </v-chip>
     <v-dialog
       v-model="dialog"
-      activator="#talk-activator">
+      activator="#talk-activator"
+      max-width="90%">
       <v-card>
         <v-card-title>
           <span class="headline">トーク編集</span>
+          <help-of-slide class="pl-6"></help-of-slide>
           <v-spacer></v-spacer>
           <v-card-actions>
             <v-icon color="red" @click="hideDialog" large>mdi-close-circle</v-icon>
@@ -65,8 +67,12 @@
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
+  import HelpOfSlide from '@/components/HelpOfSlide.vue'
 
   export default {
+    components: {
+      HelpOfSlide
+    },
     props: {
       talk: Object
     },

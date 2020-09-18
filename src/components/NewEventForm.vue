@@ -240,7 +240,7 @@
           this.endTime = ''
         }
         if (this.endTime < this.startTime) {
-          this.endTime = '';
+          this.endTime = this.startTime;
           this.minTime = this.startTime
         }
       },

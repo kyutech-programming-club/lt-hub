@@ -42,6 +42,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :rules="[requiredNotEmpty]"
                     ></v-text-field>
                   </template>
                   <v-date-picker v-model="startDate">
@@ -66,6 +67,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :rules="[requiredNotEmpty]"
                     ></v-text-field>
                   </template>
                   <v-time-picker
@@ -95,6 +97,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :rules="[requiredNotEmpty, validEndDate]"
                     ></v-text-field>
                   </template>
                   <v-date-picker v-model="endDate" :min="startDate" >
@@ -119,6 +122,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :rules="[requiredNotEmpty, validEndTime]"
                     ></v-text-field>
                   </template>
                   <v-time-picker
@@ -209,41 +213,41 @@
       modal2() {
         console.log('modal2: '+this.modal2);
       },
-      startTime() {
-        console.log('startTime: '+this.startTime);
-        if (this.startDate == this.endDate) {
-          this.minTime = this.startTime;
-        }
-      },
-      endTime() {
-        console.log('endTime: '+this.endTime);
-        if (this.startDate == this.endDate) {
-          this.maxTime = this.endTime;
-        }
-      },
-      endDate() {
-        console.log('endDate: '+this.endDate);
-        if (this.endDate != this.startDate) {
-          this.maxTime = '';
-          this.minTime = '';
-        }
-      },
-      startDate() {
-        console.log('startDate: '+this.startDate);
-        this.endDate = this.startDate;
-        if (this.startTime == '') {
-          this.startTime = '19:00'
-          this.endTime = '21:00'
-        }
-        if (this.startDate == '') {
-          this.startTime = ''
-          this.endTime = ''
-        }
-        if (this.endTime < this.startTime) {
-          this.endTime = this.startTime;
-          this.minTime = this.startTime
-        }
-      },
+      // startTime() {
+      //   console.log('startTime: '+this.startTime);
+      //   if (this.startDate == this.endDate) {
+      //     this.minTime = this.startTime;
+      //   }
+      // },
+      // endTime() {
+      //   console.log('endTime: '+this.endTime);
+      //   if (this.startDate == this.endDate) {
+      //     this.maxTime = this.endTime;
+      //   }
+      // },
+      // endDate() {
+      //   console.log('endDate: '+this.endDate);
+      //   if (this.endDate != this.startDate) {
+      //     this.maxTime = '';
+      //     this.minTime = '';
+      //   }
+      // },
+      // startDate() {
+      //   console.log('startDate: '+this.startDate);
+      //   this.endDate = this.startDate;
+      //   if (this.startTime == '') {
+      //     this.startTime = '19:00'
+      //     this.endTime = '21:00'
+      //   }
+      //   if (this.startDate == '') {
+      //     this.startTime = ''
+      //     this.endTime = ''
+      //   }
+      //   if (this.endTime < this.startTime) {
+      //     this.endTime = this.startTime;
+      //     this.minTime = this.startTime
+      //   }
+      // },
     },
     methods: {
       async createEvent() {
@@ -281,6 +285,22 @@
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
           return 'Required.';
+        }
+        return true;
+      },
+      validEndDate() {
+        if (this.endDate < this.startDate) {
+          return 'Invalid.';
+        }
+        return true;
+      },
+      validEndTime() {
+        const start = new Date(this.startDate.split('-').join('/') + ' ' + this.startTime)
+        const end = new Date(this.endDate.split('-').join('/') + ' ' + this.endTime)
+        console.log(start)
+        console.log(end)
+        if (end <= start) {
+          return 'Invalid';
         }
         return true;
       },

@@ -228,33 +228,6 @@
       modal2() {
         console.log('modal2: '+this.modal2);
       },
-      // startTime() {
-      //   console.log('startTime: '+this.startTime);
-      //   if (this.startDate == this.endDate) {
-      //     this.minTime = this.startTime;
-      //   }
-      // },
-      // endTime() {
-      //   console.log('endTime: '+this.endTime);
-      //   if (this.startDate == this.endDate) {
-      //     this.maxTime = this.endTime;
-      //   }
-      // },
-      // endDate() {
-      //   console.log('endDate: '+this.endDate);
-      //   if (this.endDate != this.startDate) {
-      //     this.maxTime = '';
-      //     this.minTime = '';
-      //   }
-      // },
-      // startDate() {
-      //   console.log('startDate: '+this.startDate);
-      //   this.endDate = this.startDate;
-      //   if (this.endTime < this.startTime) {
-      //     this.endTime = this.startTime
-      //     this.minTime = this.startTime
-      //   }
-      // },
     },
     methods: {
       updateEvent() {

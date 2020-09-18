@@ -66,7 +66,7 @@
     methods: {
       // コメント追加
       async addComment() {
-        if (this.isValid) {
+        if (this.$refs.form.validate()) {
           let userRef = await db.collection('users').doc(this.userId);
           // コメントをFirestoreへ登録
           db.collection('talks').doc(this.talkId).collection('comments').add({
@@ -80,16 +80,13 @@
       },
       requiredNotEmpty(value) {
         if (value == null) {
-          this.isValid = false;
           return 'Required.';
         }
         //イベント名のみ入力必須項目
         const spaceRemoved = value.replace(/\s/g, '');
         if (!spaceRemoved) {
-          this.isValid = false;
           return 'Required.';
         }
-        this.isValid = true;
         return true;
       },
       // Formの初期化

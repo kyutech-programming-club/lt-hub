@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isEventActive">
+    <div v-if="isEventActive && currentUserId">
       <div  v-if="isParticipated">
         <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
           Cancel
@@ -52,7 +52,7 @@
           :eventId="event.id"
           :userId="currentUserId"/>
       </div>
-      <div v-else-if="currentUserId">
+      <div v-else>
         <v-btn
           class="white--text font-weight-bold"
           color="#009eff"
@@ -106,7 +106,7 @@
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isEventActive: true
+        isEventActive: false
       }
     },
     created() {
@@ -133,8 +133,8 @@
         }
 
         let now = new Date();
-        if (this.event.end.toDate() < now) {
-          this.isEventActive = false;
+        if (this.event.end.toDate() > now) {
+          this.isEventActive = true;
         }
       }
     },

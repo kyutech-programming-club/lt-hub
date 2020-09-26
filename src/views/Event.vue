@@ -28,7 +28,7 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form
-            v-if="isEventActive"
+            v-if="isBeforeEvent"
             :event="event"/>
           <v-chip
             class="ma-2"
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isEventActive && currentUserId">
+    <div v-if="isBeforeEvent && currentUserId">
       <div  v-if="isParticipated">
         <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
           Cancel
@@ -106,7 +106,7 @@
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isEventActive: false
+        isBeforeEvent: false
       }
     },
     created() {
@@ -134,7 +134,7 @@
 
         let now = new Date();
         if (this.event.end.toDate() > now) {
-          this.isEventActive = true;
+          this.isBeforeEvent = true;
         }
       }
     },

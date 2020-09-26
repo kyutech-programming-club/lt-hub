@@ -19,8 +19,8 @@
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
-		<v-btn v-if="validUrl(comment.content)" :href="{{comment.content}}">{{comment.content}}</v-btn>
-                <v-card-text v-else class="text-left reline">{{comment.content}}</v-card-text>
+              <v-card-text v-if="validUrl(comment.content)" class="text-left reline"><a :href="comment.content">{{comment.content}}</a></v-card-text>
+              <v-card-text v-else class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>
               <v-icon
                 v-if="currentUserId == comment.userRef.id"
@@ -51,7 +51,7 @@
     data: () => ({
       comments: [],
       scrollInvoked: 0,
-      currentUserId: ''
+      currentUserId: '',
     }),
     created() {
       let self = this;
@@ -117,12 +117,12 @@
 
         return format_str;
       },
-      varidUrl(checkText){
-        if (checkText.match(/^<link>/)) {
+      validUrl(checkText){
+        if (checkText.match(/^http/)) {
           return true;
-	} else {
+        } else {
           return false;
-	}
+        }
       }
     },
   }

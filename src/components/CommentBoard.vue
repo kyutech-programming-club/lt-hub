@@ -19,7 +19,8 @@
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
-                <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
+		<v-btn v-if="validUrl(comment.content)" :href="{{comment.content}}">{{comment.content}}</v-btn>
+                <v-card-text v-else class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>
               <v-icon
                 v-if="currentUserId == comment.userRef.id"
@@ -115,6 +116,13 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
+      },
+      varidUrl(checkText){
+        if (checkText.match(/^<link>/)) {
+          return true;
+	} else {
+          return false;
+	}
       }
     },
   }

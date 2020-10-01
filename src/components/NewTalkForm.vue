@@ -111,7 +111,8 @@
               createdTime: firebase.firestore.FieldValue.serverTimestamp(),
               updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
             })
-            .then(() => {
+            .then((docRef) => {
+              console.log(docRef.id);
               console.log(`Talk ${this.title} was created.`);
               this.hideDialog();
               //this.$router.go(this.$router.currentRoute);

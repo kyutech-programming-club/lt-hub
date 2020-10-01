@@ -232,6 +232,7 @@
                 place: this.place,
                 createdTime: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
+                sort: []
               })
               .then(() => {
                 console.log(`Event ${this.title} was created.`);

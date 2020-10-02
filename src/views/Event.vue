@@ -141,8 +141,6 @@
       console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
-        //talks: db.collection('talks')
-        //  .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
         participants: db.collection('participants')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
       }

@@ -154,17 +154,17 @@
 
 <style scoped>
   .iframe-wrap {
-  position: relative;
-  overflow: hidden;
-  margin: 15px 0 20px 0;
-  padding-bottom: 50%;
-  padding-top: 65px;
+    position: relative;
+    overflow: hidden;
+    margin: 15px 0 20px 0;
+    padding-bottom: 50%;
+    padding-top: 65px;
   }
   .iframe-wrap >>> iframe {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 </style>

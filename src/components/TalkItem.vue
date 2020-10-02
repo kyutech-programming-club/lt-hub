@@ -1,5 +1,5 @@
 <template>
-  <div class="talk-item">
+  <div class="talk-item" v-if="talk !== null">
     <v-card class="pa-4 ma-6" color="#C2EEFF" @click="goTalkPage" >
       <v-card-title>{{talk.title}}</v-card-title>
       <v-card-text v-if="talk.userRef.id">
@@ -28,7 +28,7 @@
     },
     data() {
       return {
-        talk: []
+        talk: null
       }
     },
     firestore() {

@@ -118,7 +118,7 @@
         return format_str;
       },
       validUrl(checkText){
-        if (checkText.match(/^http/)) {
+        if (checkText.match(/^https?:\/\//)) {
           return true;
         } else {
           return false;

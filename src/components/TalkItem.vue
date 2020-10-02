@@ -1,5 +1,5 @@
 <template>
-  <div class="talk-item">
+  <div class="talk-item" v-if="talk !== null">
     <v-card class="pa-4 ma-6" color="#C2EEFF" @click="goTalkPage" >
       <v-card-title>{{talk.title}}</v-card-title>
       <v-card-text v-if="talk.userRef.id">
@@ -15,14 +15,25 @@
 
 <script>
   import UserItemSmall from "../components/UserItemSmall";
+  import { db } from '@/firebase/firestore.js'
 
   export default {
     components: {
       UserItemSmall,
     },
     props: {
-      talk: {
-        type: Object
+      talkId: {
+        type: String
+      }
+    },
+    data() {
+      return {
+        talk: null
+      }
+    },
+    firestore() {
+      return {
+        talk: db.collection('talks').doc(this.talkId)
       }
     },
     methods: {

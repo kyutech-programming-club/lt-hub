@@ -1,5 +1,5 @@
 <template>
-  <div class="talk">
+  <div class="talk" v-if="talk !== null">
     <div v-if="talk.id">
       参加イベント：
       <v-btn color="#CBFFD3" @click="goEventPage">
@@ -124,12 +124,17 @@
       async deleteTalk() {
         var res = confirm('やめちゃうの…？');
         if (res) {
-          let self = this;
+          let eRef = await db.collection('events').doc(this.talk.eventRef.id)
+
+          await eRef.update({
+            sort: firebase.firestore.FieldValue.arrayRemove(this.talk.id)
+          })
+
           db.collection('talks')
             .doc(this.$route.params['id'])
             .delete()
             .then(() => {
-              this.$router.push({ name : 'event', params: {id: self.talk.eventRef.id}});
+              this.$router.push({ name : 'event', params: {id: eRef.id}});
             })
             .catch(err => {
               console.error('Error deleting talk data: ', err);

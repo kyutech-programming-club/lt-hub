@@ -19,7 +19,7 @@
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
-              <v-card-text v-if="validUrl(comment.content)" class="text-left reline"><a :href="comment.content">{{comment.content}}</a></v-card-text>
+              <v-card-text v-if="validUrl(comment.content)" class="text-left reline"><a :href="comment.content" target="_blank" rel="noopener noreferrer">{{comment.content}}</a></v-card-text>
               <v-card-text v-else class="text-left reline">{{comment.content}}</v-card-text>
               </v-list-item-content>
               <v-icon

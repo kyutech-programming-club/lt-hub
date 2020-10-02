@@ -118,7 +118,7 @@
         return format_str;
       },
       validUrl(checkText){
-        if (checkText.match(/^https?:\/\//)) {
+        if (checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/)) {
           return true;
         } else {
           return false;

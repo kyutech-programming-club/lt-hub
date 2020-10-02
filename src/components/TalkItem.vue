@@ -15,14 +15,25 @@
 
 <script>
   import UserItemSmall from "../components/UserItemSmall";
+  import { db } from '@/firebase/firestore.js'
 
   export default {
     components: {
       UserItemSmall,
     },
     props: {
-      talk: {
-        type: Object
+      talkId: {
+        type: String
+      }
+    },
+    data() {
+      return {
+        talk: []
+      }
+    },
+    firestore() {
+      return {
+        talk: db.collection('talks').doc(this.talkId)
       }
     },
     methods: {

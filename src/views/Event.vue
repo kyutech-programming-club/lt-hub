@@ -62,11 +62,11 @@
       </div>
     </div>
     <div class="talks-list">
-      LT数 {{talks.length}}
+      LT数 {{event.sort.length}}
       <talk-item
-        v-for="talk in talks"
-        :key="talk.id"
-        :talk="talk"/>
+        v-for="talkId in event.sort"
+        :key="talkId"
+        :talkId="talkId" />
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -99,7 +99,6 @@
     data() {
       return {
         event: [],
-        talks: [],
         participants: [],
         isParticipated: false,
         author: {},
@@ -142,8 +141,8 @@
       console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
-        talks: db.collection('talks')
-          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
+        //talks: db.collection('talks')
+        //  .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
         participants: db.collection('participants')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
       }

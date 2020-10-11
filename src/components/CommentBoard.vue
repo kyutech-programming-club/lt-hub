@@ -72,9 +72,6 @@
       }
     },
     methods: {
-      splitComment: function(comment) {
-        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
-      },
       async favoriteComment(id) {
         let favoriteNum;
         await db.collection('talks').doc(this.talkId).collection('comments').doc(id).get()
@@ -123,6 +120,9 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
+      },
+      splitComment: function(comment) {
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
       },
       validUrl(checkText){
         return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);

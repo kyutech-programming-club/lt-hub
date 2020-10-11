@@ -150,9 +150,6 @@
       }
     },
     methods: {
-      splitComment: function(comment) {
-        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
-      },
       async deleteEvent() {
         var res = confirm('ほんとにイベントを取りやめますか？？？？？');
         if (res) {
@@ -252,9 +249,12 @@
       onScroll () {
         this.scrollInvoked++
       },
+      splitComment: function(comment) {
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
+      },
       validUrl(checkText){
         return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
-      }
+      },
     }
   }
 </script>

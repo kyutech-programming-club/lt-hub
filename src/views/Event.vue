@@ -63,10 +63,12 @@
     </div>
     <div class="talks-list">
       LT数 {{event.sort.length}}
+      <draggable>
       <talk-item
         v-for="talkId in event.sort"
         :key="talkId"
         :talkId="talkId" />
+      </draggable>
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -86,6 +88,7 @@
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
+  import draggable from 'vuedraggable';
 
   export default {
     name: 'Event',
@@ -95,6 +98,7 @@
       UserItemSmall,
       TalkItem,
       NewTalkForm,
+      draggable,
     },
     data() {
       return {
@@ -135,7 +139,7 @@
         if (this.event.end.toDate() > now) {
           this.isBeforeEvent = true;
         }
-      }
+      },
     },
     firestore(){
       console.log("firestore");

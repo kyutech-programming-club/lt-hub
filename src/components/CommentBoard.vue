@@ -73,8 +73,7 @@
     },
     methods: {
       splitComment: function(comment) {
-        console.log(comment.toString().split(/\s/));
-        return comment.toString().split(/\s/);
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
       },
       async favoriteComment(id) {
         let favoriteNum;

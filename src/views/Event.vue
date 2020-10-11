@@ -61,11 +61,23 @@
         </v-btn>
       </div>
     </div>
+    <v-chip
+      class="ma-2"
+      color="green"
+      text-color="white"
+      @click="saveEventOrder">
+    <v-icon left>
+      mdi-account-switch
+    </v-icon>
+      Save order
+  </v-chip>
     <div class="talks-list">
       LT数 {{event.sort.length}}
-      <draggable>
+      <draggable
+        :list="orderItem"
+      >
       <talk-item
-        v-for="talkId in event.sort"
+        v-for="talkId in orderItem"
         :key="talkId"
         :talkId="talkId" />
       </draggable>
@@ -109,7 +121,8 @@
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isBeforeEvent: false
+        isBeforeEvent: false,
+        orderItem: []
       }
     },
     created() {
@@ -134,11 +147,11 @@
             this.isParticipated = true;
           }
         }
-
         let now = new Date();
         if (this.event.end.toDate() > now) {
           this.isBeforeEvent = true;
         }
+        this.orderItem = await this.event.sort
       },
     },
     firestore(){
@@ -249,6 +262,9 @@
       onScroll () {
         this.scrollInvoked++
       },
+      saveEventOrder() {
+        console.log(this.orderItem)
+      }
     }
   }
 </script>

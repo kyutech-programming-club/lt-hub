@@ -19,8 +19,12 @@
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
-              <v-card-text v-if="validUrl(comment.content)" class="text-left reline"><a :href="comment.content" target="_blank" rel="noopener noreferrer">{{comment.content}}</a></v-card-text>
-              <v-card-text v-else class="text-left reline">{{comment.content}}</v-card-text>
+                <v-card-text>
+                  <template v-for="(content, id) in splitComment(comment.content)">
+                    <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+                    <span :key="id" v-else class="text-left reline">{{content}}</span>
+                  </template>
+                </v-card-text>
               </v-list-item-content>
               <v-icon
                 v-if="currentUserId == comment.userRef.id"
@@ -68,6 +72,10 @@
       }
     },
     methods: {
+      splitComment: function(comment) {
+        console.log(comment.toString().split(/\s/));
+        return comment.toString().split(/\s/);
+      },
       async favoriteComment(id) {
         let favoriteNum;
         await db.collection('talks').doc(this.talkId).collection('comments').doc(id).get()
@@ -118,11 +126,7 @@
         return format_str;
       },
       validUrl(checkText){
-        if (checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/)) {
-          return true;
-        } else {
-          return false;
-        }
+        return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
       }
     },
   }

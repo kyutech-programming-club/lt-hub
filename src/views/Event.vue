@@ -28,7 +28,7 @@
           :user = "event.author" />
         <div v-if="event.author.id == currentUserId">
           <edit-event-form
-            v-if="isEventActive"
+            v-if="isBeforeEvent"
             :event="event"/>
           <v-chip
             class="ma-2"
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isEventActive">
+    <div v-if="isBeforeEvent && currentUserId">
       <div  v-if="isParticipated">
         <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
           Cancel
@@ -52,7 +52,7 @@
           :eventId="event.id"
           :userId="currentUserId"/>
       </div>
-      <div v-else-if="currentUserId">
+      <div v-else>
         <v-btn
           class="white--text font-weight-bold"
           color="#009eff"
@@ -62,11 +62,11 @@
       </div>
     </div>
     <div class="talks-list">
-      LT数 {{talks.length}}
+      LT数 {{event.sort.length}}
       <talk-item
-        v-for="talk in talks"
-        :key="talk.id"
-        :talk="talk"/>
+        v-for="talkId in event.sort"
+        :key="talkId"
+        :talkId="talkId" />
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -99,14 +99,13 @@
     data() {
       return {
         event: [],
-        talks: [],
         participants: [],
         isParticipated: false,
         author: {},
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isEventActive: true
+        isBeforeEvent: false
       }
     },
     created() {
@@ -133,8 +132,8 @@
         }
 
         let now = new Date();
-        if (this.event.end.toDate() < now) {
-          this.isEventActive = false;
+        if (this.event.end.toDate() > now) {
+          this.isBeforeEvent = true;
         }
       }
     },
@@ -142,8 +141,6 @@
       console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
-        talks: db.collection('talks')
-          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
         participants: db.collection('participants')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
       }

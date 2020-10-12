@@ -41,6 +41,17 @@
       </div>
     </div>
     <div v-if="talk.id">
+      <v-chip
+        v-if="nextTalkId !== null"
+        class="ma-2"
+        color="green"
+        text-color="white"
+        @click="goNextTalk">
+        <v-icon left>
+          mdi-comment-arrow-right
+        </v-icon>
+        Next talk
+      </v-chip>
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
       </div>
@@ -101,7 +112,6 @@
         let eRef = await talkData.eventRef;
         let eventSort = await db.doc(eRef).get().then((event) => {return event.data().sort})
         this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
-        console.dir(this.nextTalkId);
       }
     },
     methods: {
@@ -163,7 +173,10 @@
           return null
         }
         return eventSortData[nextTalkPos]
-      }
+      },
+      goNextTalk() {
+        this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});
+      },
     }
   }
 </script>

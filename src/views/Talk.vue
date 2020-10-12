@@ -176,6 +176,7 @@
       },
       goNextTalk() {
         this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});
+        this.$router.go()
       },
     }
   }

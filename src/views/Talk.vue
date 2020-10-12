@@ -71,8 +71,9 @@
     },
     data() {
       return {
-        talk: [],
+        talk: null,
         currentUserId: '',
+        nextTalkId: null
         // isTalker: false,
         // talkEvent: {}
       }
@@ -93,6 +94,14 @@
     firestore(){
       return {
         talk: db.collection('talks').doc(this.$route.params['id'])
+      }
+    },
+    watch: {
+      async talk(talkData) {
+        let eRef = await talkData.eventRef;
+        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().sort})
+        this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
+        console.dir(this.nextTalkId);
       }
     },
     methods: {
@@ -147,6 +156,13 @@
       goEventPage() {
         console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});
+      },
+      nextTalkIdFinder(talkId, eventSortData) {
+        let nextTalkPos = eventSortData.indexOf(talkId) + 1
+        if (nextTalkPos === eventSortData.length) {
+          return null
+        }
+        return eventSortData[nextTalkPos]
       }
     }
   }

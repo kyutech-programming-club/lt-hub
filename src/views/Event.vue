@@ -14,7 +14,11 @@
           flat>
           {{event.description}}<br>
         </v-card>
-        場所：{{ event.place }}<br>
+        場所：
+        <template v-for="(content, id) in splitComment(event.place)">
+          <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+          <span :key="id" v-else class="text-left reline">{{content}}</span>
+        </template><br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
         </div>
@@ -268,7 +272,13 @@
           update({
             sort: this.orderItem
           })
-      }
+      },
+      splitComment: function(comment) {
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
+      },
+      validUrl(checkText){
+        return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
+      },
     }
   }
 </script>

@@ -18,6 +18,7 @@
     "vue": "^2.6.12",
     "vue-ctk-date-time-picker": "^2.5.0",
     "vue-router": "^3.4.5",
+    "vuedraggable": "^2.24.1",
     "vuefire": "^2.2.4",
     "vuetify": "^2.3.12"
   },

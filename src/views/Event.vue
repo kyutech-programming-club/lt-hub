@@ -65,12 +65,26 @@
         </v-btn>
       </div>
     </div>
+    <v-chip
+      class="ma-2"
+      color="green"
+      text-color="white"
+      @click="saveEventOrder">
+    <v-icon left>
+      mdi-account-switch
+    </v-icon>
+      Save order
+  </v-chip>
     <div class="talks-list">
       LT数 {{event.sort.length}}
+      <draggable
+        :list="orderItem"
+      >
       <talk-item
-        v-for="talkId in event.sort"
+        v-for="talkId in orderItem"
         :key="talkId"
         :talkId="talkId" />
+      </draggable>
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -90,6 +104,7 @@
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
+  import draggable from 'vuedraggable';
 
   export default {
     name: 'Event',
@@ -99,6 +114,7 @@
       UserItemSmall,
       TalkItem,
       NewTalkForm,
+      draggable,
     },
     data() {
       return {
@@ -109,7 +125,8 @@
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isBeforeEvent: false
+        isBeforeEvent: false,
+        orderItem: []
       }
     },
     created() {
@@ -134,12 +151,12 @@
             this.isParticipated = true;
           }
         }
-
         let now = new Date();
         if (this.event.end.toDate() > now) {
           this.isBeforeEvent = true;
         }
-      }
+        this.orderItem = await this.event.sort
+      },
     },
     firestore(){
       console.log("firestore");
@@ -248,6 +265,13 @@
       },
       onScroll () {
         this.scrollInvoked++
+      },
+      saveEventOrder() {
+        console.log(this.orderItem)
+        db.collection('events').doc(this.event.id).
+          update({
+            sort: this.orderItem
+          })
       },
       splitComment: function(comment) {
         return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);

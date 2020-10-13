@@ -264,6 +264,10 @@
       },
       saveEventOrder() {
         console.log(this.orderItem)
+        db.collection('events').doc(this.event.id).
+          update({
+            sort: this.orderItem
+          })
       }
     }
   }

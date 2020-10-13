@@ -41,6 +41,17 @@
       </div>
     </div>
     <div v-if="talk.id">
+      <v-chip
+        v-if="nextTalkId !== null"
+        class="ma-2"
+        color="green"
+        text-color="white"
+        @click="goNextTalk">
+        <v-icon left>
+          mdi-comment-arrow-right
+        </v-icon>
+        Next talk
+      </v-chip>
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
       </div>
@@ -71,8 +82,9 @@
     },
     data() {
       return {
-        talk: [],
+        talk: null,
         currentUserId: '',
+        nextTalkId: null
         // isTalker: false,
         // talkEvent: {}
       }
@@ -93,6 +105,13 @@
     firestore(){
       return {
         talk: db.collection('talks').doc(this.$route.params['id'])
+      }
+    },
+    watch: {
+      async talk(talkData) {
+        let eRef = await talkData.eventRef;
+        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().sort})
+        this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
       }
     },
     methods: {
@@ -147,7 +166,18 @@
       goEventPage() {
         console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});
-      }
+      },
+      nextTalkIdFinder(talkId, eventSortData) {
+        let nextTalkPos = eventSortData.indexOf(talkId) + 1
+        if (nextTalkPos === eventSortData.length) {
+          return null
+        }
+        return eventSortData[nextTalkPos]
+      },
+      goNextTalk() {
+        this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});
+        this.$router.go()
+      },
     }
   }
 </script>

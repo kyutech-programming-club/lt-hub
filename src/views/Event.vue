@@ -44,6 +44,16 @@
             </v-icon>
             Delete event
           </v-chip>
+          <v-chip
+            class="ma-2"
+            color="green"
+            text-color="white"
+            @click="saveEventOrder">
+            <v-icon left>
+              mdi-account-switch
+            </v-icon>
+            Save order
+          </v-chip>
         </div>
       </div>
     </div>
@@ -65,26 +75,23 @@
         </v-btn>
       </div>
     </div>
-    <v-chip
-      class="ma-2"
-      color="green"
-      text-color="white"
-      @click="saveEventOrder">
-    <v-icon left>
-      mdi-account-switch
-    </v-icon>
-      Save order
-  </v-chip>
-    <div class="talks-list">
+    <div class="talks-list" v-if="event.author">
       LT数 {{event.sort.length}}
       <draggable
+        v-if="event.author.id === currentUserId"
         :list="orderItem"
       >
+        <talk-item
+          v-for="talkId in orderItem"
+          :key="talkId"
+          :talkId="talkId" />
+      </draggable>
       <talk-item
+        v-else
         v-for="talkId in orderItem"
         :key="talkId"
-        :talkId="talkId" />
-      </draggable>
+        :talkId="talkId"
+      />
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -269,9 +276,9 @@
       saveEventOrder() {
         console.log(this.orderItem)
         db.collection('events').doc(this.event.id).
-          update({
-            sort: this.orderItem
-          })
+        update({
+          sort: this.orderItem
+        })
       },
       splitComment: function(comment) {
         return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
@@ -285,7 +292,7 @@
 
 <style scoped>
   .reline {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 </style>

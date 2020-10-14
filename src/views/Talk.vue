@@ -42,6 +42,7 @@
     </div>
     <div v-if="talk.id">
       <v-chip
+        v-if="backTalkId !== null"
         class="ma-2"
         color="orange"
         text-color="white"
@@ -94,7 +95,8 @@
       return {
         talk: null,
         currentUserId: '',
-        nextTalkId: null
+        nextTalkId: null,
+        backTalkId: null,
         // isTalker: false,
         // talkEvent: {}
       }
@@ -121,7 +123,7 @@
       async talk(talkData) {
         let eRef = await talkData.eventRef;
         let eventSort = await db.doc(eRef).get().then((event) => {return event.data().order})
-        this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
+        this.guideTalkSetter(talkData.id, eventSort)
       }
     },
     methods: {
@@ -177,12 +179,21 @@
         console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});
       },
-      nextTalkIdFinder(talkId, eventSortData) {
-        let nextTalkPos = eventSortData.indexOf(talkId) + 1
-        if (nextTalkPos === eventSortData.length) {
-          return null
+      guideTalkSetter(talkId, eventSortData) {
+        let currentTalkPos = eventSortData.indexOf(talkId)
+        let backTalkPos = currentTalkPos - 1
+        let nextTalkPos = currentTalkPos + 1
+        if (backTalkPos === -1) {
+          this.backTalkId = null
+        } else {
+          this.backTalkId = eventSortData[backTalkPos]
         }
-        return eventSortData[nextTalkPos]
+
+        if (nextTalkPos === eventSortData.length) {
+          this.nextTalkId = null
+        } else {
+          this.nextTalkId = eventSortData[nextTalkPos]
+        }
       },
       goNextTalk() {
         this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});

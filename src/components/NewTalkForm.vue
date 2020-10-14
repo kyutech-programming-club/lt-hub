@@ -115,7 +115,7 @@
               console.log(docRef.id);
               console.log(eventRef.id);
               db.collection('events').doc(eventRef.id).update({
-                sort: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+                order: firebase.firestore.FieldValue.arrayUnion(docRef.id)
               })
               console.log(`Talk ${this.title} was created.`);
               this.hideDialog();

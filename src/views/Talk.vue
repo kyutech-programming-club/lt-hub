@@ -110,7 +110,7 @@
     watch: {
       async talk(talkData) {
         let eRef = await talkData.eventRef;
-        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().sort})
+        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().order})
         this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
       }
     },
@@ -146,7 +146,7 @@
           let eRef = await db.collection('events').doc(this.talk.eventRef.id)
 
           await eRef.update({
-            sort: firebase.firestore.FieldValue.arrayRemove(this.talk.id)
+            order: firebase.firestore.FieldValue.arrayRemove(this.talk.id)
           })
 
           db.collection('talks')

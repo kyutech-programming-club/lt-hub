@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="talks-list" v-if="event.author">
-      LT数 {{event.sort.length}}
+      LT数 {{event.order.length}}
       <draggable
         v-if="event.author.id === currentUserId"
         :list="orderItem"
@@ -162,7 +162,7 @@
         if (this.event.end.toDate() > now) {
           this.isBeforeEvent = true;
         }
-        this.orderItem = await this.event.sort
+        this.orderItem = await this.event.order
       },
     },
     firestore(){
@@ -277,7 +277,7 @@
         console.log(this.orderItem)
         db.collection('events').doc(this.event.id).
         update({
-          sort: this.orderItem
+          order: this.orderItem
         })
       },
       splitComment: function(comment) {

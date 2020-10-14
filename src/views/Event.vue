@@ -45,6 +45,7 @@
             Delete event
           </v-chip>
           <v-chip
+            v-if="isBeforeEvent"
             class="ma-2"
             color="green"
             text-color="white"

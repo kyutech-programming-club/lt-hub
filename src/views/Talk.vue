@@ -42,6 +42,16 @@
     </div>
     <div v-if="talk.id">
       <v-chip
+        class="ma-2"
+        color="orange"
+        text-color="white"
+      >
+        <v-icon left>
+          mdi-comment-arrow-left
+        </v-icon>
+        Previous talk
+      </v-chip>
+      <v-chip
         v-if="nextTalkId !== null"
         class="ma-2"
         color="green"

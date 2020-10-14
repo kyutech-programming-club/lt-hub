@@ -44,6 +44,16 @@
             </v-icon>
             Delete event
           </v-chip>
+          <v-chip
+            class="ma-2"
+            color="green"
+            text-color="white"
+            @click="saveEventOrder">
+            <v-icon left>
+              mdi-account-switch
+            </v-icon>
+            Save order
+          </v-chip>
         </div>
       </div>
     </div>
@@ -65,16 +75,6 @@
         </v-btn>
       </div>
     </div>
-    <v-chip
-      class="ma-2"
-      color="green"
-      text-color="white"
-      @click="saveEventOrder">
-      <v-icon left>
-        mdi-account-switch
-      </v-icon>
-      Save order
-    </v-chip>
     <div class="talks-list" v-if="event.author">
       LT数 {{event.sort.length}}
       <draggable

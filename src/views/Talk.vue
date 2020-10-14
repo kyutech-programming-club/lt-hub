@@ -46,6 +46,7 @@
         class="ma-2"
         color="orange"
         text-color="white"
+        @click="goTalkPage(backTalkId)"
       >
         <v-icon left>
           mdi-comment-arrow-left
@@ -57,7 +58,7 @@
         class="ma-2"
         color="green"
         text-color="white"
-        @click="goNextTalk">
+        @click="goTalkPage(nextTalkId)">
         Next
         <v-icon right>
           mdi-comment-arrow-right
@@ -195,8 +196,8 @@
           this.nextTalkId = eventSortData[nextTalkPos]
         }
       },
-      goNextTalk() {
-        this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});
+      goTalkPage(targetId) {
+        this.$router.push({ name : 'talk', params: { id: targetId}});
         this.$router.go()
       },
     }

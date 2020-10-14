@@ -49,7 +49,7 @@
         <v-icon left>
           mdi-comment-arrow-left
         </v-icon>
-        Previous talk
+        Back
       </v-chip>
       <v-chip
         v-if="nextTalkId !== null"
@@ -57,10 +57,10 @@
         color="green"
         text-color="white"
         @click="goNextTalk">
-        <v-icon left>
+        Next
+        <v-icon right>
           mdi-comment-arrow-right
         </v-icon>
-        Next talk
       </v-chip>
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>

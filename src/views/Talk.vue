@@ -42,15 +42,27 @@
     </div>
     <div v-if="talk.id">
       <v-chip
+        v-if="backTalkId !== null"
+        class="ma-2"
+        color="orange"
+        text-color="white"
+        @click="goTalkPage(backTalkId)"
+      >
+        <v-icon left>
+          mdi-comment-arrow-left
+        </v-icon>
+        Back
+      </v-chip>
+      <v-chip
         v-if="nextTalkId !== null"
         class="ma-2"
         color="green"
         text-color="white"
-        @click="goNextTalk">
-        <v-icon left>
+        @click="goTalkPage(nextTalkId)">
+        Next
+        <v-icon right>
           mdi-comment-arrow-right
         </v-icon>
-        Next talk
       </v-chip>
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
@@ -84,7 +96,8 @@
       return {
         talk: null,
         currentUserId: '',
-        nextTalkId: null
+        nextTalkId: null,
+        backTalkId: null,
         // isTalker: false,
         // talkEvent: {}
       }
@@ -110,8 +123,8 @@
     watch: {
       async talk(talkData) {
         let eRef = await talkData.eventRef;
-        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().sort})
-        this.nextTalkId = this.nextTalkIdFinder(talkData.id, eventSort)
+        let eventSort = await db.doc(eRef).get().then((event) => {return event.data().order})
+        this.guideTalkSetter(talkData.id, eventSort)
       }
     },
     methods: {
@@ -146,7 +159,7 @@
           let eRef = await db.collection('events').doc(this.talk.eventRef.id)
 
           await eRef.update({
-            sort: firebase.firestore.FieldValue.arrayRemove(this.talk.id)
+            order: firebase.firestore.FieldValue.arrayRemove(this.talk.id)
           })
 
           db.collection('talks')
@@ -167,15 +180,24 @@
         console.log('goEventPage');
         this.$router.push({ name : 'event', params: { id: this.talk.eventRef.id}});
       },
-      nextTalkIdFinder(talkId, eventSortData) {
-        let nextTalkPos = eventSortData.indexOf(talkId) + 1
-        if (nextTalkPos === eventSortData.length) {
-          return null
+      guideTalkSetter(talkId, eventSortData) {
+        let currentTalkPos = eventSortData.indexOf(talkId)
+        let backTalkPos = currentTalkPos - 1
+        let nextTalkPos = currentTalkPos + 1
+        if (backTalkPos === -1) {
+          this.backTalkId = null
+        } else {
+          this.backTalkId = eventSortData[backTalkPos]
         }
-        return eventSortData[nextTalkPos]
+
+        if (nextTalkPos === eventSortData.length) {
+          this.nextTalkId = null
+        } else {
+          this.nextTalkId = eventSortData[nextTalkPos]
+        }
       },
-      goNextTalk() {
-        this.$router.push({ name : 'talk', params: { id: this.nextTalkId}});
+      goTalkPage(targetId) {
+        this.$router.push({ name : 'talk', params: { id: targetId}});
         this.$router.go()
       },
     }

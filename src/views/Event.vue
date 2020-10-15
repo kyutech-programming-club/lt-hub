@@ -60,12 +60,20 @@
     </div>
     <div v-if="isBeforeEvent && currentUserId">
       <div  v-if="isParticipated">
-        <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-          Cancel
-        </v-btn>
-        <new-talk-form
-          :eventId="event.id"
-          :userId="currentUserId"/>
+        <v-container>
+          <v-row dense justify="center" tag="span">
+            <v-col class="mt-1">
+              <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
+                Cancel
+              </v-btn>
+            </v-col>
+            <v-col>
+              <new-talk-form
+                :eventId="event.id"
+                :userId="currentUserId"/>
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
       <div v-else>
         <v-btn

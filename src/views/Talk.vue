@@ -8,6 +8,24 @@
     </div>
     <div v-if="talk.id">
       <h1>{{ talk.title }}</h1>
+      <v-container v-if="talk.userRef.id == currentUserId">
+        <v-row justify="center">
+          <v-col cols="2" class="pa-0 mt-2">
+            <edit-talk-form :talk="talk"/>
+          </v-col>
+          <v-col cols="2" class="pa-0 mt-2">
+            <v-chip
+              class="ma-2"
+              color="red"
+              text-color="white"
+              @click="deleteTalk">
+              <v-icon>
+                mdi-delete
+              </v-icon>
+            </v-chip>
+          </v-col>
+        </v-row>
+      </v-container>
       <div v-if="talk.createdTime">
         作成日時：{{ getStringFromDate(talk.createdTime.toDate()) }}<br>
       </div>
@@ -25,19 +43,6 @@
         登壇者：
         <user-item-small
           :user = "talk.userRef" />
-        <div v-if="talk.userRef.id == currentUserId">
-          <edit-talk-form :talk="talk"/>
-          <v-chip
-            class="ma-2"
-            color="red"
-            text-color="white"
-            @click="deleteTalk">
-            <v-icon left>
-              mdi-delete
-            </v-icon>
-            Delete talk
-          </v-chip>
-        </div>
       </div>
     </div>
     <div v-if="talk.id">

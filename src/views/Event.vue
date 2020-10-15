@@ -3,6 +3,26 @@
     <div v-if="event.id">
       <div>
         <h1>{{ event.title }}</h1>
+        <v-container v-if="event.author.id == currentUserId">
+          <v-row justify="center">
+            <v-col cols="2" class="pa-0 mt-2">
+              <edit-event-form
+                v-if="isBeforeEvent"
+                :event="event"/>
+            </v-col>
+            <v-col cols="2" class="pa-0 mt-2">
+              <v-chip
+                class="ma-2"
+                color="red"
+                text-color="white"
+                @click="deleteEvent">
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
@@ -30,32 +50,6 @@
         責任者：
         <user-item-small
           :user = "event.author" />
-        <div v-if="event.author.id == currentUserId">
-          <edit-event-form
-            v-if="isBeforeEvent"
-            :event="event"/>
-          <v-chip
-            class="ma-2"
-            color="red"
-            text-color="white"
-            @click="deleteEvent">
-            <v-icon left>
-              mdi-delete
-            </v-icon>
-            Delete event
-          </v-chip>
-          <v-chip
-            v-if="isBeforeEvent"
-            class="ma-2"
-            color="green"
-            text-color="white"
-            @click="saveEventOrder">
-            <v-icon left>
-              mdi-account-switch
-            </v-icon>
-            Save order
-          </v-chip>
-        </div>
       </div>
     </div>
     <div v-if="isBeforeEvent && currentUserId">
@@ -86,6 +80,19 @@
     </div>
     <div class="talks-list" v-if="event.author">
       LT数 {{event.order.length}}
+      <div v-if="event.author.id == currentUserId">
+        <v-chip
+          v-if="isBeforeEvent"
+          class="ma-2"
+          color="green"
+          text-color="white"
+          @click="saveEventOrder">
+          <v-icon left>
+            mdi-account-switch
+          </v-icon>
+          Save order
+        </v-chip>
+      </div>
       <draggable
         v-if="event.author.id === currentUserId"
         :list="orderItem"

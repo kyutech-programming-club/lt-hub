@@ -6,10 +6,9 @@
       @click:on="openDialog"
       color="blue"
       text-color="white">
-      <v-icon left>
+      <v-icon>
         mdi-pencil
       </v-icon>
-      Edit event
     </v-chip>
     <v-dialog
       v-model="dialog"

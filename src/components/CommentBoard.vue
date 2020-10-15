@@ -19,7 +19,12 @@
               </v-icon>
               <span class="light-blue--text">{{comment.favoriteNum}}</span>
               <v-list-item-content class="pa-0">
-                <v-card-text class="text-left reline">{{comment.content}}</v-card-text>
+                <v-card-text>
+                  <template v-for="(content, id) in splitComment(comment.content)">
+                    <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+                    <span :key="id" v-else class="text-left reline">{{content}}</span>
+                  </template>
+                </v-card-text>
               </v-list-item-content>
               <v-icon
                 v-if="currentUserId == comment.userRef.id"
@@ -50,7 +55,7 @@
     data: () => ({
       comments: [],
       scrollInvoked: 0,
-      currentUserId: ''
+      currentUserId: '',
     }),
     created() {
       let self = this;
@@ -115,6 +120,12 @@
         format_str = format_str.replace(/ss/g, second_str);
 
         return format_str;
+      },
+      splitComment: function(comment) {
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
+      },
+      validUrl(checkText){
+        return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
       }
     },
   }

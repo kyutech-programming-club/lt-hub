@@ -3,6 +3,26 @@
     <div v-if="event.id">
       <div>
         <h1>{{ event.title }}</h1>
+        <v-container v-if="event.author.id == currentUserId">
+          <v-row justify="center">
+            <v-col cols="2" class="pa-0 mt-2">
+              <edit-event-form
+                v-if="isBeforeEvent"
+                :event="event"/>
+            </v-col>
+            <v-col cols="2" class="pa-0 mt-2">
+              <v-chip
+                class="ma-2"
+                color="red"
+                text-color="white"
+                @click="deleteEvent">
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
         <div v-if="event.start">
           期間：{{ getStringFromDate(this.event.start.toDate()).substr(0,16) }} ~ {{ getStringFromDate(this.event.end.toDate()).substr(0,16) }}<br>
         </div>
@@ -14,7 +34,11 @@
           flat>
           {{event.description}}<br>
         </v-card>
-        場所：{{ event.place }}<br>
+        場所：
+        <template v-for="(content, id) in splitComment(event.place)">
+          <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+          <span :key="id" v-else class="text-left reline">{{content}}</span>
+        </template><br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
         </div>
@@ -26,33 +50,26 @@
         責任者：
         <user-item-small
           :user = "event.author" />
-        <div v-if="event.author.id == currentUserId">
-          <edit-event-form
-            v-if="isEventActive"
-            :event="event"/>
-          <v-chip
-            class="ma-2"
-            color="red"
-            text-color="white"
-            @click="deleteEvent">
-            <v-icon left>
-              mdi-delete
-            </v-icon>
-            Delete event
-          </v-chip>
-        </div>
       </div>
     </div>
-    <div v-if="isEventActive">
+    <div v-if="isBeforeEvent && currentUserId">
       <div  v-if="isParticipated">
-        <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
-          Cancel
-        </v-btn>
-        <new-talk-form
-          :eventId="event.id"
-          :userId="currentUserId"/>
+        <v-container>
+          <v-row dense justify="center" tag="span">
+            <v-col class="mt-1">
+              <v-btn class="white--text font-weight-bold" color="#ff4b4b" @click="cancelParticipate">
+                Cancel
+              </v-btn>
+            </v-col>
+            <v-col>
+              <new-talk-form
+                :eventId="event.id"
+                :userId="currentUserId"/>
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
-      <div v-else-if="currentUserId">
+      <div v-else>
         <v-btn
           class="white--text font-weight-bold"
           color="#009eff"
@@ -61,12 +78,36 @@
         </v-btn>
       </div>
     </div>
-    <div class="talks-list">
-      LT数 {{talks.length}}
+    <div class="talks-list" v-if="event.author">
+      LT数 {{event.order.length}}
+      <div v-if="event.author.id == currentUserId">
+        <v-chip
+          v-if="isBeforeEvent"
+          class="ma-2"
+          color="green"
+          text-color="white"
+          @click="saveEventOrder">
+          <v-icon left>
+            mdi-account-switch
+          </v-icon>
+          Save order
+        </v-chip>
+      </div>
+      <draggable
+        v-if="event.author.id === currentUserId"
+        :list="orderItem"
+      >
+        <talk-item
+          v-for="talkId in orderItem"
+          :key="talkId"
+          :talkId="talkId" />
+      </draggable>
       <talk-item
-        v-for="talk in talks"
-        :key="talk.id"
-        :talk="talk"/>
+        v-else
+        v-for="talkId in orderItem"
+        :key="talkId"
+        :talkId="talkId"
+      />
     </div>
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
@@ -86,6 +127,7 @@
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
   import { db } from '@/firebase/firestore.js'
+  import draggable from 'vuedraggable';
 
   export default {
     name: 'Event',
@@ -95,18 +137,19 @@
       UserItemSmall,
       TalkItem,
       NewTalkForm,
+      draggable,
     },
     data() {
       return {
         event: [],
-        talks: [],
         participants: [],
         isParticipated: false,
         author: {},
         currentUserId: '',
         participated: false,
         isAuthor: false,
-        isEventActive: true
+        isBeforeEvent: false,
+        orderItem: []
       }
     },
     created() {
@@ -131,19 +174,17 @@
             this.isParticipated = true;
           }
         }
-
         let now = new Date();
-        if (this.event.end.toDate() < now) {
-          this.isEventActive = false;
+        if (this.event.end.toDate() > now) {
+          this.isBeforeEvent = true;
         }
-      }
+        this.orderItem = await this.event.order
+      },
     },
     firestore(){
       console.log("firestore");
       return {
         event: db.collection('events').doc(this.$route.params['id']),
-        talks: db.collection('talks')
-          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
         participants: db.collection('participants')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
       }
@@ -248,13 +289,26 @@
       onScroll () {
         this.scrollInvoked++
       },
+      saveEventOrder() {
+        console.log(this.orderItem)
+        db.collection('events').doc(this.event.id).
+        update({
+          order: this.orderItem
+        })
+      },
+      splitComment: function(comment) {
+        return comment.toString().split(/(https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/g);
+      },
+      validUrl(checkText){
+        return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
+      },
     }
   }
 </script>
 
 <style scoped>
   .reline {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 </style>

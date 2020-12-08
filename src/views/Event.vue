@@ -78,7 +78,7 @@
         </v-btn>
       </div>
     </div>
-    <div class="talks-list" v-if="event.author">
+    <div class="talks-list" v-if="event.order && event.author">
       LT数 {{event.order.length}}
       <div v-if="event.author.id == currentUserId">
         <v-chip
@@ -109,6 +109,14 @@
         :talkId="talkId"
       />
     </div>
+    <div class="talks-list" v-else>
+      LT数 {{talks.length}}
+      <talk-item
+        v-for="talk in talks"
+        :key="talk.id"
+        :talkId="talk.id"/>
+    </div>
+
     <div v-if="participants" class="users-list">
       参加者数  {{participants.length}}人<br />
       <participate-item
@@ -149,7 +157,8 @@
         participated: false,
         isAuthor: false,
         isBeforeEvent: false,
-        orderItem: []
+        orderItem: [],
+        talks: []
       }
     },
     created() {
@@ -178,7 +187,10 @@
         if (this.event.end.toDate() > now) {
           this.isBeforeEvent = true;
         }
-        this.orderItem = await this.event.order
+
+        if (this.event.order) {
+          this.orderItem = await this.event.order;
+        }
       },
     },
     firestore(){
@@ -186,6 +198,8 @@
       return {
         event: db.collection('events').doc(this.$route.params['id']),
         participants: db.collection('participants')
+          .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
+        talks: db.collection('talks')
           .where('eventRef', '==', db.collection('events').doc(this.$route.params['id'])),
       }
     },

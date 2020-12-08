@@ -25,7 +25,7 @@
         <talk-item
           v-for="talk in userTalks"
           :key="talk.id"
-          :talk="talk" />
+          :talkId="talk.id" />
       </div>
     </div>
   </div>

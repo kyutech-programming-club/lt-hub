@@ -134,7 +134,7 @@
   import ParticipateItem from '@/components/ParticipateItem.vue'
   import UserItemSmall from '@/components/UserItemSmall.vue'
   import TalkItem from '@/components/TalkItem.vue'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
   import draggable from 'vuedraggable';
 
   export default {

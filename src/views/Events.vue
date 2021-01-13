@@ -64,7 +64,7 @@
 <script>
   import NewEventForm from '@/components/NewEventForm.vue'
   import EventItem from '@/components/EventItem.vue'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
   import firebase from 'firebase'
 
   export default {

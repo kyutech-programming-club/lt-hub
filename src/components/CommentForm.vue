@@ -43,7 +43,7 @@
 
 <script>
   import firebase from 'firebase'
-  import {db} from '@/firebase/firestore.js';
+  import {db} from '@/firebase/firestore.ts';
 
   export default {
     name: 'CreateForm',

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { db } from '@/firebase/firestore.js';
+  import { db } from '@/firebase/firestore.ts';
   import firebase from 'firebase';
 
   export default {

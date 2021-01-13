@@ -83,7 +83,7 @@
   import CommentForm from '@/components/CommentForm.vue'
   import EmbedMovie from '@/components/EmbedMovie.vue'
   import EmbedSlide from '@/components/EmbedSlide.vue'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
   import firebase from 'firebase'
   import UserItemSmall from "../components/UserItemSmall"
 

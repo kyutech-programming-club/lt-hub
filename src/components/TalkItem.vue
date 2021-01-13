@@ -15,7 +15,7 @@
 
 <script>
   import UserItemSmall from "../components/UserItemSmall";
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
 
   export default {
     components: {

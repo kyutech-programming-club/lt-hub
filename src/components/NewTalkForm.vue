@@ -66,7 +66,7 @@
 </template>
 <script>
   import firebase from 'firebase'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
   import HelpOfSlide from '@/components/HelpOfSlide.vue'
 
   export default {

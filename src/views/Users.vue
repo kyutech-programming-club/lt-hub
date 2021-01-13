@@ -14,7 +14,7 @@
 
 <script>
   import UserItem from '@/components/UserItem.vue'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.ts'
 
   export default {
     components: {

@@ -35,10 +35,11 @@
 </template>
 
 <script lang="ts">
-import firebase from "firebase";
-import { db } from "@/firebase/firestore.ts";
 import Vue from "vue";
 import Component from "vue-class-component";
+import router from "@/router";
+import firebase from "firebase";
+import { db } from "@/firebase/firestore.ts";
 
 @Component
 export default class GoogleAuth extends Vue {
@@ -108,10 +109,10 @@ export default class GoogleAuth extends Vue {
   }
   doLogout(): void {
     firebase.auth().signOut();
-    this.$router.push(this.$router.currentRoute.path);
+    router.push(router.currentRoute.path);
   }
   goMyPage(id: string): void {
-    this.$router.push({ name: "user", params: { uid: id } }).catch((e) => {
+    router.push({ name: "user", params: { uid: id } }).catch((e) => {
       console.log(e);
     });
   }

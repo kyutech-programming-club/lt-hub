@@ -1,6 +1,6 @@
 <template>
   <div class="google-auth">
-    <div v-if="user.id" key="login">
+    <div v-if="user" key="login">
       <v-avatar @click="goMyPage(user.id)">
         <img :src="user.data.photoURL" />
       </v-avatar>

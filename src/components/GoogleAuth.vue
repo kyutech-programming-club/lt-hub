@@ -1,5 +1,5 @@
 <template>
-  <div class="github-auth">
+  <div class="google-auth">
     <div v-if="user.id" key="login">
       <v-avatar @click="goMyPage(user.id)">
         <img :src="user.data.photoURL" />
@@ -40,25 +40,23 @@ import Component from "vue-class-component";
 import router from "@/router";
 import firebase from "firebase";
 import { db } from "@/firebase/firestore.ts";
+import User from "@/types/user.ts";
 
 @Component
 export default class GoogleAuth extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user: any;
+  user: User | null = null;
   loggingIn = false;
 
   created(): void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let self = this;
-
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
       if (user != null) {
         db.collection("users")
           .doc(user.uid)
           .get()
           .then((dbUser) => {
             if (dbUser.exists) {
-              self.user = {
+              this.user = {
                 id: dbUser.id,
                 data: dbUser.data(),
               };
@@ -76,7 +74,7 @@ export default class GoogleAuth extends Vue {
                     .doc(user.uid)
                     .get()
                     .then((dbUser) => {
-                      self.user = {
+                      this.user = {
                         id: dbUser.id,
                         data: dbUser.data(),
                       };
@@ -91,7 +89,7 @@ export default class GoogleAuth extends Vue {
             console.error("Error fetching user data: ", err);
           });
       } else {
-        self.user = {};
+        this.user = null;
       }
     });
   }

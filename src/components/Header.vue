@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer dark v-model="drawer" absolute temporary style="position: fixed;">
+    <v-navigation-drawer
+      dark
+      v-model="drawer"
+      absolute
+      temporary
+      style="position: fixed"
+    >
       <v-list class="pt-1" dense>
         <v-divider></v-divider>
         <v-list-item v-for="item in items" :key="item.title" :to="item.to">
@@ -23,7 +29,7 @@
         <router-link to="/" class="toolbar-title">LT-Hub</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      
+
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn text to="/events">
           <v-icon class="ma-2">mdi-calendar</v-icon>
@@ -40,29 +46,28 @@
 </template>
 
 <script>
-  import GithubAuth from '@/components/GithubAuth.vue'
+import GithubAuth from "@/components/GithubAuth.vue";
 
-  export default {
-    components: {
-      GithubAuth
-    },
-    data() {
-      return {
-        drawer: null,
-        items: [
-          { title: 'Home', icon: 'mdi-home', to: '/' },
-          { title: 'Events', icon: 'mdi-calendar', to: '/events' },
-          { title: 'Users', icon: 'mdi-account-group', to: '/users' }
-        ]
-      };
-    }
-  }
-
+export default {
+  components: {
+    GithubAuth,
+  },
+  data() {
+    return {
+      drawer: null,
+      items: [
+        { title: "Home", icon: "mdi-home", to: "/" },
+        { title: "Events", icon: "mdi-calendar", to: "/events" },
+        { title: "Users", icon: "mdi-account-group", to: "/users" },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
-  .toolbar-title {
-    color: white;
-    text-decoration: none;
-  }
+.toolbar-title {
+  color: white;
+  text-decoration: none;
+}
 </style>

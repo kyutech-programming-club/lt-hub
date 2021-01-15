@@ -107,7 +107,9 @@ export default class GoogleAuth extends Vue {
   }
   doLogout(): void {
     firebase.auth().signOut();
-    router.push(router.currentRoute.path);
+    if (router.currentRoute.path !== "/") {
+      router.push("/");
+    }
   }
   goMyPage(id: string): void {
     router.push({ name: "user", params: { uid: id } }).catch((e) => {

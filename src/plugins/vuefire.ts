@@ -1,4 +1,4 @@
-import Vue from 'vue'
-import { firestorePlugin } from 'vuefire'
+import Vue from "vue";
+import { firestorePlugin } from "vuefire";
 
-Vue.use(firestorePlugin)
+Vue.use(firestorePlugin);

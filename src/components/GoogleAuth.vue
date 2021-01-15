@@ -34,18 +34,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import firebase from "firebase";
 import { db } from "@/firebase/firestore.ts";
-export default {
-  name: "GithubAuth",
-  data() {
-    return {
-      user: {},
-      loggingIn: false,
-    };
-  },
-  created() {
+import Vue from "vue";
+import Component from "vue-class-component";
+
+@Component
+export default class GoogleAuth extends Vue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: any;
+  loggingIn = false;
+
+  created(): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let self = this;
 
@@ -92,29 +93,28 @@ export default {
         self.user = {};
       }
     });
-  },
-  methods: {
-    doLogin() {
-      this.loggingIn = true;
-      // const provider = new firebase.auth.GithubAuthProvider();
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .finally(() => {
-          this.loggingIn = false;
-        });
-    },
-    doLogout() {
-      firebase.auth().signOut();
-      this.$router.go(this.$router.currentRoute);
-    },
-    goMyPage(id) {
-      this.$router.push({ name: "user", params: { uid: id } }).catch((e) => {
-        console.log(e);
+  }
+
+  doLogin(): void {
+    this.loggingIn = true;
+    // const provider = new firebase.auth.GithubAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .finally(() => {
+        this.loggingIn = false;
       });
-    },
-  },
-};
+  }
+  doLogout(): void {
+    firebase.auth().signOut();
+    this.$router.push(this.$router.currentRoute.path);
+  }
+  goMyPage(id: string): void {
+    this.$router.push({ name: "user", params: { uid: id } }).catch((e) => {
+      console.log(e);
+    });
+  }
+}
 </script>
 <style scoped></style>

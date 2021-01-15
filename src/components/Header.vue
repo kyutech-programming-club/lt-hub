@@ -39,7 +39,7 @@
           <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
-      <google-auth />
+        <google-auth />
       </v-toolbar-items>
     </v-app-bar>
   </div>
@@ -52,12 +52,12 @@ import Component from "vue-class-component";
 
 @Component({
   components: {
-    GoogleAuth
-  }
+    GoogleAuth,
+  },
 })
 export default class Header extends Vue {
   drawer: null | boolean = null;
-  items: any = [
+  items: { title: string; icon: string; to: string }[] = [
     { title: "Home", icon: "mdi-home", to: "/" },
     { title: "Events", icon: "mdi-calendar", to: "/events" },
     { title: "Users", icon: "mdi-account-group", to: "/users" },

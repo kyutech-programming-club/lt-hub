@@ -6,7 +6,7 @@
       max-height="400"
     >
       <v-list>
-        <template v-for="(comment, index) in comments">
+        <template v-for="(comment, index) in reverseItems">
           <v-card :key="index">
             <v-list-item>
               <v-list-item-avatar @click="goUserPage(comment.userRef)">
@@ -69,6 +69,11 @@
       return {
         // firestoreのcommentsコレクションを参照
         comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'desc')
+      }
+    },
+    computed: {
+      reverseItems() {
+        return this.comments.slice().reverse();
       }
     },
     methods: {

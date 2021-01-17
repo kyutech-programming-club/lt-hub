@@ -3,7 +3,7 @@
     <v-card
       v-scroll.self="onScroll"
       class="overflow-y-auto"
-      max-height="400"
+      height="400"
     >
       <v-list>
         <template v-for="(comment, index) in reverseItems">

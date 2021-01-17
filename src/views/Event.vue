@@ -252,7 +252,7 @@
           let currentUserRef = await db.collection('users').doc(this.currentUserId)
           let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
           let talkIds = [];
-          await db.collection('participants')
+          db.collection('participants')
             .where('userRef', '==', currentUserRef)
             .where('eventRef', '==', currentEventRef)
             .get()
@@ -271,7 +271,7 @@
                 talkIds.push(talk.ref.id);
               })
             });
-          await currentEventRef.update({
+          currentEventRef.update({
             order: firebase.firestore.FieldValue.arrayRemove(...talkIds),
           });
           alert('ぴえん');

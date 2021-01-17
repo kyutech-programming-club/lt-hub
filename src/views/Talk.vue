@@ -69,10 +69,10 @@
           mdi-comment-arrow-right
         </v-icon>
       </v-chip>
+      <CommentBoard :talkId="talk.id"/>
       <div v-if="currentUserId">
         <CommentForm :talkId="talk.id" :userId="currentUserId"/>
       </div>
-      <CommentBoard :talkId="talk.id"/>
     </div>
   </div>
 </template>

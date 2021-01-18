@@ -23,37 +23,22 @@
         </v-tabs>
         <v-tabs-items v-model="tab"> <!--なんかtabがいる-->
           <v-tab-item eager>
-            <v-sheet
-              class="pb-5"
-              color="#FFECB3">
-              <!-- <h1>now</h1> -->
-              <event-item
-                v-for="event in nowEvents"
-                :key="event.id"
-                :event="event" />
-            </v-sheet>
+            <event-item
+              v-for="event in nowEvents"
+              :key="event.id"
+              :event="event" />
           </v-tab-item>
           <v-tab-item eager>
-            <v-sheet
-              class="pb-5"
-              color="#80DEEA">
-              <!-- <h1>future</h1> -->
-              <event-item
-                v-for="event in futureEvents"
-                :key="event.id"
-                :event="event" />
-            </v-sheet>
+            <event-item
+              v-for="event in futureEvents"
+              :key="event.id"
+              :event="event" />
           </v-tab-item>
           <v-tab-item eager>
-            <v-sheet
-              class="pb-5"
-              color="#E0E0E0">
-              <!-- <h1>past</h1> -->
-              <event-item
-                v-for="event in pastEvents"
-                :key="event.id"
-                :event="event" />
-            </v-sheet>
+            <event-item
+              v-for="event in pastEvents"
+              :key="event.id"
+              :event="event" />
           </v-tab-item>
         </v-tabs-items>
       </div>

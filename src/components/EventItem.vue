@@ -8,7 +8,9 @@
               <v-chip :color="colors[status][Number(isParticipated)]" class="ma-0">{{messages[status]}}</v-chip>
             </v-col>
             <v-col class="pa-0 ma-0">
-              <v-chip v-if="isParticipated" color="#FF80AB" class="ma-0">登録済み</v-chip>
+              <v-chip v-if="isParticipated" color="white">
+                <v-icon color="green" large>mdi-check-bold</v-icon>
+              </v-chip>
             </v-col>
           </v-row>
         </v-container>

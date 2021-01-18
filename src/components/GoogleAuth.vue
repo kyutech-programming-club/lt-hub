@@ -44,7 +44,6 @@ import User from "@/types/user.ts";
 
 @Component
 export default class GoogleAuth extends Vue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: User | null = null;
   loggingIn = false;
 
@@ -96,7 +95,6 @@ export default class GoogleAuth extends Vue {
 
   doLogin(): void {
     this.loggingIn = true;
-    // const provider = new firebase.auth.GithubAuthProvider();
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase
       .auth()

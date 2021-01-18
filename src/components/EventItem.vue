@@ -1,14 +1,16 @@
 <template>
   <div class="event-item">
     <div v-if="event.id">
-      <v-card class="pa-2 mb-2" :color="colors[status]" @click="goEventPage">
+      <v-card class="pa-2 mb-2" :color="colors[status][Number(isParticipated)]" @click="goEventPage">
         <v-container class="pa-0 ma-0">
           <v-row class="justify-content-between">
             <v-col class="pa-0 ma-0">
-              <v-chip :color="colors[status]" class="ma-0">{{messages[status]}}</v-chip>
+              <v-chip :color="colors[status][Number(isParticipated)]" class="ma-0">{{messages[status]}}</v-chip>
             </v-col>
             <v-col class="pa-0 ma-0">
-              <v-chip v-if="isParticipated" color="#FF80AB" class="ma-0">登録済み</v-chip>
+              <v-chip v-if="isParticipated" color="white">
+                <v-icon color="green" large>mdi-check-bold</v-icon>
+              </v-chip>
             </v-col>
           </v-row>
         </v-container>
@@ -34,7 +36,7 @@
     data() {
       return {
         status: '',
-        colors: ['#FDD835','#90CAF9','#B0BEC5'],
+        colors: [['#fffde7', '#fff176'], ['#e3f2fd', '#64b5f6'], ['#fafafa', '#9e9e9e']],
         messages: ['開催中！', '開催予定', '終了イベント'],
         isParticipated: false,
         participants: [],

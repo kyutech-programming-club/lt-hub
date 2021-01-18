@@ -53,12 +53,12 @@ export default class GoogleAuth extends Vue {
         let dbUser: firebase.firestore.DocumentSnapshot = await db
           .collection("users")
           .doc(user.uid)
-          .get()
-          // TODO To make return type
-          // .catch((err) => {
-          //   console.error("Error fetching user data: ", err);
-          //   return ;
-          // });
+          .get();
+        // TODO To make return type
+        // .catch((err) => {
+        //   console.error("Error fetching user data: ", err);
+        //   return ;
+        // });
         if (dbUser.exists) {
           this.user = {
             id: dbUser.id,

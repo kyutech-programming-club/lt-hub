@@ -4,9 +4,10 @@
       v-scroll.self="onScroll"
       class="overflow-y-auto"
       height="400"
+      id="content"
     >
       <v-list>
-        <template v-for="(comment, index) in reverseItems">
+        <template v-for="(comment, index) in comments">
           <v-card :key="index">
             <v-list-item>
               <v-list-item-avatar @click="goUserPage(comment.userRef)">
@@ -68,12 +69,7 @@
     firestore() {
       return {
         // firestoreのcommentsコレクションを参照
-        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'desc')
-      }
-    },
-    computed: {
-      reverseItems() {
-        return this.comments.slice().reverse();
+        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'asc')
       }
     },
     methods: {

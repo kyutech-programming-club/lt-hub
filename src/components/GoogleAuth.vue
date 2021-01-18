@@ -48,45 +48,44 @@ export default class GoogleAuth extends Vue {
   loggingIn = false;
 
   created(): void {
-    firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
+    firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       if (user != null) {
-        db.collection("users")
+        let dbUser: firebase.firestore.DocumentSnapshot = await db
+          .collection("users")
           .doc(user.uid)
           .get()
-          .then((dbUser) => {
-            if (dbUser.exists) {
-              this.user = {
-                id: dbUser.id,
-                data: dbUser.data(),
-              };
-            } else {
-              db.collection("users")
-                .doc(user.uid)
-                .set({
-                  name: user.displayName || "ななっしー",
-                  photoURL: user.photoURL,
-                  createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-                  updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
-                })
-                .then(() => {
-                  db.collection("users")
-                    .doc(user.uid)
-                    .get()
-                    .then((dbUser) => {
-                      this.user = {
-                        id: dbUser.id,
-                        data: dbUser.data(),
-                      };
-                    });
-                })
-                .catch((err) => {
-                  console.error("Error Creating new user: ", err);
-                });
-            }
-          })
-          .catch((err) => {
-            console.error("Error fetching user data: ", err);
-          });
+          // TODO To make return type
+          // .catch((err) => {
+          //   console.error("Error fetching user data: ", err);
+          //   return ;
+          // });
+        if (dbUser.exists) {
+          this.user = {
+            id: dbUser.id,
+            data: dbUser.data(),
+          };
+        } else {
+          await db
+            .collection("users")
+            .doc(user.uid)
+            .set({
+              name: user.displayName || "ななっしー",
+              photoURL: user.photoURL,
+              createdTime: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .catch((err) => {
+              console.error("Error Creating new user: ", err);
+            });
+          let newUser: firebase.firestore.DocumentSnapshot = await db
+            .collection("users")
+            .doc(user.uid)
+            .get();
+          this.user = {
+            id: newUser.id,
+            data: newUser.data(),
+          };
+        }
       } else {
         this.user = null;
       }

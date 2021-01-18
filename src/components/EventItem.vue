@@ -34,7 +34,7 @@
     data() {
       return {
         status: '',
-        colors: [['#ffff00', '#eac95e'], ['#90CAF9', '#6495ED'], ['#B0BEC5', '#696969']],
+        colors: [['#fffde7', '#fff176'], ['#e3f2fd', '#64b5f6'], ['#fafafa', '#9e9e9e']],
         messages: ['開催中！', '開催予定', '終了イベント'],
         isParticipated: false,
         participants: [],

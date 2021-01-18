@@ -11,13 +11,13 @@
           slider-color="red"
           slider-size="4"
         >
-          <v-tab style="background-color: #FFECB3; color: black;">
+          <v-tab style="background-color: #fff176; color: black;">
             開催中
           </v-tab>
-          <v-tab style="background-color: #80DEEA; color: black;">
+          <v-tab style="background-color: #64b5f6; color: black;">
             開催予定
           </v-tab>
-          <v-tab style="background-color: #E0E0E0; color: black;">
+          <v-tab style="background-color: #9e9e9e; color: black;">
             終了
           </v-tab>
         </v-tabs>

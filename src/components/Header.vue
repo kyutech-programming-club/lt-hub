@@ -18,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <github-auth />
+      <google-auth />
     </v-navigation-drawer>
     <v-app-bar dark clipped-left fixed app>
       <v-app-bar-nav-icon
@@ -39,30 +39,30 @@
           <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
-        <github-auth />
+        <google-auth />
       </v-toolbar-items>
     </v-app-bar>
   </div>
 </template>
 
-<script>
-import GithubAuth from "@/components/GithubAuth.vue";
+<script lang="ts">
+import GoogleAuth from "@/components/GoogleAuth.vue";
+import Vue from "vue";
+import Component from "vue-class-component";
 
-export default {
+@Component({
   components: {
-    GithubAuth,
+    GoogleAuth,
   },
-  data() {
-    return {
-      drawer: null,
-      items: [
-        { title: "Home", icon: "mdi-home", to: "/" },
-        { title: "Events", icon: "mdi-calendar", to: "/events" },
-        { title: "Users", icon: "mdi-account-group", to: "/users" },
-      ],
-    };
-  },
-};
+})
+export default class Header extends Vue {
+  drawer: null | boolean = null;
+  items: { title: string; icon: string; to: string }[] = [
+    { title: "Home", icon: "mdi-home", to: "/" },
+    { title: "Events", icon: "mdi-calendar", to: "/events" },
+    { title: "Users", icon: "mdi-account-group", to: "/users" },
+  ];
+}
 </script>
 
 <style scoped>

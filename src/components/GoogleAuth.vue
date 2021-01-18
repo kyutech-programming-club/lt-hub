@@ -1,6 +1,6 @@
 <template>
-  <div class="github-auth">
-    <div v-if="user.id" key="login">
+  <div class="google-auth">
+    <div v-if="user" key="login">
       <v-avatar @click="goMyPage(user.id)">
         <img :src="user.data.photoURL" />
       </v-avatar>
@@ -34,29 +34,28 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import router from "@/router";
 import firebase from "firebase";
 import { db } from "@/firebase/firestore.ts";
-export default {
-  name: "GithubAuth",
-  data() {
-    return {
-      user: {},
-      loggingIn: false,
-    };
-  },
-  created() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let self = this;
+import User from "@/types/user.ts";
 
-    firebase.auth().onAuthStateChanged((user) => {
+@Component
+export default class GoogleAuth extends Vue {
+  user: User | null = null;
+  loggingIn = false;
+
+  created(): void {
+    firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
       if (user != null) {
         db.collection("users")
           .doc(user.uid)
           .get()
           .then((dbUser) => {
             if (dbUser.exists) {
-              self.user = {
+              this.user = {
                 id: dbUser.id,
                 data: dbUser.data(),
               };
@@ -74,7 +73,7 @@ export default {
                     .doc(user.uid)
                     .get()
                     .then((dbUser) => {
-                      self.user = {
+                      this.user = {
                         id: dbUser.id,
                         data: dbUser.data(),
                       };
@@ -89,32 +88,32 @@ export default {
             console.error("Error fetching user data: ", err);
           });
       } else {
-        self.user = {};
+        this.user = null;
       }
     });
-  },
-  methods: {
-    doLogin() {
-      this.loggingIn = true;
-      // const provider = new firebase.auth.GithubAuthProvider();
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .finally(() => {
-          this.loggingIn = false;
-        });
-    },
-    doLogout() {
-      firebase.auth().signOut();
-      this.$router.go(this.$router.currentRoute);
-    },
-    goMyPage(id) {
-      this.$router.push({ name: "user", params: { uid: id } }).catch((e) => {
-        console.log(e);
+  }
+
+  doLogin(): void {
+    this.loggingIn = true;
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .finally(() => {
+        this.loggingIn = false;
       });
-    },
-  },
-};
+  }
+  doLogout(): void {
+    firebase.auth().signOut();
+    if (router.currentRoute.path !== "/") {
+      router.push("/");
+    }
+  }
+  goMyPage(id: string): void {
+    router.push({ name: "user", params: { uid: id } }).catch((e) => {
+      console.log(e);
+    });
+  }
+}
 </script>
 <style scoped></style>

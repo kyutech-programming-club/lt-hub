@@ -1,6 +1,6 @@
 interface User {
   id: string;
-  data: any;
+  data: firebase.firestore.DocumentData | undefined;
 }
 
 export default User;

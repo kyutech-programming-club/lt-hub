@@ -72,6 +72,9 @@
         comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'asc')
       }
     },
+    updated() {
+      this.scrollToEnd()
+    },
     methods: {
       async favoriteComment(id) {
         let favoriteNum;
@@ -136,9 +139,6 @@
       })
       }
     },
-    updated() {
-      this.scrollToEnd()
-    }
   }
 </script>
 <style scoped>

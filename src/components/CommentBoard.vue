@@ -4,7 +4,7 @@
       v-scroll.self="onScroll"
       class="overflow-y-auto"
       height="400"
-      id="content"
+      ref="content"
     >
       <v-list>
         <template v-for="(comment, index) in comments">
@@ -94,7 +94,7 @@
         this.$router.push({ name : 'user', params: { uid: userRef.id}});
       },
       onScroll () {
-        this.scrollInvoked++
+        this.scrollInvoked++;
       },
       //日付から文字列に変換する関数
       getStringFromDate(date) {
@@ -127,8 +127,18 @@
       },
       validUrl(checkText){
         return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
+      },
+      scrollToEnd() {
+        this.$nextTick(() => {
+          const chatLog = this.$refs.content
+          if (!chatLog) return
+          chatLog.$refs.link.scrollTop = chatLog.$refs.link.scrollHeight
+      })
       }
     },
+    updated() {
+      this.scrollToEnd()
+    }
   }
 </script>
 <style scoped>

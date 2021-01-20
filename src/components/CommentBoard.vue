@@ -3,7 +3,8 @@
     <v-card
       v-scroll.self="onScroll"
       class="overflow-y-auto"
-      max-height="400"
+      height="400"
+      ref="content"
     >
       <v-list>
         <template v-for="(comment, index) in comments">
@@ -68,8 +69,11 @@
     firestore() {
       return {
         // firestoreのcommentsコレクションを参照
-        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'desc')
+        comments: db.collection('talks').doc(this.talkId).collection('comments').orderBy('createdTime', 'asc')
       }
+    },
+    updated() {
+      this.scrollToEnd()
     },
     methods: {
       async favoriteComment(id) {
@@ -93,7 +97,7 @@
         this.$router.push({ name : 'user', params: { uid: userRef.id}});
       },
       onScroll () {
-        this.scrollInvoked++
+        this.scrollInvoked++;
       },
       //日付から文字列に変換する関数
       getStringFromDate(date) {
@@ -126,6 +130,13 @@
       },
       validUrl(checkText){
         return checkText.match(/^(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)$/);
+      },
+      scrollToEnd() {
+        this.$nextTick(() => {
+          const chatLog = this.$refs.content
+          if (!chatLog) return
+          chatLog.$refs.link.scrollTop = chatLog.$refs.link.scrollHeight
+      })
       }
     },
   }

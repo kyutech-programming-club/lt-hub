@@ -251,6 +251,7 @@
           this.isParticipated = false;
           let currentUserRef = await db.collection('users').doc(this.currentUserId)
           let currentEventRef = await db.collection('events').doc(this.$route.params['id'])
+          let talkIds = [];
           db.collection('participants')
             .where('userRef', '==', currentUserRef)
             .where('eventRef', '==', currentEventRef)
@@ -260,15 +261,19 @@
                 participant.ref.delete();
               })
             });
-          db.collection('talks')
+          await db.collection('talks')
             .where('userRef', '==', currentUserRef)
             .where('eventRef', '==', currentEventRef)
             .get()
             .then(talks => {
               talks.forEach(talk =>{
                 talk.ref.delete();
+                talkIds.push(talk.ref.id);
               })
             });
+          currentEventRef.update({
+            order: firebase.firestore.FieldValue.arrayRemove(...talkIds),
+          });
           alert('ぴえん');
         } else {
           alert('命拾いしましたね');

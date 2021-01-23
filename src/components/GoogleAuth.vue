@@ -44,7 +44,7 @@ import { User, userConverter } from "@/types/user.ts";
 
 @Component
 export default class GoogleAuth extends Vue {
-  user: User | null = null;
+  user?: User;
   loggingIn = false;
 
   created(): void {
@@ -88,7 +88,7 @@ export default class GoogleAuth extends Vue {
           this.user = newUser.data();
         }
       } else {
-        this.user = null;
+        this.user = undefined;
       }
     });
   }

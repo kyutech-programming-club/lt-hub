@@ -87,8 +87,6 @@ export default class GoogleAuth extends Vue {
 
           this.user = newUser.data();
         }
-      } else {
-        this.user = undefined;
       }
     });
   }

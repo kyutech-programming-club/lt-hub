@@ -20,35 +20,34 @@ export interface UserDoc {
   updatedTime: firebase.firestore.Timestamp;
 }
 
-// const varidateUserType = (data: any): data is UserDoc => {
-//  if (!(data.id && typeof data.id === "string")) {
-//    return false;
-//  }
-//  if (!(data.name && typeof data.name === "string")) {
-//    return false;
-//  }
-//  if (!(data.belong && typeof data.belong === "string")) {
-//    return false;
-//  }
-//  if (
-//    !(
-//      data.createdTime &&
-//      data.createdTime instanceof firebase.firestore.Timestamp
-//    )
-//  ) {
-//    return false;
-//  }
-//  if (
-//    !(
-//      data.updatedTime &&
-//      data.updatedTime instanceof firebase.firestore.Timestamp
-//    )
-//  ) {
-//    return false;
-//  }
-//  return true;
-//  return data !== undefined;
-//};
+const varidateUserType = (data: any): data is UserDoc => {
+  if (!(data.id && typeof data.id === "string")) {
+    return false;
+  }
+  if (!(data.name && typeof data.name === "string")) {
+    return false;
+  }
+  if (!(data.belong && typeof data.belong === "string")) {
+    return false;
+  }
+  if (
+    !(
+      data.createdTime &&
+      data.createdTime instanceof firebase.firestore.Timestamp
+    )
+  ) {
+    return false;
+  }
+  if (
+    !(
+      data.updatedTime &&
+      data.updatedTime instanceof firebase.firestore.Timestamp
+    )
+  ) {
+    return false;
+  }
+  return true;
+};
 
 export const userConverter: firebase.firestore.FirestoreDataConverter<User> = {
   toFirestore(user: User): UserDoc {
@@ -69,7 +68,7 @@ export const userConverter: firebase.firestore.FirestoreDataConverter<User> = {
   ): User {
     const data = snapshot.data(options);
 
-    if (data === undefined) {
+    if (!varidateUserType) {
       console.error(data);
       throw new Error("Invalid data");
     }

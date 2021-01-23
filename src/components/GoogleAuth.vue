@@ -62,7 +62,7 @@ export default class GoogleAuth extends Vue {
         // });
         if (dbUser.exists) {
           const data = dbUser.data();
-          this.user = data !== undefined ? data : null;
+          this.user = data;
         } else {
           await db
             .collection("users")
@@ -79,14 +79,13 @@ export default class GoogleAuth extends Vue {
               console.error("Error Creating new user: ", err);
             });
 
-          let newUser: firebase.firestore.DocumentSnapshot<User> = await db
+          const newUser = await db
             .collection("users")
             .withConverter(userConverter)
             .doc(user.uid)
             .get();
 
-          const data = newUser.data();
-          this.user = data !== undefined ? data : null;
+          this.user = newUser.data();
         }
       } else {
         this.user = null;

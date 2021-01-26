@@ -21,9 +21,6 @@ export interface UserDoc {
 }
 
 const varidateUserType = (data: any): data is UserDoc => {
-  if (!(data.id && typeof data.id === "string")) {
-    return false;
-  }
   if (!(data.name && typeof data.name === "string")) {
     return false;
   }
@@ -68,7 +65,7 @@ export const userConverter: firebase.firestore.FirestoreDataConverter<User> = {
   ): User {
     const data = snapshot.data(options);
 
-    if (!varidateUserType) {
+    if (!varidateUserType(data)) {
       console.error(data);
       throw new Error("Invalid data");
     }

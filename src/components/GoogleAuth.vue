@@ -2,7 +2,7 @@
   <div class="google-auth">
     <div v-if="user" key="login">
       <v-avatar @click="goMyPage(user.id)">
-        <img :src="user.data.photoURL" />
+        <img :src="user.photoUrl" />
       </v-avatar>
       <v-btn
         class="ma-2"
@@ -40,7 +40,7 @@ import Component from "vue-class-component";
 import router from "@/router";
 import firebase from "firebase";
 import { db } from "@/firebase/firestore.ts";
-import User from "@/types/user.ts";
+import { User, userConverter } from "@/types/user.ts";
 
 @Component
 export default class GoogleAuth extends Vue {
@@ -50,9 +50,10 @@ export default class GoogleAuth extends Vue {
   created(): void {
     firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       if (user != null) {
-        let dbUser: firebase.firestore.DocumentSnapshot = await db
+        let dbUser: firebase.firestore.DocumentSnapshot<User> = await db
           .collection("users")
           .doc(user.uid)
+          .withConverter(userConverter)
           .get();
         // TODO To make return type
         // .catch((err) => {
@@ -60,34 +61,33 @@ export default class GoogleAuth extends Vue {
         //   return ;
         // });
         if (dbUser.exists) {
-          this.user = {
-            id: dbUser.id,
-            data: dbUser.data(),
-          };
+          const data = dbUser.data() as User;
+          this.user = data;
         } else {
           await db
             .collection("users")
+            .withConverter(userConverter)
             .doc(user.uid)
             .set({
               name: user.displayName || "ななっしー",
-              photoURL: user.photoURL,
-              createdTime: firebase.firestore.FieldValue.serverTimestamp(),
-              updatedTime: firebase.firestore.FieldValue.serverTimestamp(),
-            })
+              belong: "none",
+              photoUrl: user.photoURL,
+              createdTime: new Date(),
+              updatedTime: new Date(),
+            } as User)
             .catch((err) => {
               console.error("Error Creating new user: ", err);
             });
-          let newUser: firebase.firestore.DocumentSnapshot = await db
+
+          const newUser = await db
             .collection("users")
+            .withConverter(userConverter)
             .doc(user.uid)
             .get();
-          this.user = {
-            id: newUser.id,
-            data: newUser.data(),
-          };
+
+          const data = newUser.data() as User;
+          this.user = data;
         }
-      } else {
-        this.user = null;
       }
     });
   }
@@ -102,12 +102,14 @@ export default class GoogleAuth extends Vue {
         this.loggingIn = false;
       });
   }
+
   doLogout(): void {
     firebase.auth().signOut();
     if (router.currentRoute.path !== "/") {
       router.push("/");
     }
   }
+
   goMyPage(id: string): void {
     router.push({ name: "user", params: { uid: id } }).catch((e) => {
       console.log(e);

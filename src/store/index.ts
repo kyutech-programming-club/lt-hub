@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import User from "@/types/user.ts";
 
 Vue.use(Vuex);
 

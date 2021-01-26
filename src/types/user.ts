@@ -20,7 +20,9 @@ export interface UserDoc {
   updatedTime: firebase.firestore.Timestamp;
 }
 
-const varidateUserType = (data: any): data is UserDoc => {
+const varidateUserType = (
+  data: firebase.firestore.DocumentData
+): data is UserDoc => {
   if (!(data.name && typeof data.name === "string")) {
     return false;
   }

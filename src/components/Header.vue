@@ -50,12 +50,18 @@ import GoogleAuth from "@/components/GoogleAuth.vue";
 import Vue from "vue";
 import Component from "vue-class-component";
 
+const HeaderProps = Vue.extend({
+  props: {
+    uid: String,
+  },
+});
+
 @Component({
   components: {
     GoogleAuth,
   },
 })
-export default class Header extends Vue {
+export default class Header extends HeaderProps {
   drawer: null | boolean = null;
   items: { title: string; icon: string; to: string }[] = [
     { title: "Home", icon: "mdi-home", to: "/" },

@@ -18,7 +18,8 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <google-auth />
+      <logout-button v-if="uid" />
+      <login-button v-else />
     </v-navigation-drawer>
     <v-app-bar dark clipped-left fixed app>
       <v-app-bar-nav-icon
@@ -39,23 +40,32 @@
           <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
-        <google-auth />
+        <logout-button v-if="uid" />
+        <login-button v-else />
       </v-toolbar-items>
     </v-app-bar>
   </div>
 </template>
 
 <script lang="ts">
-import GoogleAuth from "@/components/GoogleAuth.vue";
+import LoginButton from "@/components/LoginButton.vue";
+import LogoutButton from "@/components/LogoutButton.vue";
 import Vue from "vue";
 import Component from "vue-class-component";
 
+const HeaderProps = Vue.extend({
+  props: {
+    uid: String,
+  },
+});
+
 @Component({
   components: {
-    GoogleAuth,
+    LoginButton,
+    LogoutButton,
   },
 })
-export default class Header extends Vue {
+export default class Header extends HeaderProps {
   drawer: null | boolean = null;
   items: { title: string; icon: string; to: string }[] = [
     { title: "Home", icon: "mdi-home", to: "/" },

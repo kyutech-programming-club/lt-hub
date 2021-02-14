@@ -10,11 +10,11 @@ export const Auth = {
     }
     return currentUser.uid;
   },
-  login(): void {
+  async login(): Promise<void> {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebaseApp.auth().signInWithPopup(provider);
+    await firebaseApp.auth().signInWithPopup(provider);
   },
-  logout(): void {
-    firebaseApp.auth().signOut();
+  async logout(): Promise<void> {
+    await firebaseApp.auth().signOut();
   },
 };

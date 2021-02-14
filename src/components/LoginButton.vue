@@ -4,6 +4,7 @@
       class="ma-2"
       style="text-transform: none"
       color="white"
+      :loading="loading"
       @click="doLogin"
       outlined
       dark
@@ -21,8 +22,13 @@ import { Auth } from "@/firebase/auth";
 
 @Component
 export default class LoginButton extends Vue {
+  loading = false;
+
   doLogin(): void {
-    Auth.login();
+    this.loading = true;
+    Auth.login().finally(() => {
+      this.loading = false;
+    });
   }
 }
 </script>

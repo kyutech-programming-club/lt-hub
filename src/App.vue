@@ -14,6 +14,7 @@ import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/Header.vue";
 import { firebaseApp } from "@/firebase/firebase";
 import { Auth } from "@/firebase/auth";
+import { createUser, userExists } from "@/repository/userRepository";
 
 @Component({
   components: {
@@ -24,7 +25,9 @@ export default class App extends Vue {
   currentUid = "";
   mounted(): void {
     firebaseApp.auth().onAuthStateChanged(async (user) => {
-      console.dir(user);
+      if (user !== null && (await userExists(user.uid)) === false) {
+        await createUser(user);
+      }
       this.currentUid = Auth.currentUid();
     });
   }

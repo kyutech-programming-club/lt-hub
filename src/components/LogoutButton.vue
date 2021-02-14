@@ -30,7 +30,7 @@ export default class LogoutButton extends Vue {
   user?: User = {} as User;
 
   async created(): Promise<void> {
-    this.user = await getUserData();
+    this.user = await getUserData(Auth.currentUid());
   }
 
   doLogout(): void {

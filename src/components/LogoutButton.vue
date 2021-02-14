@@ -1,5 +1,5 @@
 <template>
-  <div class="google-auth">
+  <div class="logout-button">
     <v-btn
       class="ma-2"
       style="text-transform: none"

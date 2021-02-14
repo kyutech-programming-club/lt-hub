@@ -40,14 +40,14 @@
           <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
-        <google-auth />
+        <logout-button v-if="uid" />
+        <login-button v-else />
       </v-toolbar-items>
     </v-app-bar>
   </div>
 </template>
 
 <script lang="ts">
-import GoogleAuth from "@/components/GoogleAuth.vue";
 import LoginButton from "@/components/LoginButton.vue";
 import LogoutButton from "@/components/LogoutButton.vue";
 import Vue from "vue";
@@ -61,7 +61,6 @@ const HeaderProps = Vue.extend({
 
 @Component({
   components: {
-    GoogleAuth,
     LoginButton,
     LogoutButton,
   },

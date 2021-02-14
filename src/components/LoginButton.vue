@@ -1,5 +1,5 @@
 <template>
-  <div class="google-auth">
+  <div class="login-button">
     <v-btn
       class="ma-2"
       style="text-transform: none"
@@ -17,7 +17,6 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import router from "@/router";
 import firebase from "firebase";
 
 @Component
@@ -25,13 +24,6 @@ export default class LoginButton extends Vue {
   doLogin(): void {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider);
-  }
-
-  doLogout(): void {
-    firebase.auth().signOut();
-    if (router.currentRoute.path !== "/") {
-      router.push("/");
-    }
   }
 }
 </script>

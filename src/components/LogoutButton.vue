@@ -23,7 +23,7 @@ import Component from "vue-class-component";
 import { getUserData } from "@/repository/userRepository";
 import { User } from "@/types/user";
 import router from "@/router";
-import firebase from "firebase";
+import { Auth } from "@/firebase/auth";
 
 @Component
 export default class LogoutButton extends Vue {
@@ -34,7 +34,7 @@ export default class LogoutButton extends Vue {
   }
 
   doLogout(): void {
-    firebase.auth().signOut();
+    Auth.logout();
     if (router.currentRoute.path !== "/") {
       router.push("/");
     }

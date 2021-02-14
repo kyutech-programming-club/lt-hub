@@ -17,13 +17,12 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import firebase from "firebase";
+import { Auth } from "@/firebase/auth";
 
 @Component
 export default class LoginButton extends Vue {
   doLogin(): void {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
+    Auth.login();
   }
 }
 </script>

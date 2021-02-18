@@ -33,7 +33,6 @@ export default class Events extends EventsProps {
 
   async created(): Promise<void> {
     await this.fetchEvents();
-    console.dir(this.events);
   }
 
   async fetchEvents(): Promise<void> {

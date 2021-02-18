@@ -8,6 +8,8 @@
 import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
 import { User } from "@/types/user";
+import { Event } from "@/types/event";
+import { getEventList } from "@/repository/eventRepository";
 
 const EventsProps = Vue.extend({
   props: {
@@ -17,8 +19,15 @@ const EventsProps = Vue.extend({
 
 @Component({})
 export default class Events extends EventsProps {
-  created(): void {
-    console.dir(this.currentUser);
+  events: Array<Event> = [];
+
+  async created(): Promise<void> {
+    await this.fetchEvents();
+    console.dir(this.events);
+  }
+
+  async fetchEvents(): Promise<void> {
+    this.events = await getEventList(this.currentUser);
   }
 }
 </script>

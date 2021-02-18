@@ -1,12 +1,18 @@
 <template>
   <div class="events">
     <h1>Events</h1>
+    <div class="events-list" v-if="events.length">
+      <div v-for="event in events" :key="event.id">
+        <EventListItem :event="event" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
+import EventListItem from "@/components/events/EventListItem.vue";
 import { User } from "@/types/user";
 import { Event } from "@/types/event";
 import { getEventList } from "@/repository/eventRepository";
@@ -17,7 +23,11 @@ const EventsProps = Vue.extend({
   },
 });
 
-@Component({})
+@Component({
+  components: {
+    EventListItem,
+  },
+})
 export default class Events extends EventsProps {
   events: Array<Event> = [];
 

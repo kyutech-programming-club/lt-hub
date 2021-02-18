@@ -3,7 +3,7 @@
     <Header :currentUser="currentUser" />
     <v-main fluid fill-height align-start>
       <v-container>
-        <router-view :currentUser="currentUser" />
+        <router-view :currentUser="currentUser" :key="isLogin" />
       </v-container>
     </v-main>
   </v-app>
@@ -27,6 +27,7 @@ import { User } from "@/types/user";
 })
 export default class App extends Vue {
   currentUser = {} as User;
+  isLogin = false;
 
   created(): void {
     firebaseApp.auth().onAuthStateChanged(async (user) => {
@@ -35,8 +36,10 @@ export default class App extends Vue {
           await createUser(user);
         }
         this.currentUser = await getUserData(user.uid);
+        this.isLogin = true;
       } else {
         this.currentUser = {} as User;
+        this.isLogin = false;
       }
     });
   }

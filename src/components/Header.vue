@@ -18,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <logout-button v-if="uid" />
+      <logout-button v-if="currentUser.id" />
       <login-button v-else />
     </v-navigation-drawer>
     <v-app-bar dark clipped-left fixed app>
@@ -40,7 +40,7 @@
           <v-icon class="ma-2">mdi-account-group</v-icon>
           Users
         </v-btn>
-        <logout-button v-if="uid" />
+        <logout-button v-if="currentUser.id" />
         <login-button v-else />
       </v-toolbar-items>
     </v-app-bar>
@@ -50,12 +50,13 @@
 <script lang="ts">
 import LoginButton from "@/components/LoginButton.vue";
 import LogoutButton from "@/components/LogoutButton.vue";
-import Vue from "vue";
+import { User } from "@/types/user";
+import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
 
 const HeaderProps = Vue.extend({
   props: {
-    uid: String,
+    currentUser: Object as PropType<User>,
   },
 });
 

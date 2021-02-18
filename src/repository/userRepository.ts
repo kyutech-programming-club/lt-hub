@@ -10,7 +10,7 @@ export async function userExists(id: string): Promise<boolean> {
   return doc.exists;
 }
 
-export async function getUserData(id: string): Promise<User | undefined> {
+export async function getUserData(id: string): Promise<User> {
   try {
     const doc = await db
       .collection("users")
@@ -19,7 +19,8 @@ export async function getUserData(id: string): Promise<User | undefined> {
       .get();
     return doc.data() as User;
   } catch (e) {
-    console.dir(e);
+    // TODO:Inform error to user by moving to 500 page or showing something like a dialog
+    throw new Error(e);
   }
 }
 

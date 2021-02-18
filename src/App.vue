@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <Header :uid="currentUid" />
+    <Header :currentUser="currentUser" />
     <v-main fluid fill-height align-start>
       <v-container>
-        <router-view />
+        <router-view :currentUser="currentUser" />
       </v-container>
     </v-main>
   </v-app>
@@ -13,8 +13,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/Header.vue";
 import { firebaseApp } from "@/firebase/firebase";
-import { Auth } from "@/firebase/auth";
-import { createUser, userExists } from "@/repository/userRepository";
+import {
+  createUser,
+  getUserData,
+  userExists,
+} from "@/repository/userRepository";
+import { User } from "@/types/user";
 
 @Component({
   components: {
@@ -22,13 +26,18 @@ import { createUser, userExists } from "@/repository/userRepository";
   },
 })
 export default class App extends Vue {
-  currentUid = "";
-  mounted(): void {
+  currentUser = {} as User;
+
+  created(): void {
     firebaseApp.auth().onAuthStateChanged(async (user) => {
-      if (user !== null && (await userExists(user.uid)) === false) {
-        await createUser(user);
+      if (user !== null) {
+        if (!(await userExists(user.uid))) {
+          await createUser(user);
+        }
+        this.currentUser = await getUserData(user.uid);
+      } else {
+        this.currentUser = {} as User;
       }
-      this.currentUid = Auth.currentUid();
     });
   }
 }

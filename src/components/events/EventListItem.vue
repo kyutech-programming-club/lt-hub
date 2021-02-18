@@ -1,10 +1,8 @@
 <template>
   <div class="event-item">
-    <div v-if="event.id">
-      <v-card>
-        <v-card-title> {{ event.title }}</v-card-title>
-      </v-card>
-    </div>
+    <v-card>
+      <v-card-title> {{ event.title }}</v-card-title>
+    </v-card>
   </div>
 </template>
 

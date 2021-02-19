@@ -10,15 +10,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Header from "@/components/Header.vue";
+import Vue from "vue";
+import Component from "vue-class-component";
 import { firebaseApp } from "@/firebase/firebase";
-import {
-  createUser,
-  getUserData,
-  userExists,
-} from "@/repository/userRepository";
+
+import Header from "@/components/Header.vue";
+
+import { repository } from "@/repository";
 import { User } from "@/types/user";
+
+const userRepository = repository.v2.user;
 
 @Component({
   components: {
@@ -32,10 +33,10 @@ export default class App extends Vue {
   created(): void {
     firebaseApp.auth().onAuthStateChanged(async (user) => {
       if (user !== null) {
-        if (!(await userExists(user.uid))) {
-          await createUser(user);
+        if (!(await userRepository.userExists(user.uid))) {
+          await userRepository.createUser(user);
         }
-        this.currentUser = await getUserData(user.uid);
+        this.currentUser = await userRepository.getUserData(user.uid);
         this.isLogin = true;
       } else {
         this.currentUser = {} as User;

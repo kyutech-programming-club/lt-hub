@@ -9,6 +9,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
+
 import { Event } from "@/types/event";
 
 const EventListItemProps = Vue.extend({

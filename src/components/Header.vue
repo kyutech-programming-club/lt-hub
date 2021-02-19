@@ -48,11 +48,13 @@
 </template>
 
 <script lang="ts">
-import LoginButton from "@/components/LoginButton.vue";
-import LogoutButton from "@/components/LogoutButton.vue";
-import { User } from "@/types/user";
 import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
+
+import LoginButton from "@/components/LoginButton.vue";
+import LogoutButton from "@/components/LogoutButton.vue";
+
+import { User } from "@/types/user";
 
 const HeaderProps = Vue.extend({
   props: {

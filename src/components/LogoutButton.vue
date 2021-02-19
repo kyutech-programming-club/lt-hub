@@ -20,10 +20,11 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { repository } from "@/repository";
-import { User } from "@/types/user";
 import router from "@/router";
 import { Auth } from "@/firebase/auth";
+
+import { repository } from "@/repository";
+import { User } from "@/types/user";
 
 const userRepository = repository.v2.user;
 

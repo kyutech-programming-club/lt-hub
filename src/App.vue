@@ -10,9 +10,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Header from "@/components/Header.vue";
+import Vue from "vue";
+import Component from "vue-class-component";
 import { firebaseApp } from "@/firebase/firebase";
+
+import Header from "@/components/Header.vue";
+
 import { repository } from "@/repository";
 import { User } from "@/types/user";
 

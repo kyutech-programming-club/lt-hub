@@ -12,10 +12,12 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import Component from "vue-class-component";
+
 import EventListItem from "@/components/events/EventListItem.vue";
+
+import { repository } from "@/repository";
 import { User } from "@/types/user";
 import { Event } from "@/types/event";
-import { repository } from "@/repository";
 
 const eventRepository = repository.v2.event;
 

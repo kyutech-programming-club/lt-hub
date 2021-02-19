@@ -20,17 +20,19 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getUserData } from "@/repository/userRepository";
+import { repository } from "@/repository";
 import { User } from "@/types/user";
 import router from "@/router";
 import { Auth } from "@/firebase/auth";
+
+const userRepository = repository.v2.user;
 
 @Component
 export default class LogoutButton extends Vue {
   user?: User = {} as User;
 
   async created(): Promise<void> {
-    this.user = await getUserData(Auth.currentUid());
+    this.user = await userRepository.getUserData(Auth.currentUid());
   }
 
   doLogout(): void {

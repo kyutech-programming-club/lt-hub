@@ -15,7 +15,9 @@ import Component from "vue-class-component";
 import EventListItem from "@/components/events/EventListItem.vue";
 import { User } from "@/types/user";
 import { Event } from "@/types/event";
-import { getEventList } from "@/repository/eventRepository";
+import { repository } from "@/repository";
+
+const eventRepository = repository.v2.event;
 
 const EventsProps = Vue.extend({
   props: {
@@ -36,7 +38,7 @@ export default class Events extends EventsProps {
   }
 
   async fetchEvents(): Promise<void> {
-    this.events = await getEventList(this.currentUser);
+    this.events = await eventRepository.getEventList(this.currentUser);
   }
 }
 </script>

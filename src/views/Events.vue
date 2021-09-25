@@ -17,9 +17,9 @@
           <v-tab style="background-color: #64b5f6; color: black;">
             開催予定
           </v-tab>
-          <v-tab style="background-color: #9e9e9e; color: black;">
+          <!-- <v-tab style="background-color: #9e9e9e; color: black;">
             終了
-          </v-tab>
+          </v-tab> -->
         </v-tabs>
         <v-tabs-items v-model="tab"> <!--なんかtabがいる-->
           <v-tab-item eager>
@@ -34,12 +34,12 @@
               :key="event.id"
               :event="event" />
           </v-tab-item>
-          <v-tab-item eager>
+          <!-- <v-tab-item eager>
             <event-item
               v-for="event in pastEvents"
               :key="event.id"
               :event="event" />
-          </v-tab-item>
+          </v-tab-item> -->
         </v-tabs-items>
       </div>
     </div>

@@ -15,7 +15,7 @@
         最終更新日時：{{ getStringFromDate(user.updatedTime.toDate()) }}
       </div>
 
-      <div v-if="userEvents" class="events-list">
+      <!-- <div v-if="userEvents" class="events-list">
         <user-event-item
           v-for="event in userEvents"
           :key="event.id"
@@ -26,7 +26,7 @@
           v-for="talk in userTalks"
           :key="talk.id"
           :talkId="talk.id" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -34,15 +34,15 @@
 <script>
   import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
-  import UserEventItem from '@/components/UserEventItem.vue'
-  import TalkItem from '@/components/TalkItem.vue'
+  // import UserEventItem from '@/components/UserEventItem.vue'
+  // import TalkItem from '@/components/TalkItem.vue'
   import EditUserForm from '@/components/EditUserForm';
 
   export default {
     name: 'User',
     components: {
-      UserEventItem,
-      TalkItem,
+      // UserEventItem,
+      // TalkItem,
       EditUserForm
     },
     data() {

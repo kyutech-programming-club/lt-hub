@@ -36,8 +36,8 @@
         </v-card>
         場所：
         <template v-for="(content, id) in splitComment(event.place)">
-          <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
-          <span :key="id" v-else class="text-left reline">{{content}}</span>
+          <span  v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+          <span  v-else class="text-left reline">{{content}}</span>
         </template><br>
         <div v-if="event.createdTime">
           作成日時：{{ getStringFromDate(event.createdTime.toDate()) }}<br>
@@ -128,7 +128,6 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
   import EditEventForm from '@/components/EditEventForm.vue'
   import NewTalkForm from '@/components/NewTalkForm.vue'
   import ParticipateItem from '@/components/ParticipateItem.vue'

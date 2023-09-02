@@ -1,11 +1,12 @@
 <template>
   <v-app>
     <Header />
-    <v-content fluid fill-height align-start>
+	<h1>App.vue</h1>
+    <v-main fluid fill-height align-start>
       <v-container>
         <router-view />
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

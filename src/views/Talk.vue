@@ -84,8 +84,8 @@
   import EmbedMovie from '@/components/EmbedMovie.vue'
   import EmbedSlide from '@/components/EmbedSlide.vue'
   import { db } from '@/firebase/firestore.js'
-  import firebase from 'firebase'
-  import UserItemSmall from "../components/UserItemSmall"
+  //import firebase from 'firebase'
+  import UserItemSmall from "@/components/UserItemSmall.vue"
 
   export default {
     name: 'Talk',

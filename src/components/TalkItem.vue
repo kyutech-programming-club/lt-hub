@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import UserItemSmall from "../components/UserItemSmall";
+  import UserItemSmall from "@/components/UserItemSmall.vue";
   import { db } from '@/firebase/firestore.js'
 
   export default {

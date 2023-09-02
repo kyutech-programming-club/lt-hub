@@ -24,7 +24,7 @@
              @click="doLogin"
              outlined
              dark>
-        <v-img src="@/assets/google-logo.png" left class="mr-2"/>
+        <v-img src="src/assets/google-logo.png" left class="mr-2"/>
         Login
       </v-btn>
     </div>
@@ -32,8 +32,8 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
-  import { db } from '@/firebase/firestore.js'
+  import { db } from '@/firebase/firestore.js';
+  import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
   export default {
     name: 'GithubAuth',
@@ -46,7 +46,7 @@
     created() {
       let self = this;
 
-      firebase.auth().onAuthStateChanged(user => {
+      onAuthStateChanged(getAuth(), (user) => {
 
         if (user != null) {
           db.collection('users')

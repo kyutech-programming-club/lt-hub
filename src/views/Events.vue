@@ -50,7 +50,6 @@
   import NewEventForm from '@/components/NewEventForm.vue'
   import EventItem from '@/components/EventItem.vue'
   import { db } from '@/firebase/firestore.js'
-  import firebase from 'firebase'
 
   export default {
     components: {
@@ -108,5 +107,6 @@
     }
   };
 </script>
+
 <style scoped>
 </style>

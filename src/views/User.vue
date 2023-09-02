@@ -32,11 +32,11 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+ // import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
   import UserEventItem from '@/components/UserEventItem.vue'
   import TalkItem from '@/components/TalkItem.vue'
-  import EditUserForm from '@/components/EditUserForm';
+  import EditUserForm from '@/components/EditUserForm.vue';
 
   export default {
     name: 'User',

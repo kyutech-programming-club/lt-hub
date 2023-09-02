@@ -53,7 +53,6 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
 
   export default {

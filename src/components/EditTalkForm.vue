@@ -64,7 +64,6 @@
   </div>
 </template>
 <script>
-  import firebase from 'firebase'
   import { db } from '@/firebase/firestore.js'
   import HelpOfSlide from '@/components/HelpOfSlide.vue'
 

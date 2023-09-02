@@ -1,4 +1,4 @@
-import firebase from 'firebase'
-import { firebaseConfig } from '@/../firebase.config.js'
+import { firebaseConfig } from './firebase.config.js';
+import { initializeApp } from 'firebase/app';
 
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);

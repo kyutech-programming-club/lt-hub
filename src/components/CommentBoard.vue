@@ -8,7 +8,7 @@
     >
       <v-list>
         <template v-for="(comment, index) in comments">
-          <v-card :key="index">
+          <v-card >
             <v-list-item>
               <v-list-item-avatar @click="goUserPage(comment.userRef)">
                 <img :src="comment.userRef.photoURL">
@@ -22,8 +22,8 @@
               <v-list-item-content class="pa-0">
                 <v-card-text>
                   <template v-for="(content, id) in splitComment(comment.content)">
-                    <span :key="id" v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
-                    <span :key="id" v-else class="text-left reline">{{content}}</span>
+                    <span v-if="validUrl(content)" class="text-left reline"><a :href="content" target="_blank" rel="noopener noreferrer">{{content}}</a></span>
+                    <span v-else class="text-left reline">{{content}}</span>
                   </template>
                 </v-card-text>
               </v-list-item-content>
@@ -44,7 +44,6 @@
 
 <script>
   import { db } from '@/firebase/firestore.js';
-  import firebase from 'firebase';
 
   export default {
     name: 'CommentBoard',

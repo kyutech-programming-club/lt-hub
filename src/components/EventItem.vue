@@ -26,7 +26,6 @@
 
 <script>
   import { db } from '@/firebase/firestore.js'
-  import firebase from 'firebase'
   export default {
     props: {
       event: {
